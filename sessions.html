@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/jpeg" href="AgapicChantsLogo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sessions — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+em { color: var(--terra-dark); font-style: italic; }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo img { width: 36px; height: 36px; border-radius: 6px; }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+p { margin-bottom: 18px; color: var(--ink-soft); }
+p:last-child { margin-bottom: 0; }
+
+/* Section label */
+.label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.7;
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+/* Testimonial */
+.testimonial {
+  border-left: 3px solid var(--rule);
+  padding: 20px 24px;
+  margin: 40px 0;
+  border-radius: 0 12px 12px 0;
+}
+.testimonial p {
+  font-size: 15px;
+  font-style: italic;
+  color: var(--ink);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.testimonial .attribution {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  opacity: 0.6;
+  font-style: normal;
+  margin: 0;
+}
+
+/* For you list */
+.for-you-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+}
+.for-you-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 15px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  padding-left: 20px;
+  position: relative;
+}
+.for-you-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--terra);
+  opacity: 0.5;
+}
+.for-you-list li:last-child { border-bottom: none; }
+
+/* How it works grid */
+.how-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+}
+.how-card {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 24px 20px;
+}
+.how-card h4 {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.how-card ul {
+  list-style: none;
+  padding: 0;
+}
+.how-card ul li {
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--rule);
+  line-height: 1.5;
+}
+.how-card ul li:last-child { border-bottom: none; }
+
+/* Pricing */
+.pricing {
+  margin-top: 24px;
+  padding: 20px 24px;
+  background: rgba(210,104,79,0.04);
+  border-radius: 12px;
+  border: 1px solid var(--rule);
+}
+.pricing h4 {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--terra);
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+.pricing-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  gap: 16px;
+}
+.pricing-row:last-child { border-bottom: none; }
+.pricing-row .price-label { font-size: 14px; color: var(--ink); }
+.pricing-row .price-detail { font-size: 12px; color: var(--ink-soft); opacity: 0.7; flex: 1; }
+.pricing-row .price-amount { font-size: 15px; font-weight: 500; color: var(--ink); white-space: nowrap; }
+
+/* FAQ accordion */
+.faq { margin: 24px 0; }
+.faq-item { border-bottom: 1px solid var(--rule); }
+.faq-item:first-child { border-top: 1px solid var(--rule); }
+.faq-q {
+  width: 100%;
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 18px 0;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  line-height: 1.5;
+}
+.faq-q:hover { color: var(--terra); }
+.faq-icon {
+  font-size: 18px;
+  color: var(--terra);
+  opacity: 0.5;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+.faq-item.open .faq-icon { transform: rotate(45deg); opacity: 1; }
+.faq-a {
+  display: none;
+  padding: 0 0 18px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  max-width: 600px;
+}
+.faq-item.open .faq-a { display: block; }
+
+.about-row { display: flex; gap: 24px; align-items: flex-start; }
+.about-row img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+
+/* CTA button */
+.cta-btn {
+  display: inline-block;
+  padding: 14px 32px;
+  background: var(--terra);
+  color: var(--cream);
+  border-radius: 100px;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: inherit;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.cta-btn:hover { background: var(--terra-dark); color: var(--cream); }
+
+/* Divider */
+.divider { width: 40px; height: 2px; background: var(--terra); opacity: 0.25; margin: 48px 0; }
+
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+}
+@media (max-width: 480px) {
+  .how-grid { grid-template-columns: 1fr; }
+  .pricing-row { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+    <span>Agapic Chants</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Live</a></li>
+    <li><a href="chants.html">Chantbook</a></li>
+    <li><a href="sessions.html" class="active">Sessions</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
+</nav>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span class="nav-icon">🎤</span>Live</a>
+  <a href="chants.html"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html" class="active"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
+<div class="page">
+
+  <div style="text-align:center; padding:40px 0 40px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:16px;line-height:1.1;">Sessions</h1>
+    <p style="font-size:15px;color:var(--ink-soft);max-width:480px;margin:0 auto;line-height:1.8;">You share what you're carrying. Together we shape it into a chant. Something hard to hold alone becomes something you can sing.</p>
+  </div>
+
+  <div style="text-align:center;padding-bottom:48px;border-bottom:1px solid var(--rule);">
+    <a href="https://calendly.com/nathanvanderpool/check-in" target="_blank" class="cta-btn">Book a Free Exploration Session</a>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="testimonial">
+    <p>"Agapic Chants was a magical experience. It transformed one of my deepest sorrows that previously felt like it had no bottom, into a poem that I was here to express in the world. Singing it together with Nathan helped move the transformation through my entire system. It wasn't just a change in perspective, it reached my body, heart, and soul."</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+      <img src="rosa.png" alt="Rosa Lewis" style="width:40px;height:40px;border-radius:50%;object-fit:cover;opacity:0.9;">
+      <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0.6;">Rosa Lewis</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <span class="label">This might be for you if</span>
+  <ul class="for-you-list">
+    <li>You carry something that's seeking expression and want support doing it</li>
+    <li>You long for deeper connection and need actual practices, not just ideas</li>
+    <li>You love to sing — or were told you can't, and part of you still believes that</li>
+    <li>You want spaces that help you experience mystery without the guru bullshit</li>
+    <li>You need space to move stuck emotional energy</li>
+    <li>You want more loving relationships and you're ready to open your heart</li>
+    <li>You want to practice stabilizing profound trust in your body</li>
+  </ul>
+
+  <div class="divider"></div>
+
+  <span class="label">How it works</span>
+  <div class="how-grid">
+    <div class="how-card">
+      <h4>The Session</h4>
+      <ul>
+        <li>Share what's moving through you</li>
+        <li>Together we shape it into a chant</li>
+        <li>You receive a recording</li>
+        <li>With your permission, it joins the collective repertoire</li>
+      </ul>
+    </div>
+    <div class="how-card">
+      <h4>What You Receive</h4>
+      <ul>
+        <li>Support in exploring your world</li>
+        <li>Help articulating what's hard to express</li>
+        <li>A well-held space to feel</li>
+        <li>A personal chant you can sing with others</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pricing">
+    <h4>Suggested Prices</h4>
+    <div class="pricing-row">
+      <span class="price-label">Regular</span>
+      <span class="price-detail">Two sessions + home recording</span>
+      <span class="price-amount">€500</span>
+    </div>
+    <div class="pricing-row">
+      <span class="price-label">Supporter</span>
+      <span class="price-detail">4 sessions + studio recording, funds a scholarship for someone else</span>
+      <span class="price-amount">€2000</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="testimonial">
+    <p>"We mapped a recent professional conflict I had back to some much deeper issues and then transformed those old associations into an empowering sense of being reborn. And then to top it all off — in a surprising twist — Nathan and I wrote a song about it!"</p>
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px;">
+      <img src="ajbond.png" alt="A.J. Bond" style="width:40px;height:40px;border-radius:50%;object-fit:cover;opacity:0.9;">
+      <span style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-soft);opacity:0.6;">A.J. Bond</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <span class="label">You might be wondering</span>
+  <div class="faq">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        "But I really can't sing."
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">If you can talk, you can chant. The contraction in your throat isn't about pitch — it's about what you stopped saying when someone told you your voice didn't matter. The practice of chanting works with that directly.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        "Is this religious?"
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">No. Agapic Chants creates space for what's sacred without requiring belief. You can belong to any religion or none. You don't need to sign up for an ideology or cosmology. You just need to show up and see what's there.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        "Is this therapy?"
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">No. Agapic Chants is not a replacement for therapy or treatment for mental illness. It's a structured practice space. If you're working with a therapist, this can complement that work. If you need therapy, get therapy first.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        "What if what I share is too personal?"
+        <span class="faq-icon">+</span>
+      </button>
+      <div class="faq-a">Nothing becomes part of the collective repertoire without your explicit permission. The 1:1 session is confidential. You decide what, if anything, gets shared.</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <span class="label">About Nathan</span>
+  <div class="about-row">
+    <div style="width:80px;height:80px;border-radius:50%;flex-shrink:0;background-image:url('nathan.webp');background-size:120%;background-position:30% 15%;background-repeat:no-repeat;"></div>
+    <div>
+      <p style="color:var(--ink);font-size:15px;line-height:1.9;">I've spent decades working where sound meets transformation. PhD in sociology of religion, years as a <a href="https://open.spotify.com/intl-de/artist/262xWmzc20luZm1ji0n9kR?si=bYlA13dYT5qqlrsyhh8I8g" target="_blank">musician and songwriter</a>, a decade designing ritual spaces for people navigating what matters most. I founded the <a href="https://rspnd.network/" target="_blank">Respond</a> project and have sat with people through their hardest moments. I've also spent long stretches in monasteries and meditation retreats.</p>
+      <p style="font-size:15px;line-height:1.9;">With Agapic Chants, I use the simple social technology of singing together to create conditions where something can shift. The work draws on all of it: academic training in how meaning-making works, musical practice, contemplative training, and years holding space when things fall apart. I hold space and provide structure. The work happens through you, not to you.</p>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div style="text-align:center;padding:8px 0 16px;">
+    <a href="https://calendly.com/nathanvanderpool/check-in" target="_blank" class="cta-btn">Book a Free Exploration Session</a>
+    <p style="margin-top:20px;font-size:12px;color:var(--ink-soft);opacity:0.6;">Or reach out directly:<br>
+    <a href="https://t.me/AgapicChants" target="_blank" style="color:var(--ink-soft);">Telegram</a> · <a href="https://wa.me/4917654622093" target="_blank" style="color:var(--ink-soft);">WhatsApp</a> · <a href="/cdn-cgi/l/email-protection#c1afa0b5a9a0afb7a0afa5a4b3b1aeaeadb1a9a581a6aca0a8adefa2aeac" style="color:var(--ink-soft);"><span class="__cf_email__" data-cfemail="9cf2fde8f4fdf2eafdf2f8f9eeecf3f3f0ecf4f8dcfbf1fdf5f0b2fff3f1">[email&#160;protected]</span></a>
+       </p>
+  </div>
+
+  <div style="margin-top:48px;padding-top:32px;border-top:1px solid var(--rule);text-align:center;">
+    <a href="https://nathanvanderpool.com" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);opacity:0.4;text-decoration:none;transition:opacity 0.2s;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='0.4'">Nathan's other projects →</a>
+  </div>
+
+</div>
+</body>
+</html>

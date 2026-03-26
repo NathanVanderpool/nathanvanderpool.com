@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nathan Vanderpool</title>
+<meta name="description" content="Nathan Vanderpool — musician, Berlin. Secret Chord Collective, Pappelbaum, Agapic Chants.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Syne:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void: #0e0c0a;
+  --bone: #e8e0d4;
+  --bone-soft: rgba(232,224,212,0.52);
+  --bone-faint: rgba(232,224,212,0.18);
+  --terra: #d2684f;
+  --rule: rgba(232,224,212,0.07);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--bone);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ── HEADER ── */
+.header {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 80px 48px 72px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.header-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 6.5vw, 88px);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 0.95;
+  color: var(--bone);
+  opacity: 0;
+  animation: fadeUp 1s ease 0.1s forwards;
+}
+
+.header-location {
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(232,224,212,0.42);
+  padding-bottom: 10px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.4s forwards;
+}
+
+/* ── PROJECT CARDS ── */
+.projects {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.project-card {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border-radius: 3px;
+  display: block;
+  opacity: 0;
+}
+
+.project-card:nth-child(1) { animation: fadeUp 0.9s ease 0.3s forwards; }
+.project-card:nth-child(2) { animation: fadeUp 0.9s ease 0.5s forwards; }
+.project-card:nth-child(3) { animation: fadeUp 0.9s ease 0.7s forwards; }
+
+/* SCC: logo on textured dark */
+.card-scc {
+  background: #1c1610;
+}
+.card-scc-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 60%, rgba(60,40,20,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(80,50,20,0.2) 0%, transparent 50%);
+}
+.scc-logo-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18%;
+  z-index: 1;
+}
+.scc-logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  opacity: 0.88;
+  mix-blend-mode: luminosity;
+  transition: opacity 0.5s ease, transform 0.7s ease;
+}
+.card-scc:hover .scc-logo-wrap img {
+  opacity: 1;
+  mix-blend-mode: normal;
+  transform: scale(1.04);
+}
+
+/* Pappelbaum: faces in water, tight crop */
+.card-pappelbaum .project-card-img {
+  object-position: center 28%;
+}
+
+/* Agapic Chants: warm */
+.card-ac .project-card-img {
+  filter: brightness(0.72) saturate(0.85);
+}
+
+.project-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease, filter 0.5s ease;
+}
+
+.project-card:hover .project-card-img {
+  transform: scale(1.04);
+  filter: brightness(0.9) saturate(1);
+}
+.card-ac:hover .project-card-img {
+  filter: brightness(0.85) saturate(1);
+}
+
+/* gradient overlay */
+.project-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 35%,
+    rgba(14,12,10,0.92) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+.card-ac::after {
+  background: linear-gradient(
+    to bottom,
+    transparent 25%,
+    rgba(28,16,8,0.88) 100%
+  );
+}
+
+.project-card-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 28px 26px 26px;
+  z-index: 3;
+}
+
+.project-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  display: block;
+  margin-bottom: 7px;
+}
+
+.project-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  font-weight: 400;
+  color: var(--bone);
+  line-height: 1.15;
+  display: block;
+  margin-bottom: 9px;
+}
+
+.card-ac .project-name { color: #f0e2cc; }
+
+.project-desc {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: var(--bone-soft);
+  line-height: 1.55;
+  display: block;
+  margin-bottom: 14px;
+}
+
+.project-link {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  transition: color 0.25s, letter-spacing 0.25s;
+}
+
+.card-ac .project-link { color: rgba(210,104,79,0.7); }
+.project-card:hover .project-link { color: var(--bone); letter-spacing: 0.32em; }
+.card-ac:hover .project-link { color: var(--terra); letter-spacing: 0.32em; }
+
+/* ── CONNECTIVE TEXT ── */
+.connective {
+  max-width: 620px;
+  margin: 104px auto 0;
+  padding: 0 48px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1s forwards;
+}
+
+.connective p {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(19px, 2.2vw, 25px);
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--bone-soft);
+  font-style: italic;
+}
+
+.connective em {
+  font-style: normal;
+  color: var(--bone);
+}
+
+/* ── TRUST LINE ── */
+.trust-line {
+  max-width: 620px;
+  margin: 28px auto 0;
+  padding: 0 48px;
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(232,224,212,0.42);
+  line-height: 2;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+
+/* ── CTA ── */
+.cta-block {
+  max-width: 620px;
+  margin: 64px auto 0;
+  padding: 48px 48px 0;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.3s forwards;
+}
+
+.cta-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  transition: opacity 0.2s;
+}
+
+.cta-line:hover { opacity: 0.85; }
+
+.cta-prompt {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  font-style: italic;
+  color: var(--bone-soft);
+}
+
+.cta-arrow {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--terra);
+  transition: letter-spacing 0.25s;
+}
+
+.cta-line:hover .cta-arrow { letter-spacing: 0.3em; }
+
+/* ── EMAIL CAPTURE ── */
+.email-section {
+  max-width: 620px;
+  margin: 48px auto 0;
+  padding: 36px 48px 100px;
+  border-top: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.4s forwards;
+}
+
+.email-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  white-space: nowrap;
+}
+
+.email-input {
+  background: none;
+  border: none;
+  border-bottom: 1px solid rgba(232,224,212,0.12);
+  color: var(--bone);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  padding: 4px 0;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.25s;
+}
+
+.email-input::placeholder {
+  color: var(--bone-faint);
+}
+
+.email-input:focus {
+  border-color: rgba(232,224,212,0.28);
+}
+
+.email-send {
+  background: none;
+  border: none;
+  color: var(--bone-faint);
+  cursor: pointer;
+  font-family: 'Syne', sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.email-send:hover { color: var(--bone); }
+
+/* sent state */
+.email-thanks {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--bone-soft);
+  display: none;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 800px) {
+  .header {
+    padding: 56px 24px 48px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .projects {
+    padding: 0 24px;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .project-card { aspect-ratio: 4 / 3; }
+
+  .connective,
+  .trust-line,
+  .cta-block,
+  .email-section {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .connective { margin-top: 64px; }
+  .cta-block { padding-top: 36px; }
+  .email-section { padding-bottom: 72px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <h1 class="header-name">Nathan<br>Vanderpool</h1>
+  <p class="header-location">Musician · Berlin</p>
+</header>
+
+<!-- PROJECT CARDS -->
+<section class="projects" aria-label="Projects">
+
+  <!-- Secret Chord Collective -->
+  <a href="secret-chord-collective.html"
+     class="project-card card-scc"
+     aria-label="Secret Chord Collective">
+    <div class="card-scc-bg"></div>
+    <div class="scc-logo-wrap">
+      <img src="SCC_Logo_new.png" alt="Secret Chord Collective">
+    </div>
+    <div class="project-card-text">
+      <span class="project-label">Art Music</span>
+      <span class="project-name">Secret Chord<br>Collective</span>
+      <span class="project-desc">Songs that speak for themselves, in all their difficulty.</span>
+      <span class="project-link">Listen →</span>
+    </div>
+  </a>
+
+  <!-- Pappelbaum -->
+  <a href="pappelbaum.html"
+     class="project-card card-pappelbaum"
+     aria-label="Pappelbaum">
+    <img class="project-card-img" src="album_cover.jpg" alt="Pappelbaum — Nathan Vanderpool and Ronja Polzin">
+    <div class="project-card-text">
+      <span class="project-label">Audio · Visual</span>
+      <span class="project-name">Pappelbaum</span>
+      <span class="project-desc">A collaborative audio-visual project with Ronja Polzin.</span>
+      <span class="project-link">Watch →</span>
+    </div>
+  </a>
+
+  <!-- Agapic Chants -->
+  <a href="https://agapicchants.com"
+     target="_blank"
+     rel="noopener"
+     class="project-card card-ac"
+     aria-label="Agapic Chants">
+    <img class="project-card-img" src="here_beyond_sound.jpg" alt="Agapic Chants">
+    <div class="project-card-text">
+      <span class="project-label">Sacred Music</span>
+      <span class="project-name">Agapic Chants</span>
+      <span class="project-desc">Songs that don't belong to me, for another world that's on her way.</span>
+      <span class="project-link">Enter →</span>
+    </div>
+  </a>
+
+</section>
+
+<!-- CONNECTIVE PARAGRAPH -->
+<div class="connective" aria-label="About">
+  <p>Secret Chord Collective and Pappelbaum are where I speak for myself — <em>with all the darkness and beauty that entails.</em> Agapic Chants is something else: an attempt to draw on decades of music making, and lend those skills to the act of singing together. Songs that don't belong to me, for another world that's on her way.</p>
+</div>
+
+<!-- TRUST LINE -->
+<div class="trust-line" aria-hidden="true">
+  PhD Sociology · 30 years making music · Berlin
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <a href="https://agapicchants.com/chants.html" class="cta-line">
+    <span class="cta-prompt">Want to experience it first?</span>
+    <span class="cta-arrow">Open the Chantbook →</span>
+  </a>
+  <a href="https://calendly.com/nathanvanderpool/check-in" target="_blank" rel="noopener" class="cta-line">
+    <span class="cta-prompt">Ready to talk?</span>
+    <span class="cta-arrow">Book a conversation →</span>
+  </a>
+</div>
+
+<!-- EMAIL CAPTURE -->
+<div class="email-section">
+  <span class="email-label">Stay close to the work</span>
+  <input class="email-input" type="email" placeholder="your@email.com" aria-label="Email address">
+  <button class="email-send" onclick="handleEmail()" aria-label="Submit">→</button>
+  <span class="email-thanks">thank you.</span>
+</div>
+
+<script>
+function handleEmail() {
+  const input = document.querySelector('.email-input');
+  const thanks = document.querySelector('.email-thanks');
+  const btn = document.querySelector('.email-send');
+  const val = input.value.trim();
+  if (!val || !val.includes('@')) { input.focus(); return; }
+  btn.textContent = '...';
+  btn.disabled = true;
+  fetch('https://script.google.com/macros/s/AKfycbxu14QyYP8UOxmmVlS7Lb7YYyt9fbdXgRc8b6YH4mXBfhjTIoKg7Csn2jPsVx-ChBL2Qw/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'email=' + encodeURIComponent(val)
+  }).finally(() => {
+    input.style.display = 'none';
+    btn.style.display = 'none';
+    thanks.style.display = 'block';
+  });
+}
+document.querySelector('.email-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleEmail();
+});
+</script>
+
+</body>
+</html>
