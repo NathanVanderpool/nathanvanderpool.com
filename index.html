@@ -102,15 +102,15 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 0;
+  padding: 7.5% 7.5% 0;
   z-index: 1;
 }
 .scc-logo-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
   opacity: 0.88;
   mix-blend-mode: luminosity;
   transition: opacity 0.5s ease, transform 0.7s ease;
@@ -119,6 +119,15 @@ a { color: inherit; text-decoration: none; }
   opacity: 1;
   mix-blend-mode: normal;
   transform: scale(1.03);
+}
+
+/* Stronger overlay for SCC so text reads over warm logo tones */
+.card-scc::after {
+  background: linear-gradient(
+    to bottom,
+    transparent 20%,
+    rgba(14,12,10,0.97) 100%
+  );
 }
 
 /* Pappelbaum: faces in water, tight crop */
@@ -428,7 +437,7 @@ a { color: inherit; text-decoration: none; }
     </div>
     <div class="project-card-text">
       <span class="project-label">Art Music</span>
-      <span class="project-name">Secret Chord<br>Collective</span>
+      <span class="project-name">Secret Chord Collective</span>
       <span class="project-desc">Songs that speak for themselves, in all their difficulty.</span>
       <span class="project-link">Listen →</span>
     </div>
