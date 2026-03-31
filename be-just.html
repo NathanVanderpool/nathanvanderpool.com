@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/jpeg" href="AgapicChantsLogo.jpg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Be Just the Way You Are — Agapic Chants</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+:root {
+  --cream: #f4e7d4; --terra: #d2684f; --terra-dark: #b04c35;
+  --ink: #2a1f14; --ink-soft: #5a4535; --rule: rgba(210,104,79,0.2);
+  --nav-height: 60px; --bottom-nav-height: 64px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--cream); color: var(--ink); font-family: 'Jost', Futura, 'Century Gothic', sans-serif; font-size: 16px; line-height: 1.7; padding-bottom: var(--bottom-nav-height); }
+a { color: var(--terra); text-decoration: none; }
+a:hover { color: var(--terra-dark); }
+em { color: var(--terra-dark); font-style: italic; }
+.top-nav { display: none; position: sticky; top: 0; z-index: 100; background: var(--cream); border-bottom: 1px solid var(--rule); padding: 0 48px; height: var(--nav-height); align-items: center; justify-content: space-between; }
+.top-nav .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+.top-nav .nav-logo img { width: 36px; height: 36px; border-radius: 6px; }
+.top-nav .nav-logo span { font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; font-weight: 500; }
+.top-nav .nav-links { display: flex; gap: 40px; list-style: none; }
+.top-nav .nav-links a { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; }
+.top-nav .nav-links a:hover, .top-nav .nav-links a.active { color: var(--terra); }
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: var(--cream); border-top: 1px solid var(--rule); height: var(--bottom-nav-height); display: flex; align-items: stretch; }
+.bottom-nav a { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-soft); text-decoration: none; transition: color 0.2s; padding: 8px 4px; }
+.bottom-nav a.active, .bottom-nav a:hover { color: var(--terra); }
+.bottom-nav .nav-icon { font-size: 18px; line-height: 1; }
+.page { max-width: 720px; margin: 0 auto; padding: 48px 24px 48px; }
+h1 { font-size: 36px; font-weight: 300; line-height: 1.2; margin-bottom: 24px; color: var(--ink); }
+p { margin-bottom: 18px; color: var(--ink-soft); }
+p:last-child { margin-bottom: 0; }
+.divider { width: 40px; height: 2px; background: var(--terra); opacity: 0.35; margin: 40px 0; }
+.lyric-line { font-size: 18px; font-weight: 300; color: var(--ink); line-height: 1.4; padding-top: 24px; margin-bottom: 12px; position: relative; }
+cw { display: inline; position: relative; }
+cw::before { content: attr(data-label); position: absolute; top: -22px; left: 0; font-size: 11px; font-weight: 400; font-style: normal; color: var(--ink-soft); opacity: 0.4; letter-spacing: 0.04em; white-space: nowrap; transition: all 0.25s ease; pointer-events: none; }
+body.musician-mode cw::before { font-size: 13px; font-weight: 700; color: var(--terra); opacity: 1; }
+.instrument-btn { padding: 8px 16px; font-size: 12px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.06em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 12px; }
+.instrument-btn:hover { border-color: var(--terra); color: var(--terra); }
+.instrument-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.tool-btn { padding: 9px 18px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: 'Jost', Futura, sans-serif; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 12px; }
+.tool-btn:hover { border-color: var(--terra); color: var(--terra); }
+.tool-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.key-btn { padding: 6px 12px; font-size: 12px; font-family: 'Jost', Futura, sans-serif; letter-spacing: 0.08em; border: 1px solid var(--rule); background: var(--cream); color: var(--ink-soft); cursor: pointer; transition: all 0.15s; border-radius: 10px; }
+.key-btn:hover { border-color: var(--terra); color: var(--terra); }
+.key-btn.active { background: var(--terra); color: var(--cream); border-color: var(--terra); }
+.capo-option { padding: 16px; border: 1px solid var(--rule); background: var(--cream); cursor: pointer; text-align: left; font-family: 'Jost', Futura, sans-serif; border-radius: 12px; transition: all 0.15s; }
+.capo-option:hover { border-color: var(--terra); background: rgba(210,104,79,0.03); }
+.capo-option.active { border-color: var(--terra); background: rgba(210,104,79,0.06); }
+.capo-option .opt-tag { font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--terra); opacity: 0.7; display: block; margin-bottom: 6px; }
+.capo-option .opt-title { font-size: 15px; font-weight: 500; color: var(--ink); display: block; margin-bottom: 4px; }
+.capo-option .opt-chords { font-size: 13px; font-weight: 600; color: var(--terra); display: block; margin-bottom: 8px; }
+.capo-option .opt-note { font-size: 12px; color: var(--ink-soft); opacity: 0.75; display: block; line-height: 1.6; }
+@media (min-width: 768px) {
+  body { padding-bottom: 0; }
+  .top-nav { display: flex; }
+  .bottom-nav { display: none; }
+  .page { padding: 48px 48px 80px; }
+  h1 { font-size: 48px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <a href="index.html" class="nav-logo">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants">
+    <span>Agapic Chants</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Live</a></li>
+    <li><a href="chants.html" class="active">Chantbook</a></li>
+    <li><a href="sessions.html">Sessions</a></li>
+    <li><a href="support.html">Support</a></li>
+  </ul>
+</nav>
+
+<nav class="bottom-nav">
+  <a href="index.html"><span class="nav-icon">🎤</span>Live</a>
+  <a href="chants.html" class="active"><span class="nav-icon">🎵</span>Chants</a>
+  <a href="sessions.html"><span class="nav-icon">🙏</span>Sessions</a>
+  <a href="support.html"><span class="nav-icon">♡</span>Support</a>
+</nav>
+
+<div class="page">
+
+  <div style="text-align:center; padding:40px 0 32px;">
+    <img src="AgapicChantsLogo.jpg" alt="Agapic Chants" style="width:120px;height:120px;border-radius:24px;box-shadow:0 4px 24px rgba(44,36,22,0.15);display:block;margin:0 auto 16px;object-fit:cover;">
+    <h1 style="font-size:36px;font-weight:300;margin-bottom:6px;line-height:1.1;">Be Just the Way You Are</h1>
+    <p style="font-size:12px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 6px;">with Jim</p>
+    <p style="font-size:10px;color:var(--ink-soft);opacity:0.5;margin:0 0 20px;display:flex;align-items:center;justify-content:center;gap:5px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#5a4535" stroke-width="1.5"/><text x="12" y="16" font-size="11" font-family="serif" font-weight="bold" fill="#5a4535" text-anchor="middle">cc</text></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#5a4535" stroke-width="1.5"/><circle cx="12" cy="8.5" r="2.5" fill="#5a4535"/><path d="M7 19c0-3 2-5 5-5s5 2 5 5" stroke="#5a4535" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" stroke="#5a4535" stroke-width="1.5"/><text x="12" y="16" font-size="13" font-family="serif" fill="#5a4535" text-anchor="middle">$</text><line x1="6" y1="6" x2="18" y2="18" stroke="#5a4535" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Free to sing &amp; share · <a href="license.html" style="color:var(--terra);text-decoration:none;opacity:1;">CC BY-NC 4.0</a></span>
+    </p>
+    <a href="chants.html" style="font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;opacity:0.5;">← Back to the Chantbook</a>
+  </div>
+
+  <iframe width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/agapicchants/agapic-chant-be-just-the-way&color=%23d2684f&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"
+    style="display:block;margin-bottom:24px;"></iframe>
+
+  <p style="font-size:13px;margin-bottom:32px;text-align:center;"><a href="https://t.me/AgapicChants" target="_blank" style="color:var(--terra);text-decoration:none;letter-spacing:0.02em;">Chant with us live → Telegram</a></p>
+
+  <p style="font-size:12px;color:var(--ink-soft);opacity:0.6;margin-top:32px;margin-bottom:14px;">Playing an instrument?</p>
+
+  <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+    <button class="instrument-btn" id="btn-guitar"  onclick="selectInstrument('guitar',this)">🎸 Guitar</button>
+    <button class="instrument-btn" id="btn-piano"   onclick="selectInstrument('piano',this)">🎹 Piano / Keyboard</button>
+    <button class="instrument-btn" id="btn-ukulele" onclick="selectInstrument('ukulele',this)">🪕 Ukulele</button>
+    <button class="instrument-btn" id="btn-other"   onclick="selectInstrument('other',this)">🎵 Other</button>
+  </div>
+  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-top:20px;margin-bottom:8px;font-weight:500;">Chant Along</p>
+  <button id="reset-btn" onclick="resetInstrument()" style="display:none;margin-bottom:24px;background:none;border:none;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--terra);cursor:pointer;padding:0;font-family:inherit;">← Reset instrument</button>
+
+  <div id="key-row" style="display:none;margin-top:20px;margin-bottom:0;">
+    <div style="display:flex;gap:8px;margin-bottom:16px;">
+      <button class="tool-btn" id="tool-btn-boxes"  onclick="toggleTool('boxes')">Chord boxes</button>
+      <button class="tool-btn" id="tool-btn-chords" onclick="toggleTool('chords')">Change the key</button>
+    </div>
+    <div id="tool-panel-chords" style="display:none;margin-top:16px;padding:20px;background:rgba(107,87,68,0.04);border-radius:12px;">
+      <p style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Change the key</p>
+      <p style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:12px;">Tap any letter below and all the chords will change together — useful if someone has told you to play in a specific key, or if the pitch feels too high or low for your voice.</p>
+      <div style="position:relative;padding-bottom:20px;">
+        <div id="key-selector" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div id="key-indicator" style="position:absolute;font-size:10px;color:var(--ink-soft);opacity:0.5;letter-spacing:0.06em;white-space:nowrap;pointer-events:none;bottom:2px;left:0;">← lower &nbsp;·&nbsp; higher →</div>
+      </div>
+    </div>
+    <div id="tool-panel-boxes" style="display:none;margin-top:16px;padding:20px;background:rgba(107,87,68,0.04);border-radius:12px;">
+      <p style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Chord boxes</p>
+      <p id="chord-boxes-desc" style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:16px;">Finger positions for each chord in this song.</p>
+      <div id="chord-diagrams-container" style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;"></div>
+    </div>
+  </div>
+
+  <div id="instrument-reassurance" style="display:none;margin-top:20px;margin-bottom:4px;">
+    <p id="reassurance-title" style="font-size:13px;color:var(--ink);margin-bottom:4px;font-weight:500;">Whatever you know, there's a way to play this.</p>
+    <p id="reassurance-body" style="font-size:12px;color:var(--ink-soft);opacity:0.8;margin-bottom:0;">Scroll past any chords you don't recognise and pick the option that suits you — all of them work, all of them sound good.</p>
+  </div>
+
+  <!-- ── LYRICS WITH CHORDS ── -->
+  <!-- Song key: F (semitone 5). Chord semitones: F=5, Bbmaj7=10, B=11 -->
+  <div class="lyrics-section" style="margin-bottom:40px;">
+
+    <div class="lyric-line">
+      <cw data-semitone="10"></cw>Be just the way you <cw data-semitone="3"></cw>are
+    </div>
+    <div class="lyric-line" style="margin-bottom:40px;">
+      <cw data-semitone="8"></cw>I'll be <cw data-semitone="3"></cw>hap-py to <cw data-semitone="10"></cw>be with you
+    </div>
+
+  </div>
+
+  <!-- ── PLAY OPTIONS ── -->
+  <div id="play-options-section" style="display:none;margin-bottom:32px;border-top:1px solid var(--rule);padding-top:24px;">
+    <div id="step-capo" style="display:none;margin-bottom:20px;">
+      <p style="font-size:11px;color:var(--ink-soft);opacity:0.65;margin-bottom:12px;letter-spacing:0.02em;">Pick one — the chords update automatically.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button class="capo-option" onclick="selectCapo('open',this)">
+          <span class="opt-tag">Total beginner</span>
+          <span class="opt-title">Play in D</span>
+          <span class="opt-chords">D · G · C</span>
+          <span class="opt-note">Three easy open chords — no capo, no retuning. The pitch sits a little higher than the recording but it sounds beautiful.</span>
+        </button>
+        <button class="capo-option" onclick="selectCapo('tunedown',this)">
+          <span class="opt-tag">Match the recording</span>
+          <span class="opt-title">Tune down a whole step</span>
+          <span class="opt-chords">C · F · Bb shapes</span>
+          <span class="opt-note">Tune all six strings down a full step (a clip-on tuner makes this easy). Then play C, F and Bb shapes — they come out in Bb and match the recording exactly.</span>
+        </button>
+        <button class="capo-option" onclick="selectCapo('capo1',this)">
+          <span class="opt-tag">With capo</span>
+          <span class="opt-title">Capo 1</span>
+          <span class="opt-chords">Play A · D · G shapes</span>
+          <span class="opt-note">Capo on the first fret. An A shape gives you Bb, a D shape gives you Eb, a G shape gives you Ab. All easy open shapes — close to the recording.</span>
+        </button>
+        <button class="capo-option" onclick="selectCapo('standard',this)">
+          <span class="opt-tag">No capo, no retuning</span>
+          <span class="opt-title">Standard tuning, play Bb</span>
+          <span class="opt-chords">Bb · Eb · Ab</span>
+          <span class="opt-note">All three chords are barre chords in standard tuning. Works beautifully once you have them, but this is the most challenging option.</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── THEORY TUTOR ── -->
+  <div style="margin-bottom:40px;border-top:1px solid var(--rule);padding-top:32px;">
+    <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-bottom:6px;font-weight:500;">Loud mind? Focus on music theory!</p>
+    <p style="font-size:12px;color:var(--ink-soft);opacity:0.7;margin:0 0 16px;line-height:1.6;">A great thing for your mind to attend to while you chant — and a way to go deeper in the body.</p>
+    <button onclick="toggleTutor()" id="tutor-toggle-btn" style="padding:12px 28px;background:var(--terra);color:var(--cream);border:none;border-radius:100px;font-family:inherit;font-size:12px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;">Nerd out! ↓</button>
+    <div id="tutor-panel" style="display:none;margin-top:24px;"></div>
+  </div>
+
+
+  <!-- ── SHEET MUSIC ── -->
+  <!-- ── SUPPORT BUBBLE ── -->
+  <div style="border-top:1px solid var(--rule);padding-top:40px;text-align:center;margin-bottom:40px;">
+    <div style="display:inline-block;padding:18px 28px;background:rgba(210,104,79,0.06);border:1px solid var(--rule);border-radius:16px;margin-bottom:24px;">
+      <p style="font-size:13px;color:var(--ink-soft);line-height:1.8;font-weight:300;margin:0;">The chants are free. If they've meant something to you,<br><a href="support.html" style="color:var(--terra);text-decoration:none;">your support helps make more of them ♡</a></p>
+    </div>
+    <br>
+    <a href="chants.html" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);text-decoration:none;opacity:0.6;">← Back to the Chantbook</a>
+  </div>
+
+  <!-- ── SHEET MUSIC ── -->
+  <p style="font-size:13px;letter-spacing:0.1em;text-transform:uppercase;color:var(--terra);margin-bottom:20px;font-weight:500;">Sheet Music</p>
+  <div style="margin-bottom:48px;">
+    <img src="Agapic_Chantbook_Be_Just_the_Way_You_Are_(with_Jim).svg" alt="Be Just the Way You Are — sheet music" style="width:100%;border:1px solid var(--rule);border-radius:2px;">
+  </div>
+
+  <div style="text-align:center;padding-bottom:8px;">
+    <a href="chants.html" style="font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--ink-soft);opacity:0.5;">← Back to the Chantbook</a>
+  </div>
+
+</div>
+
+</div>
+
+<script src="chord-utils.js"></script>
+<script>
+const NOTES_FLAT  = ['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+const NOTES_SHARP = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+const PREFER_FLAT = new Set([1,3,5,6,8,10]);
+const KEYS = [
+  {label:'C',root:0},{label:'Db',root:1},{label:'D',root:2},{label:'Eb',root:3},
+  {label:'E',root:4},{label:'F',root:5},{label:'Gb',root:6},{label:'G',root:7},
+  {label:'Ab',root:8},{label:'A',root:9},{label:'Bb',root:10},{label:'B',root:11}
+];
+const SONG_KEY = 10; // Bb
+let currentRoot = SONG_KEY;
+
+function noteName(s) { s=((s%12)+12)%12; return PREFER_FLAT.has(s)?NOTES_FLAT[s]:NOTES_SHARP[s]; }
+function transposeSemitone(orig,from,to) { return (((orig-from+to)%12)+12)%12; }
+
+function updateChords(newRoot) {
+  document.querySelectorAll('cw').forEach(el=>{
+    const t=transposeSemitone(parseInt(el.dataset.semitone),currentRoot,newRoot);
+    el.dataset.semitone=t; el.dataset.label=noteName(t)+(el.dataset.quality||'');
+  });
+  document.querySelectorAll('#key-selector .key-btn').forEach(btn=>{
+    btn.classList.toggle('active',parseInt(btn.dataset.root)===newRoot);
+  });
+  currentRoot=newRoot;
+  if(activeTool==='boxes') renderChordDiagrams();
+  positionKeyIndicator();
+}
+
+function initChordLabels() {
+  document.querySelectorAll('cw').forEach(el=>{ el.dataset.label=noteName(parseInt(el.dataset.semitone))+(el.dataset.quality||''); });
+}
+
+function selectInstrument(choice,btn) {
+  document.querySelectorAll('.instrument-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentInstrument=choice;
+  document.body.classList.add('musician-mode');
+  document.getElementById('key-row').style.display='block';
+  document.getElementById('step-capo').style.display='none';
+  document.getElementById('play-options-section').style.display='none';
+  document.getElementById('reset-btn').style.display='block';
+  document.getElementById('instrument-reassurance').style.display=choice==='piano'?'none':'block';
+  document.getElementById('tool-btn-boxes').style.display=choice==='other'?'none':'inline-block';
+  if(choice==='other'&&activeTool==='boxes'){
+    activeTool=null;
+    document.getElementById('tool-btn-boxes').classList.remove('active');
+    document.getElementById('tool-panel-boxes').style.display='none';
+  }
+  document.getElementById('reassurance-title').textContent="Whatever you know, there's a way to play this.";
+  document.getElementById('reassurance-body').textContent="Scroll past any chords you don't recognise and pick the option that suits you — all of them work, all of them sound good.";
+  if(activeTool==='boxes'&&choice!=='other'){document.getElementById('tool-panel-boxes').style.display='block';renderChordDiagrams();}
+  else if(activeTool==='chords'){document.getElementById('tool-panel-chords').style.display='block';}
+  if(choice==='guitar'){document.getElementById('step-capo').style.display='block';document.getElementById('play-options-section').style.display='block';}
+  else if(choice==='piano'){showResult('Play in F major — chords: F · Bbmaj7','Matches the original recording exactly. F is a very natural key on piano.');}
+  else if(choice==='ukulele'){showResult('The easiest key on ukulele is G — tap G in the key selector above.','This gives you G · Cmaj7 — both very playable open shapes. To play along to the recording, tune your uke down a whole step and keep the key set to G.');}
+  else{showResult('Original key: F major — chords: F · Bbmaj7','Use the key selector above to transpose to any key that suits your instrument.');}
+  if(tutorOpen && tutorIdx >= 0) {
+    if(choice !== 'other') tutorShowInstrument = true;
+    renderTutor();
+  }
+}
+
+function selectCapo(choice,btn) {
+  document.querySelectorAll('.capo-option').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(choice==='open'){showResult('Play in D — D · G · C','Three easy open chords, no setup. The pitch sits a little higher than the recording but it sounds beautiful.');setKeyAndOpenChords(2);}
+  else if(choice==='tunedown'){showResult('Tune down a whole step — C · F · Bb shapes','Tune all six strings down a full step, then play C, F and Bb shapes. They come out in Bb and match the recording exactly.');setKeyAndOpenChords(0);}
+  else if(choice==='capo1'){showResult('Capo 1 — A · D · G shapes','Capo on the first fret. An A shape gives you Bb, a D shape gives you Eb, a G shape gives you Ab.');setKeyAndOpenChords(9);}
+  else{showResult('Standard tuning — Bb · Eb · Ab','All barre chords, but each one is worth knowing. Matches the recording exactly.');setKeyAndOpenChords(10);}
+}
+
+function setKeyAndOpenChords(root) {
+  updateChords(root);
+  activeTool='chords';
+  document.getElementById('tool-btn-chords').classList.add('active');
+  document.getElementById('tool-btn-boxes').classList.remove('active');
+  document.getElementById('tool-panel-chords').style.display='block';
+  document.getElementById('tool-panel-boxes').style.display='none';
+  positionKeyIndicator();
+}
+
+function showResult(main,note) {
+  document.getElementById('reassurance-title').textContent=main;
+  document.getElementById('reassurance-body').textContent=note||'';
+}
+
+
+function resetInstrument() {
+  document.querySelectorAll('.instrument-btn,.capo-option').forEach(b=>b.classList.remove('active'));
+  ['step-capo','play-options-section','key-row','reset-btn','instrument-reassurance','tool-panel-chords','tool-panel-boxes'].forEach(id=>{
+    document.getElementById(id).style.display='none';
+  });
+  document.getElementById('tool-btn-chords').classList.remove('active');
+  document.getElementById('tool-btn-boxes').classList.remove('active');
+  document.getElementById('tool-btn-boxes').style.display='inline-block';
+  activeTool=null;
+  document.body.classList.remove('musician-mode');
+  updateChords(SONG_KEY);
+}
+
+function tutorPianoSVG(name, dotColor) {
+  // Parse chord name
+  const NOTES=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+  const INTERVALS={'':[ 0,4,7],'maj7':[0,4,7,11],'m':[0,3,7],'7':[0,4,7,10]};
+  let root=-1,suffix='',bestLen=0;
+  for(let i=0;i<NOTES.length;i++){if(name.startsWith(NOTES[i])&&NOTES[i].length>bestLen){bestLen=NOTES[i].length;root=i;suffix=name.slice(NOTES[i].length);}}
+  if(root===-1) return null;
+  const ivs = INTERVALS[suffix] || INTERVALS[''];
+  // Root-position semitone positions (absolute, starting from root=0)
+  const litSemitones = new Set(ivs); // 0, 3or4, 7 etc.
+
+  // Build one octave of keys starting at the root note
+  // Chromatic layout: which semitones are white keys
+  const WHITE_SEMI = [0,2,4,5,7,9,11]; // C D E F G A B offsets
+  const BLACK_SEMI = {1:true,3:true,6:true,8:true,10:true};
+
+  // We'll show 13 semitones (one octave + root again) so the octave is complete
+  // Layout: walk through semitones 0-12 relative to root
+  const WW=14,WH=44,BW=9,BH=27,padT=18;
+  // Count white keys in one octave (0..11) = 7
+  const numWhite = 7;
+  const W = WW*numWhite + 2;
+  const H = WH + padT + 6;
+
+  // Map semitone offset -> x position
+  // We need to figure out white key index for each semitone
+  // Starting from root semitone, walk the chromatic scale
+  // Find which diatonic position root sits at
+  const rootSemi = root; // 0-11 in standard chromatic
+
+  // For layout: treat the keyboard as starting at root
+  // white key positions: we need to know for each of 0..11 semitones from root
+  // whether it's white, and what its x position is
+  let whiteIdx = 0;
+  const semiToWhiteX = {}; // semitone offset from root -> x center
+  const semiToBlackX = {}; // for black keys
+
+  for(let s=0; s<=12; s++){
+    const semi = s % 12;
+    // Is this semitone a white key? Check by looking at absolute position
+    const absSemi = (rootSemi + s) % 12;
+    const isWhite = !BLACK_SEMI[absSemi];
+    if(isWhite){
+      semiToWhiteX[s] = whiteIdx * WW + WW/2;
+      whiteIdx++;
+    } else {
+      // Black key sits between previous and next white key
+      semiToBlackX[s] = (whiteIdx - 0.5) * WW - BW/2;
+    }
+    if(s < 12 && whiteIdx >= numWhite) break;
+  }
+
+  const col = dotColor || TC.chord;
+  const colDark = col; // same color for stroke
+
+  let s = `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="display:block;">`;
+  s += `<text x="${W/2}" y="12" text-anchor="middle" font-family="Jost,sans-serif" font-size="10" font-weight="600" fill="${col}" letter-spacing="0.04em">${name}</text>`;
+
+  // Draw white keys
+  whiteIdx = 0;
+  for(let semi=0; semi<=11; semi++){
+    const absSemi = (rootSemi + semi) % 12;
+    if(BLACK_SEMI[absSemi]) continue;
+    const x = whiteIdx * WW;
+    const lit = litSemitones.has(semi);
+    s += `<rect x="${x+0.5}" y="${padT}" width="${WW-1}" height="${WH}" rx="1.5" fill="${lit?col:'#f4e7d4'}" stroke="#c8b8a8" stroke-width="0.75"/>`;
+    whiteIdx++;
+  }
+
+  // Draw black keys on top
+  let wIdx2 = 0;
+  for(let semi=0; semi<=11; semi++){
+    const absSemi = (rootSemi + semi) % 12;
+    if(!BLACK_SEMI[absSemi]){wIdx2++;continue;}
+    const x = wIdx2 * WW - BW/2;
+    const lit = litSemitones.has(semi);
+    s += `<rect x="${x}" y="${padT}" width="${BW}" height="${BH}" rx="1" fill="${lit?col:'#2a1f14'}" stroke="${lit?colDark:'#1a110a'}" stroke-width="0.5"/>`;
+  }
+
+  return s + '</svg>';
+}
+
+function renderChordDiagrams() {
+  const container=document.getElementById('chord-diagrams-container');
+  if(!container) return;
+  container.innerHTML='';
+  const desc=document.getElementById('chord-boxes-desc');
+  if(desc){
+    if(currentInstrument==='piano'){desc.textContent='The highlighted keys show which notes to play. Two octaves shown — play wherever feels comfortable.';}
+    else if(currentInstrument==='ukulele'){desc.textContent='Finger positions for each chord on ukulele (G C E A). Dots show where to press.';}
+    else{desc.textContent='Finger positions for each chord. Vertical lines are strings, horizontal lines are frets. Dots show where to press.';}
+  }
+  const usePiano=currentInstrument==='piano',seen=new Set();
+  document.querySelectorAll('cw').forEach(el=>{
+    const label=el.dataset.label;
+    if(label&&!seen.has(label)){seen.add(label);
+      const svg=usePiano?pianoSVG(label):chordSVG(label,currentInstrument);
+      const div=document.createElement('div');div.style.textAlign='center';
+      div.innerHTML=svg||`<div style="font-size:11px;color:var(--ink-soft);opacity:0.5;padding-top:20px;">${label}</div>`;
+      container.appendChild(div);}
+  });
+}
+
+let currentInstrument=null,activeTool=null;
+
+function toggleTool(tool) {
+  const same=activeTool===tool;activeTool=same?null:tool;
+  document.getElementById('tool-btn-chords').classList.toggle('active',activeTool==='chords');
+  document.getElementById('tool-btn-boxes').classList.toggle('active',activeTool==='boxes');
+  document.getElementById('tool-panel-chords').style.display=activeTool==='chords'?'block':'none';
+  document.getElementById('tool-panel-boxes').style.display=activeTool==='boxes'?'block':'none';
+  if(activeTool==='boxes') renderChordDiagrams();
+  if(activeTool==='chords') positionKeyIndicator();
+}
+
+function positionKeyIndicator() {
+  requestAnimationFrame(()=>{
+    const activeBtn=document.querySelector('#key-selector .key-btn.active');
+    const indicator=document.getElementById('key-indicator');
+    const container=indicator&&indicator.parentElement;
+    if(!activeBtn||!indicator||!container) return;
+    const cr=container.getBoundingClientRect(),br=activeBtn.getBoundingClientRect();
+    if(br.width===0) return;
+    const btnCenter=br.left-cr.left+br.width/2,indW=indicator.offsetWidth||80;
+    indicator.style.left=Math.max(0,Math.min(btnCenter-indW/2,cr.width-indW))+'px';
+  });
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  initChordLabels();
+  const sel=document.getElementById('key-selector');
+  KEYS.forEach(k=>{
+    const btn=document.createElement('button');
+    btn.className='key-btn'+(k.root===currentRoot?' active':'');
+    btn.textContent=k.label;btn.dataset.root=k.root;
+    btn.onclick=()=>updateChords(k.root);
+    sel.appendChild(btn);
+  });
+  setTimeout(positionKeyIndicator,0);
+});
+</script>
+<script>
+// ── THEORY TUTOR ──────────────────────────────────────────────────────────────
+const TUTOR_CHANT = {
+  title: "Be Just the Way You Are",
+  key: "Bb",
+  steps: [
+    { note:"F4",  chord:"Bb", lyric:"Be"   },
+    { note:"F4",  chord:"Bb", lyric:"just"  },
+    { note:"F4",  chord:"Bb", lyric:"the"   },
+    { note:"Eb4", chord:"Bb", lyric:"way"   },
+    { note:"D4",  chord:"Bb", lyric:"you"   },
+    { note:"Bb3", chord:"Eb", lyric:"are"   },
+    { note:"C4",  chord:"Ab", lyric:"I'll"  },
+    { note:"D4",  chord:"Ab", lyric:"be"    },
+    { note:"C4",  chord:"Eb", lyric:"ha-"   },
+    { note:"Bb3", chord:"Eb", lyric:"-ppy"  },
+    { note:"G3",  chord:"Eb", lyric:"to"    },
+    { note:"F3",  chord:"Bb", lyric:"be"    },
+    { note:"D4",  chord:"Bb", lyric:"with"  },
+    { note:"D4",  chord:"Bb", lyric:"you"   },
+  ]
+};
+
+const TC = {
+  bg:"#FDF8F0", paper:"#FFFDF7", ink:"#3D2B1F",
+  warm:"#8B7355", pale:"#C8B89A", paler:"#E8DDD0",
+  melody:"#d2684f", chord:"#2a5c52", chordLit:"#3d8a7a"
+};
+
+const SHARP_N = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const FLAT_N  = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+const FLAT_ROOTS = new Set(["C","F","Bb","Eb","Ab","Db","Gb","Am","Dm","Gm","Cm","Fm","Bbm","Ebm"]);
+const MAJOR_INT = [0,2,4,5,7,9,11];
+const DEG_NUMS  = ["1","2","3","4","5","6","7"];
+const NASH_UP   = ["I","II","III","IV","V","VI","VII"];
+const NASH_LO   = ["i","ii","iii","iv","v","vi","vii"];
+
+function preferFlats(c){if(!c)return true;if(c.includes("b"))return true;return FLAT_ROOTS.has(c);}
+function midiToLetter(m,fl){return(fl?FLAT_N:SHARP_N)[m%12];}
+function noteToMidi(name){const r=name.match(/^([A-G][b#]?)(\d)$/);if(!r)return null;let s=SHARP_N.indexOf(r[1]);if(s<0)s=FLAT_N.indexOf(r[1]);return s<0?null:(parseInt(r[2])+1)*12+s;}
+function keyRoot(k){let i=FLAT_N.indexOf(k);if(i<0)i=SHARP_N.indexOf(k);return i;}
+function scaleDeg(mm,key){if(!key||mm==null)return"";const r=keyRoot(key);if(r<0)return"";const iv=((mm-r)%12+12)%12;const i=MAJOR_INT.indexOf(iv);return i>=0?DEG_NUMS[i]:"♭"+DEG_NUMS[Math.max(0,MAJOR_INT.findIndex(x=>x>iv)-1)];}
+function nashville(chord,key){if(!key||!chord)return chord;const r=keyRoot(key);if(r<0)return chord;const m=chord.match(/^([A-G][b#]?)(.*)/);if(!m)return chord;let cr=FLAT_N.indexOf(m[1]);if(cr<0)cr=SHARP_N.indexOf(m[1]);if(cr<0)return chord;const iv=((cr-r)%12+12)%12;const di=MAJOR_INT.indexOf(iv);const isMin=/^m(?!aj|7)/.test(m[2])||m[2]==="m";const isDim=m[2].includes("dim")||m[2]==="°";const suffix=isDim?"°":"";if(di>=0){return(isMin||isDim)?NASH_LO[di]+suffix:NASH_UP[di];}// Chromatic: find nearest diatonic below and flat it
+const CHROM_MAP={1:"♭II",3:"♭III",6:"♭V",8:"♭VI",10:"♭VII"};const num=CHROM_MAP[iv]||("♭?");return(isMin||isDim)?num.toLowerCase()+suffix:num;}
+function chordTone(mm,chord){if(!chord||mm==null)return"";const m=chord.match(/^([A-G][b#]?)/);if(!m)return"";let r=FLAT_N.indexOf(m[1]);if(r<0)r=SHARP_N.indexOf(m[1]);if(r<0)return"";const iv=((mm-r)%12+12)%12;return({0:"1",2:"2",3:"♭3",4:"3",5:"4",6:"♭5",7:"5",9:"6",10:"♭7",11:"7"})[iv]||"";}
+
+const SOLFEGE_MAP = {"1":"Do","2":"Re","3":"Mi","4":"Fa","5":"Sol","6":"La","7":"Ti","♭2":"Ra","♭3":"Me","♭4":"Fe","♭5":"Se","♭6":"Le","♭7":"Te","♯1":"Di","♯2":"Ri","♯4":"Fi","♯5":"Si","♯6":"Li"};
+function solfege(mm, key){ const sd = scaleDeg(mm, key); return SOLFEGE_MAP[sd] || sd; }
+
+// Grand Staff MIDI position maps
+const MIDI_TREBLE={}, MIDI_BASS={};
+(function(){const d={C:0,D:1,E:2,F:3,G:4,A:5,B:6};const e4=d.E+4*7,g2=d.G+2*7;
+for(let m=28;m<=100;m++){const l=SHARP_N[m%12];if(!l.includes("#")){const s=d[l]+(Math.floor(m/12)-1)*7;MIDI_TREBLE[m]=s-e4;MIDI_BASS[m]=s-g2;}}
+for(let m=28;m<=100;m++){if(!(m in MIDI_TREBLE)&&(m+1)in MIDI_TREBLE){MIDI_TREBLE[m]=MIDI_TREBLE[m+1];MIDI_BASS[m]=MIDI_BASS[m+1];}}})();
+function staffFor(m){return m<60?"bass":"treble";}
+
+function grandStaffSVG(melodyMidis, flats, chordMidis=[]){
+  // melodyMidis: array of midi values (usually 1, occasionally 2 for passing-note steps)
+  if(!Array.isArray(melodyMidis)) melodyMidis = melodyMidis!=null ? [melodyMidis] : [];
+  const W=300,ls=16,step=ls/2;
+  const tTop=24,tH=8*step,gap=ls*2,bH=8*step,bPad=24;
+  const H=tTop+tH+gap+bH+bPad;
+  const tBot=tTop+tH, bBot=tBot+gap+bH;
+  const tY=pos=>tBot-pos*step;
+  const bY=pos=>bBot-pos*step;
+  const noteX=200,rx=11,ry=7,lineX1=42,lineX2=W-8;
+
+  // Spread multiple melody notes across x; single note at noteX
+  const mCount = melodyMidis.length;
+  const mXPositions = mCount <= 1 ? [noteX]
+    : melodyMidis.map((_,i) => noteX - 18 + i * (36 / (mCount-1)));
+
+  const melodyNotes = melodyMidis.map((mm, i) => {
+    if(mm==null) return null;
+    const mStaff=staffFor(mm);
+    const mPos=mStaff==="treble"?MIDI_TREBLE[mm]:MIDI_BASS[mm];
+    return mPos!=null ? {mm, mStaff, mPos, x: mXPositions[i]} : null;
+  }).filter(Boolean);
+
+  // Reference note (last) for chord-note collision avoidance
+  const lastMelody = melodyNotes[melodyNotes.length-1] || null;
+
+  // Chord notes deduplicated by staff position
+  const seen=new Set();
+  const chordNotes=[];
+  for(const midi of chordMidis){
+    const staff=staffFor(midi);
+    const pos=staff==="treble"?MIDI_TREBLE[midi]:MIDI_BASS[midi];
+    if(pos==null) continue;
+    const key=`${staff}-${pos}`;
+    if(!seen.has(key)){seen.add(key);chordNotes.push({midi,staff,pos});}
+  }
+
+  // Ledger lines
+  let ledgers="";
+  const addLedgers=(staff,pos,nx=noteX)=>{
+    const yFn=staff==="treble"?tY:bY;
+    if(pos<=-2){for(let p=-2;p>=pos;p-=2)ledgers+=`<line x1="${nx-18}" y1="${yFn(p)}" x2="${nx+18}" y2="${yFn(p)}" stroke="${TC.warm}" stroke-width="1.2"/>`;}
+    if(pos>=10){for(let p=10;p<=pos;p+=2)ledgers+=`<line x1="${nx-18}" y1="${yFn(p)}" x2="${nx+18}" y2="${yFn(p)}" stroke="${TC.warm}" stroke-width="1.2"/>`;}
+  };
+  for(const {staff,pos} of chordNotes) addLedgers(staff,pos);
+  for(const {mStaff,mPos,x} of melodyNotes) addLedgers(mStaff,mPos,x);
+
+  // Chord noteheads
+  let chordSVGNotes="";
+  for(const {midi,staff,pos} of chordNotes){
+    const yFn=staff==="treble"?tY:bY;
+    const adj=lastMelody&&lastMelody.mStaff===staff&&Math.abs(pos-lastMelody.mPos)<=1;
+    const x=noteX+(adj?-20:0), y=yFn(pos);
+    const stemUp=pos<6;
+    const letter=midiToLetter(midi,flats);
+    const stem=stemUp
+      ?`<line x1="${x+rx-1}" y1="${y}" x2="${x+rx-1}" y2="${y-36}" stroke="${TC.chord}" stroke-width="1.6"/>`
+      :`<line x1="${x-rx+1}" y1="${y}" x2="${x-rx+1}" y2="${y+36}" stroke="${TC.chord}" stroke-width="1.6"/>`;
+    chordSVGNotes+=`<g>${stem}<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${TC.chord}" transform="rotate(-15,${x},${y})"/><text x="${x}" y="${y+1}" font-size="8" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif">${letter}</text></g>`;
+  }
+
+  // Melody noteheads (one or more)
+  let noteSVG="";
+  for(const {mm, mStaff, mPos, x} of melodyNotes){
+    const yFn=mStaff==="treble"?tY:bY;
+    const y=yFn(mPos), stemUp=mPos<6;
+    const letter=midiToLetter(mm,flats);
+    const stemLine=stemUp
+      ?`<line x1="${x+rx-1}" y1="${y}" x2="${x+rx-1}" y2="${y-36}" stroke="${TC.melody}" stroke-width="1.6"/>`
+      :`<line x1="${x-rx+1}" y1="${y}" x2="${x-rx+1}" y2="${y+36}" stroke="${TC.melody}" stroke-width="1.6"/>`;
+    noteSVG+=`<g>${stemLine}<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${TC.melody}" transform="rotate(-15,${x},${y})"/><text x="${x}" y="${y+1}" font-size="8" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif">${letter}</text></g>`;
+  }
+
+
+  // Staff lines
+  let tLines="",bLines="";
+  [0,2,4,6,8].forEach(p=>{
+    tLines+=`<line x1="${lineX1}" y1="${tY(p)}" x2="${lineX2}" y2="${tY(p)}" stroke="${TC.warm}" stroke-width="1.2"/>`;
+    bLines+=`<line x1="${lineX1}" y1="${bY(p)}" x2="${lineX2}" y2="${bY(p)}" stroke="${TC.warm}" stroke-width="1.2"/>`;
+  });
+
+  return `<svg width="${W}" height="${H}" style="display:block;margin:0 auto;">
+    ${tLines}
+    <text x="34" y="${tY(4) - 18}" font-size="8" font-family="Georgia,serif" fill="${TC.warm}" text-anchor="middle" letter-spacing="0.5">T<tspan x="34" dy="7">R</tspan><tspan x="34" dy="7">E</tspan><tspan x="34" dy="7">B</tspan><tspan x="34" dy="7">L</tspan><tspan x="34" dy="7">E</tspan></text>
+    <text x="20" y="${tY(3)}" font-size="22" font-family="serif" fill="${TC.warm}" text-anchor="middle" dominant-baseline="middle">𝄞</text>
+    ${bLines}
+    <text x="34" y="${bY(4) - 11}" font-size="8" font-family="Georgia,serif" fill="${TC.warm}" text-anchor="middle" letter-spacing="0.5">B<tspan x="34" dy="7">A</tspan><tspan x="34" dy="7">S</tspan><tspan x="34" dy="7">S</tspan></text>
+    <text x="20" y="${bY(5)}" font-size="18" font-family="serif" fill="${TC.warm}" text-anchor="middle" dominant-baseline="middle">𝄢</text>
+    <line x1="${lineX1}" y1="${tY(8)}" x2="${lineX1}" y2="${bY(0)}" stroke="${TC.warm}" stroke-width="1.2"/>
+    ${ledgers}${chordSVGNotes}${noteSVG}
+    <circle cx="${lineX1}" cy="${H-12}" r="4" fill="${TC.melody}"/>
+    <text x="${lineX1+10}" y="${H-8}" font-size="9" fill="${TC.melody}" font-family="Georgia,serif">melody</text>
+    ${chordMidis.length>0?`<circle cx="${lineX1+60}" cy="${H-12}" r="4" fill="${TC.chord}"/><text x="${lineX1+70}" y="${H-8}" font-size="9" fill="${TC.chord}" font-family="Georgia,serif">chord</text>`:''}
+  </svg>`;
+}
+
+function tutorChordSVG(name, instrument){
+  const svg = chordSVG(name, instrument);
+  if(!svg) return null;
+  return svg.replace(/#d2684f/g, TC.chord);
+}
+
+function tutorChordName(chord){
+  // Transpose the tutor chord to match whatever key the user has currently selected
+  const offset = ((currentRoot - SONG_KEY) % 12 + 12) % 12;
+  if(offset === 0) return chord;
+  const m = chord.match(/^([A-G][b#]?)(.*)$/);
+  if(!m) return chord;
+  let idx = SHARP_N.indexOf(m[1]);
+  if(idx < 0) idx = FLAT_N.indexOf(m[1]);
+  if(idx < 0) return chord;
+  const newIdx = (idx + offset) % 12;
+  return FLAT_N[newIdx] + m[2];
+}
+
+function tutorFretboardSVG(chord){
+  if(!currentInstrument || currentInstrument === 'other' || currentInstrument === 'piano') return '';
+  const transposed = tutorChordName(chord);
+  const svg = chordSVG(transposed, currentInstrument);
+  if(!svg) return '';
+  return `<div style="background:${TC.paper};border-radius:12px;padding:12px 0 8px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);margin-bottom:8px;overflow:hidden;display:flex;justify-content:center;">${svg}</div>`;
+}
+let tutorIdx = -1;
+let tutorOpen = false;
+let tutorShowInstrument = false;
+
+// Standard guitar open string MIDIs: E2 A2 D3 G3 B3 e4
+const GUITAR_OPEN = [40,45,50,55,59,64];
+// Ukulele open string MIDIs: G4 C4 E4 A4
+const UKE_OPEN = [67,60,64,69];
+
+function getChordMidis(chordName){
+  if(!currentInstrument || currentInstrument==='other') return [];
+  const transposed = tutorChordName(chordName);
+  if(currentInstrument==='piano'){
+    // Use CHORD_INTERVALS from pianoSVG logic
+    const NOTES=['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'];
+    const INTERVALS={'':[ 0,4,7],'maj7':[0,4,7,11],'m':[0,3,7],'7':[0,4,7,10]};
+    let root=-1,suffix='',bestLen=0;
+    for(let i=0;i<NOTES.length;i++){if(transposed.startsWith(NOTES[i])&&NOTES[i].length>bestLen){bestLen=NOTES[i].length;root=i;suffix=transposed.slice(NOTES[i].length);}}
+    if(root===-1) return [];
+    const ivs=INTERVALS[suffix]||INTERVALS[''];
+    // Root position: root in octave 3, then stack up
+    const rootMidi = 48 + root; // C3=48, so root in octave 3
+    return ivs.map(i => rootMidi + i);
+  }
+  const isUke = currentInstrument==='ukulele';
+  const db = isUke ? UKE_DB : CHORD_DB;
+  const open = isUke ? UKE_OPEN : GUITAR_OPEN;
+  const data = db[transposed];
+  if(!data) return [];
+  return data.strings.map((fret,i) => fret < 0 ? null : open[i] + fret).filter(v=>v!=null);
+}
+
+function toggleTutor(){
+  tutorOpen = !tutorOpen;
+  const panel = document.getElementById('tutor-panel');
+  const btn = document.getElementById('tutor-toggle-btn');
+  if(tutorOpen){
+    panel.style.display='block';
+    btn.textContent = 'Close theory ↑';
+    btn.style.background = 'var(--ink)';
+    tutorIdx = -1;
+    renderTutor();
+  } else {
+    panel.style.display='none';
+    btn.textContent = 'Nerd out! ↓';
+    btn.style.background = 'var(--terra)';
+    tutorShowInstrument = false;
+  }
+}
+
+function renderTutor(){
+  const panel = document.getElementById('tutor-panel');
+  const chant = TUTOR_CHANT;
+  const started = tutorIdx >= 0;
+  const step = started ? chant.steps[tutorIdx] : null;
+  const isLast = tutorIdx === chant.steps.length - 1;
+
+  // Support single note or multi-note steps — theory columns use the final (landing) note
+  const stepNotes = step ? (step.notes || [step.note]) : [];
+  const mm = stepNotes.length > 0 ? noteToMidi(stepNotes[stepNotes.length - 1]) : null;
+  const mmAll = stepNotes.map(n => noteToMidi(n)).filter(x => x != null);
+  const flats = step ? preferFlats(step.chord) : true;
+  const key = chant.key || "C";
+  const sd = mm != null ? scaleDeg(mm, key) : "";
+  const nv = step ? nashville(step.chord, key) : "";
+  const sf = mm != null ? solfege(mm, key) : "";
+
+  // Progress dots — sliding window so they never overflow past the nav buttons
+  const MAX_DOTS = 13;
+  const n = chant.steps.length;
+  let dotStart = 0, dotEnd = n;
+  if (n > MAX_DOTS) {
+    const half = Math.floor(MAX_DOTS / 2);
+    dotStart = Math.max(0, tutorIdx - half);
+    dotEnd = Math.min(n, dotStart + MAX_DOTS);
+    if (dotEnd === n) dotStart = Math.max(0, n - MAX_DOTS);
+  }
+  const dots = chant.steps.slice(dotStart, dotEnd).map((_, j) => {
+    const i = dotStart + j;
+    const w = i === tutorIdx ? 18 : 7;
+    const bg = i < tutorIdx ? TC.pale : i === tutorIdx ? TC.ink : TC.paler;
+    return `<div onclick="tutorGo(${i})" style="width:${w}px;height:7px;border-radius:4px;background:${bg};cursor:pointer;transition:all 0.3s;flex-shrink:0;"></div>`;
+  }).join('');
+
+  // Theory columns
+  const colStyle = (border) => `flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px 12px;cursor:pointer;${border?'border-right:1px solid '+TC.paler+';':''}`;
+
+  const theoryCard = started ? `
+    <div style="background:${TC.paper};border-radius:12px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:8px;">
+      ${step.lyric ? `<div style="text-align:center;font-size:26px;color:${TC.melody};font-style:italic;padding-top:12px;padding-bottom:4px;font-family:Georgia,serif;">${step.lyric}</div>` : ''}
+      <div style="display:flex;">
+        <div style="${colStyle(true)}" onclick="showTutorPopup('melody')" onmouseover="this.style.background=TC.paler" onmouseout="this.style.background='transparent'">
+          <div style="font-size:34px;color:${TC.melody};font-weight:bold;line-height:1;font-family:Georgia,serif;">${sd}</div>
+          <div style="font-size:9px;color:${TC.pale};letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;font-family:Georgia,serif;">melody ↗</div>
+        </div>
+        <div style="${colStyle(true)}" onclick="showTutorPopup('chord')" onmouseover="this.style.background=TC.paler" onmouseout="this.style.background='transparent'">
+          <div style="display:flex;align-items:baseline;gap:5px;">
+            <span style="font-size:34px;color:${TC.chord};font-weight:bold;line-height:1;font-family:Georgia,serif;">${nv}</span>
+            <span style="font-size:12px;color:${TC.chordLit};font-family:Georgia,serif;">${step.chord}</span>
+          </div>
+          <div style="font-size:9px;color:${TC.pale};letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;font-family:Georgia,serif;">chord ↗</div>
+        </div>
+        <div style="${colStyle(false)}" onclick="showTutorPopup('interval')" onmouseover="this.style.background=TC.paler" onmouseout="this.style.background='transparent'">
+          <div style="font-size:28px;color:#7a6230;font-weight:bold;line-height:1;font-family:Georgia,serif;">${sf}</div>
+          <div style="font-size:9px;color:${TC.pale};letter-spacing:0.08em;text-transform:uppercase;margin-top:4px;font-family:Georgia,serif;">solfège ↗</div>
+        </div>
+      </div>
+    </div>
+  ` : '';
+
+  const instrLabel = currentInstrument==='guitar' ? 'guitar' : currentInstrument==='ukulele' ? 'ukulele' : currentInstrument==='piano' ? 'piano' : null;
+  const chordMidis = tutorShowInstrument && step ? getChordMidis(step.chord) : [];
+
+  const instrSVG = (started && instrLabel) ? (currentInstrument==='piano'
+    ? (tutorPianoSVG(tutorChordName(step.chord), TC.chord) || '')
+    : (tutorChordSVG(tutorChordName(step.chord), currentInstrument) || '')) : '';
+
+  const staffCard = started ? `
+    <div style="background:${TC.paper};border-radius:12px;padding:10px 0 6px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);margin-bottom:8px;overflow:hidden;">
+      ${grandStaffSVG(mmAll, flats, chordMidis)}
+    </div>
+  ` : '';
+
+  const fretCard = started && instrLabel ? `
+    <div style="background:${TC.paper};border-radius:12px;padding:12px 16px 8px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.05);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:16px;">
+      <button onclick="tutorToggleInstrument()" style="background:${tutorShowInstrument?TC.chord:'none'};color:${tutorShowInstrument?'white':TC.chord};border:1px solid ${TC.chord};border-radius:20px;padding:6px 14px;font-family:Georgia,serif;font-size:10px;cursor:pointer;letter-spacing:0.04em;white-space:nowrap;">
+        ${tutorShowInstrument?'− hide':'+ add'} ${instrLabel} notes
+      </button>
+      <div style="flex-shrink:0;">${instrSVG}</div>
+    </div>
+  ` : '';
+
+  const titleCard = !started ? `
+    <div style="text-align:center;color:${TC.warm};padding:32px 0;font-family:Georgia,serif;cursor:pointer;" onclick="tutorGo(0)">
+      <div style="font-size:50px;opacity:0.2;margin-bottom:8px;">♩</div>
+      <div style="font-size:16px;margin-bottom:6px;">${chant.title}</div>
+      <div style="font-size:13px;color:${TC.pale};">tap to begin</div>
+    </div>
+  ` : '';
+
+  const navBtns = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px;padding:0 4px;">
+      <button onclick="tutorPrev()" style="background:none;border:1px solid ${TC.paler};border-radius:8px;padding:8px 16px;font-family:Georgia,serif;font-size:13px;color:${TC.warm};cursor:pointer;${!started||tutorIdx===0?'opacity:0.3;':''}">‹ prev</button>
+      <div style="display:flex;gap:5px;align-items:center;">${dots}</div>
+      <button onclick="tutorNext()" style="padding:8px 16px;background:none;border:1px solid ${TC.paler};border-radius:8px;font-family:Georgia,serif;font-size:13px;color:${isLast?TC.melody:TC.warm};cursor:pointer;">${isLast ? '↺ chant again' : 'next ›'}</button>
+    </div>
+  `;
+
+  panel.innerHTML = `
+    <div style="background:${TC.bg};border-radius:16px;padding:16px;font-family:Georgia,serif;">
+      ${titleCard}${theoryCard}${staffCard}${fretCard}
+      ${navBtns}
+    </div>
+  `;
+}
+
+function tutorToggleInstrument(){ tutorShowInstrument=!tutorShowInstrument; renderTutor(); }
+function tutorGo(i){ tutorIdx=i; renderTutor(); }
+function tutorNext(){ if(tutorIdx===TUTOR_CHANT.steps.length-1){tutorIdx=0;renderTutor();}else{tutorIdx===(-1)?tutorIdx=0:tutorIdx++;renderTutor();} }
+function tutorPrev(){ if(tutorIdx>0){tutorIdx--;renderTutor();}else if(tutorIdx===0){tutorIdx=-1;renderTutor();} }
+
+function showTutorPopup(type){
+  const chant=TUTOR_CHANT;
+  const key=chant.key||"C";
+  let title,rows;
+  if(type==="melody"){
+    title="Melody · scale degrees";
+    rows=chant.steps.map(s=>{const m=noteToMidi(s.note);return{value:scaleDeg(m,key),label:s.lyric||s.note,color:TC.melody};});
+  } else if(type==="chord"){
+    title="Chords · Nashville";
+    rows=chant.steps.map(s=>({value:nashville(s.chord,key),label:s.chord,color:TC.chord}));
+  } else {
+    title="Melody · solfège";
+    rows=chant.steps.map(s=>{const m=noteToMidi(s.note);return{value:solfege(m,key),label:s.lyric||s.note,color:"#7a6230"};});
+  }
+  const cells=rows.map((r,i)=>`
+    <div style="display:flex;flex-direction:column;align-items:center;min-width:32px;">
+      <div style="font-size:20px;font-weight:bold;line-height:1;color:${r.color};font-family:Georgia,serif;">${r.value}</div>
+      ${r.label?`<div style="font-size:9px;color:${TC.pale};margin-top:1px;text-align:center;max-width:40px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:Georgia,serif;">${r.label}</div>`:''}
+    </div>`).join('');
+  const popup=document.createElement('div');
+  popup.id='tutor-popup';
+  popup.onclick=()=>popup.remove();
+  popup.style.cssText=`position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;background:rgba(61,43,31,0.18);`;
+  popup.innerHTML=`
+    <div onclick="event.stopPropagation()" style="background:${TC.paper};border-radius:14px;box-shadow:0 8px 36px rgba(61,43,31,0.18);padding:18px 20px 14px;min-width:200px;max-width:300px;font-family:Georgia,serif;">
+      <div style="font-size:10px;color:${TC.pale};letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;">${title}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px 10px;">${cells}</div>
+      <div style="margin-top:12px;text-align:right;"><button onclick="document.getElementById('tutor-popup').remove()" style="background:transparent;border:none;cursor:pointer;font-size:11px;color:${TC.pale};font-family:Georgia,serif;">close</button></div>
+    </div>`;
+  document.body.appendChild(popup);
+}
+</script>
+
+</body>
+</html>
