@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAPPELBAUM — Electronic Press Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark: #111009; --darkmid: #1a1915; --bark: #2e2b24; --moss: #3d4235;
+    --stone: #6b6860; --mist: #9a9790; --pale: #c8c4bb; --leaf: #7a8a5a;
+    --cream: #e8e3d8; --accent: #8fad6e; --paper: #f5f2ec;
+    --futura: 'Century Gothic', 'Futura', 'Trebuchet MS', sans-serif;
+    --cormorant: 'Cormorant Garamond', serif;
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--dark); color: var(--cream); font-family: var(--futura); font-weight: 300; line-height: 1.7; font-size: 16px; overflow-x: hidden; }
+  a { color: inherit; text-decoration: none; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 3rem; background: rgba(14,13,11,0.88); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+  nav .wordmark { font-family: var(--futura); font-size: 0.85rem; font-weight: 300; letter-spacing: 0.22em; text-transform: uppercase; color: var(--pale); }
+  nav ul { display: flex; gap: 2rem; list-style: none; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone); }
+  nav ul a:hover { color: var(--pale); transition: color 0.2s; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 6rem 3rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background-image: url('https://nathanvanderpool.github.io/album_cover.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3) saturate(0.6);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 100%, rgba(17,16,9,0.85) 0%, transparent 70%),
+      linear-gradient(180deg, rgba(10,10,8,0.5) 0%, transparent 40%, rgba(17,16,9,0.7) 100%);
+  }
+  .hero-tree { position: absolute; right: 5%; top: 5%; width: 38%; max-width: 480px; opacity: 0.12; pointer-events: none; }
+  .hero-content { position: relative; z-index: 2; max-width: 700px; }
+  .hero-eyebrow { font-family: var(--futura); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--leaf); margin-bottom: 1.25rem; }
+  .hero-title { font-family: var(--futura); font-size: clamp(2.8rem, 8vw, 6rem); font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1; color: var(--paper); margin-bottom: 0.75rem; }
+  .hero-sub { font-family: var(--futura); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--stone); margin-bottom: 3rem; }
+  .hero-lyric { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 1.1rem; color: var(--mist); max-width: 400px; line-height: 1.6; border-left: 1px solid rgba(122,138,90,0.4); padding-left: 1.25rem; }
+  .scroll-hint { position: absolute; bottom: 2rem; right: 3rem; font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bark); writing-mode: vertical-rl; }
+
+  /* SECTIONS */
+  section { padding: 6rem 3rem; max-width: 900px; margin: 0 auto; }
+  .section-label { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.32em; text-transform: uppercase; color: var(--leaf); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(122,138,90,0.25); max-width: 60px; }
+
+  /* BIO */
+  .bio-text { font-family: var(--cormorant); font-weight: 300; font-size: 1.3rem; line-height: 1.75; color: var(--cream); max-width: 640px; }
+  .bio-text p + p { margin-top: 1.5em; }
+  .bio-text .standout { font-style: italic; color: var(--pale); }
+  .sounds-like { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.5rem; align-items: center; }
+  .sounds-like-label { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--stone); width: 100%; margin-bottom: 0.5rem; }
+  .sounds-like-name { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 1rem; color: var(--mist); border: 1px solid rgba(255,255,255,0.08); padding: 0.35rem 1rem; }
+
+  /* LYRIC INTERLUDE */
+  .lyric-interlude { text-align: center; padding: 5rem 3rem; border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .lyric-interlude blockquote { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: clamp(1.4rem, 3vw, 2rem); color: var(--mist); line-height: 1.6; max-width: 600px; margin: 0 auto; }
+  .lyric-interlude .lyric-source { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--stone); margin-top: 1.5rem; }
+
+  /* EP / VIDEO */
+  .ep-section { background: var(--darkmid); margin: 0; max-width: 100%; padding: 6rem 0; }
+  .ep-inner { max-width: 900px; margin: 0 auto; padding: 0 3rem; }
+  .ep-title { font-family: var(--futura); font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pale); margin-bottom: 0.4rem; }
+  .ep-meta { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--stone); margin-bottom: 2rem; }
+  .ep-desc { font-family: var(--cormorant); font-weight: 300; font-size: 1.05rem; color: var(--mist); line-height: 1.8; max-width: 580px; margin-bottom: 2.5rem; font-style: italic; }
+
+  /* VIDEO PLAYER */
+  .pp-featured-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #111009; overflow: hidden; }
+  .pp-featured-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .pp-featured-info { padding: 1.25rem 0 1.75rem; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 1.25rem; }
+  .pp-featured-title { font-family: var(--futura); font-size: 1rem; font-weight: 300; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pale); margin-bottom: 0.2rem; }
+  .pp-featured-credit { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone); margin-bottom: 0.9rem; }
+  .pp-featured-note { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 1.05rem; color: var(--mist); line-height: 1.65; max-width: 560px; }
+  .pp-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem; }
+  .pp-thumb { cursor: pointer; }
+  .pp-thumb-video { position: relative; aspect-ratio: 16/9; background: #1a1915; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: border-color 0.2s; }
+  .pp-thumb:hover .pp-thumb-video { border-color: rgba(122,138,90,0.45); }
+  .pp-thumb-video img { width: 100%; height: 100%; object-fit: cover; display: block; opacity: 0.55; transition: opacity 0.2s; }
+  .pp-thumb:hover .pp-thumb-video img { opacity: 0.85; }
+  .pp-thumb-video-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.35rem 0.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.8)); font-family: var(--futura); font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pale); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pp-thumb-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -60%); width: 26px; height: 26px; border: 1px solid rgba(200,196,187,0.45); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s, transform 0.2s; }
+  .pp-thumb:hover .pp-thumb-play { opacity: 1; transform: translate(-50%, -50%); }
+  .pp-thumb-play::after { content: ''; width: 0; height: 0; border-style: solid; border-width: 4px 0 4px 8px; border-color: transparent transparent transparent #c8c4bb; margin-left: 2px; }
+  .pp-thumb-card { overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.35s ease, opacity 0.3s ease, padding 0.3s ease; padding: 0 0.5rem; background: #111009; border-left: 1px solid rgba(122,138,90,0.2); border-right: 1px solid rgba(122,138,90,0.2); border-bottom: 1px solid rgba(122,138,90,0.2); }
+  .pp-thumb-card.visible { max-height: 160px; opacity: 1; padding: 0.75rem 0.6rem 0.85rem; }
+  .pp-thumb-card-title { font-family: var(--futura); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--pale); margin-bottom: 0.35rem; }
+  .pp-thumb-card-credit { font-family: var(--futura); font-size: 0.55rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--moss); margin-bottom: 0.5rem; }
+  .pp-thumb-card-note { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 0.88rem; color: var(--stone); line-height: 1.55; }
+  .pp-flying { position: fixed; z-index: 9999; pointer-events: none; overflow: hidden; background: #111009; }
+  .pp-flying iframe { width: 100%; height: 100%; border: none; }
+
+  /* ARTISTS */
+  .artists-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .artist-card { border: 1px solid rgba(255,255,255,0.07); padding: 2rem; position: relative; }
+  .artist-card::before { content: ''; position: absolute; top: 0; left: 0; width: 2rem; height: 2px; background: var(--leaf); }
+  .artist-name { font-family: var(--futura); font-size: 1rem; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pale); margin-bottom: 0.3rem; }
+  .artist-role { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--leaf); margin-bottom: 1.25rem; }
+  .artist-bio { font-family: var(--cormorant); font-weight: 300; font-size: 1rem; color: var(--mist); line-height: 1.75; }
+
+  /* QUOTE */
+  .quote-section { background: var(--darkmid); margin: 0; max-width: 100%; padding: 5rem 0; }
+  .quote-inner { max-width: 700px; margin: 0 auto; padding: 0 3rem; }
+  .quote-placeholder { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 1.3rem; color: var(--bark); line-height: 1.7; border-left: 1px solid rgba(122,138,90,0.2); padding-left: 1.5rem; }
+  .quote-placeholder span { font-family: var(--futura); font-size: 0.58rem; font-style: normal; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bark); display: block; margin-top: 1rem; }
+
+  /* LIVE */
+  .live-intro { font-family: var(--cormorant); font-weight: 300; font-size: 1.15rem; color: var(--mist); max-width: 520px; line-height: 1.75; margin-bottom: 3rem; font-style: italic; }
+  .live-specs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+  .spec-block { border-left: 1px solid rgba(122,138,90,0.3); padding-left: 1.25rem; }
+  .spec-label { font-family: var(--futura); font-size: 0.55rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--stone); margin-bottom: 0.5rem; }
+  .spec-value { font-family: var(--cormorant); font-weight: 300; font-size: 1rem; color: var(--cream); }
+  .live-note { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 0.95rem; color: var(--stone); line-height: 1.75; max-width: 480px; margin-bottom: 0.5rem; }
+  .shows-list { list-style: none; margin-top: 2.5rem; border-top: 1px solid rgba(255,255,255,0.05); }
+  .show-item { display: flex; gap: 2rem; align-items: baseline; padding: 0.9rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  .show-venue { font-family: var(--futura); font-size: 0.75rem; font-weight: 300; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream); }
+  .show-context { font-family: var(--cormorant); font-style: italic; font-weight: 300; font-size: 0.95rem; color: var(--stone); }
+  .show-year { font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.15em; color: var(--bark); margin-left: auto; }
+
+  /* CONTACT */
+  .contact-section { background: var(--darkmid); margin: 0; max-width: 100%; padding: 5rem 0; text-align: center; }
+  .contact-inner { max-width: 600px; margin: 0 auto; padding: 0 3rem; }
+  .contact-inner h2 { font-family: var(--futura); font-size: 1.2rem; font-weight: 300; letter-spacing: 0.18em; text-transform: uppercase; color: var(--pale); margin-bottom: 1rem; }
+  .contact-inner p { font-family: var(--cormorant); font-weight: 300; font-size: 1.05rem; font-style: italic; color: var(--stone); margin-bottom: 2.5rem; line-height: 1.7; }
+  .contact-email { font-family: var(--futura); font-size: 0.85rem; letter-spacing: 0.12em; color: var(--accent); display: inline-block; border-bottom: 1px solid rgba(143,173,110,0.3); padding-bottom: 0.2rem; margin-bottom: 2.5rem; }
+  .contact-links { display: flex; justify-content: center; gap: 2rem; font-family: var(--futura); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--stone); }
+  .contact-links a:hover { color: var(--pale); transition: color 0.2s; }
+
+  footer { text-align: center; padding: 2rem; font-family: var(--futura); font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bark); border-top: 1px solid rgba(255,255,255,0.04); }
+
+  @media (max-width: 640px) {
+    nav { padding: 1rem 1.5rem; } nav ul { gap: 1.2rem; }
+    .hero { padding: 5rem 1.5rem 3rem; } section { padding: 4rem 1.5rem; }
+    .artists-grid { grid-template-columns: 1fr; }
+    .live-specs { grid-template-columns: 1fr 1fr; }
+    .ep-inner, .quote-inner, .contact-inner { padding: 0 1.5rem; }
+    .pp-thumbs { grid-template-columns: repeat(2, 1fr); }
+    .show-item { flex-wrap: wrap; gap: 0.5rem; } .show-year { margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="wordmark">Pappelbaum</span>
+  <ul>
+    <li><a href="#bio">About</a></li>
+    <li><a href="#music">Music</a></li>
+    <li><a href="#artists">Artists</a></li>
+    <li><a href="#live">Live</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <svg class="hero-tree" viewBox="0 0 300 600" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="143" y="340" width="14" height="240" rx="3" fill="#c8c4bb"/>
+    <rect x="146" y="400" width="8" height="180" rx="2" fill="#9a9790"/>
+    <line x1="150" y1="340" x2="90" y2="240" stroke="#9a9790" stroke-width="5" stroke-linecap="round"/>
+    <line x1="150" y1="320" x2="210" y2="210" stroke="#9a9790" stroke-width="5" stroke-linecap="round"/>
+    <line x1="150" y1="300" x2="80" y2="170" stroke="#9a9790" stroke-width="4" stroke-linecap="round"/>
+    <line x1="150" y1="290" x2="220" y2="150" stroke="#9a9790" stroke-width="4" stroke-linecap="round"/>
+    <line x1="150" y1="270" x2="130" y2="120" stroke="#9a9790" stroke-width="3" stroke-linecap="round"/>
+    <line x1="150" y1="260" x2="170" y2="80" stroke="#9a9790" stroke-width="3" stroke-linecap="round"/>
+    <line x1="90" y1="240" x2="55" y2="200" stroke="#6b6860" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="90" y1="240" x2="100" y2="195" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="80" y1="170" x2="45" y2="135" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="80" y1="170" x2="88" y2="128" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="210" y1="210" x2="245" y2="175" stroke="#6b6860" stroke-width="2.5" stroke-linecap="round"/>
+    <line x1="210" y1="210" x2="198" y2="170" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="220" y1="150" x2="255" y2="115" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="55" y1="200" x2="38" y2="175" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="245" y1="175" x2="260" y2="148" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="170" y1="80" x2="160" y2="48" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="170" y1="80" x2="185" y2="52" stroke="#6b6860" stroke-width="1" stroke-linecap="round"/>
+    <line x1="130" y1="120" x2="115" y2="88" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="150" y1="575" x2="105" y2="595" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="150" y1="575" x2="195" y2="590" stroke="#6b6860" stroke-width="2" stroke-linecap="round"/>
+    <line x1="150" y1="575" x2="148" y2="598" stroke="#6b6860" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Electronic Press Kit — 2025</p>
+    <h1 class="hero-title">PAPPELBAUM</h1>
+    <p class="hero-sub">Nathan Vanderpool &amp; Ronja Polzin — Berlin</p>
+    <p class="hero-lyric">Wind o wind, himmlisches Kind —<br>ruft zum Gebet, Krone weht und dann vergeht</p>
+  </div>
+  <p class="scroll-hint">Scroll</p>
+</div>
+
+<section id="bio">
+  <p class="section-label">About</p>
+  <div class="bio-text">
+    <p>Pappelbaum is Nathan Vanderpool and Ronja Polzin. Between them: two guitars, two voices, and a shared instinct for songs that hold more than they say.</p>
+    <p>Their debut EP <em>Each Eternal Day</em> moves through entanglement, distance, and the slow process of letting go — five tracks that range from English to German, from the cellular to the cosmic. Vanderpool brings a decade of work at the intersection of sacred music and community; Polzin — also known for her ensemble project Maneko — writes with the precision of someone who chooses every word because it's the only one. The title track, written together, is where both sensibilities meet.</p>
+    <p class="standout">They are based in Berlin. They are not very good at promoting themselves. The music is very good.</p>
+  </div>
+  <div class="sounds-like">
+    <p class="sounds-like-label">Sounds like</p>
+    <span class="sounds-like-name">Adrienne Lenker</span>
+    <span class="sounds-like-name">Aldous Harding</span>
+    <span class="sounds-like-name">Hand Habits</span>
+  </div>
+</section>
+
+<div class="lyric-interlude">
+  <blockquote>A gesture of love, a red drop of blood —<br>the most beautiful thing I have ever seen.</blockquote>
+  <p class="lyric-source">Roots — Each Eternal Day</p>
+</div>
+
+<div class="ep-section" id="music">
+  <div class="ep-inner">
+    <p class="section-label">Music</p>
+    <div class="ep-title">Each Eternal Day</div>
+    <p class="ep-meta">EP — November 2025 &nbsp;·&nbsp; All videos directed by Ronja Polzin</p>
+    <p class="ep-desc">Five meditations on wholeness, connection, and loss — from entangled roots in sacred darkness to the final releasing of what cannot stay. Bilingual: English and German. Hover the thumbnails to read about each track.</p>
+    <div class="pp-featured-wrap" id="featuredWrap">
+      <iframe id="featuredIframe" src="" allowfullscreen allow="autoplay"></iframe>
+    </div>
+    <div class="pp-featured-info">
+      <div class="pp-featured-title" id="featuredTitle"></div>
+      <div class="pp-featured-credit" id="featuredCredit"></div>
+      <div class="pp-featured-note" id="featuredNote"></div>
+    </div>
+    <div class="pp-thumbs" id="thumbsGrid"></div>
+  </div>
+</div>
+
+<div class="lyric-interlude">
+  <blockquote>The lake paints its twin on her silver skin,<br>without within.</blockquote>
+  <p class="lyric-source">Domino — Each Eternal Day</p>
+</div>
+
+<section id="artists">
+  <p class="section-label">The Artists</p>
+  <div class="artists-grid">
+    <div class="artist-card">
+      <h3 class="artist-name">Nathan Vanderpool</h3>
+      <p class="artist-role">Guitar, Voice, Songwriter, Arranger</p>
+      <p class="artist-bio">Berlin-based musician and songwriter with roots in sacred music and a decade of work at the intersection of song, community, and contemplative practice. Alongside Pappelbaum, Nathan leads Agapic Chants and the Secret Chord Collective. Responsible for the arrangements on <em>Each Eternal Day</em>, he brings a patient, spacious touch to the architecture of the songs.</p>
+    </div>
+    <div class="artist-card">
+      <h3 class="artist-name">Ronja Polzin</h3>
+      <p class="artist-role">Guitar, Voice, Songwriter, Filmmaker</p>
+      <p class="artist-bio">Songwriter, vocalist, guitarist, and filmmaker also known for her ensemble project Maneko. Polzin wrote two of the five tracks on <em>Each Eternal Day</em> and co-wrote the title track with Vanderpool — and created all five of the EP's music videos. Her work moves fluidly between sound and image, and the two are inseparable in what Pappelbaum makes.</p>
+    </div>
+  </div>
+</section>
+
+<div class="lyric-interlude">
+  <blockquote>There's time, this time —<br>awake, arise.</blockquote>
+  <p class="lyric-source">Time — Each Eternal Day</p>
+</div>
+
+<div class="quote-section">
+  <div class="quote-inner">
+    <p class="section-label">Press</p>
+    <p class="quote-placeholder">
+      "Quote placeholder — add a press quote or peer endorsement here once you have one."
+      <span>— Name, Publication / Role</span>
+    </p>
+  </div>
+</div>
+
+<section id="live">
+  <p class="section-label">Live</p>
+  <p class="live-intro">Pappelbaum performs as a duo — two voices, two acoustic guitars, and the particular quiet that comes from people who have played together long enough to know when not to play.</p>
+  <div class="live-specs">
+    <div class="spec-block"><p class="spec-label">Formation</p><p class="spec-value">Duo (expandable to quartet)</p></div>
+    <div class="spec-block"><p class="spec-label">Set length</p><p class="spec-value">30 — 75 min</p></div>
+    <div class="spec-block"><p class="spec-label">Technical rider</p><p class="spec-value">Minimal — two vocal mics, DI</p></div>
+    <div class="spec-block"><p class="spec-label">Languages</p><p class="spec-value">English &amp; German</p></div>
+    <div class="spec-block"><p class="spec-label">Base</p><p class="spec-value">Berlin, DE</p></div>
+    <div class="spec-block"><p class="spec-label">Available</p><p class="spec-value">Europe-wide</p></div>
+  </div>
+  <p class="live-note">Suited to intimate venues, festival stages, curated listening spaces, and anywhere an audience will actually sit still. The music rewards attention. Fee on request.</p>
+  <ul class="shows-list">
+    <li class="show-item">
+      <span class="show-venue">Kallasch&amp;</span>
+      <span class="show-context">Berlin — EP release show</span>
+      <span class="show-year">2025</span>
+    </li>
+    <li class="show-item">
+      <span class="show-venue">New Healing Festival</span>
+      <span class="show-context">Festival stage</span>
+      <span class="show-year">2024</span>
+    </li>
+  </ul>
+</section>
+
+<div class="contact-section" id="contact">
+  <div class="contact-inner">
+    <p class="section-label" style="justify-content: center;">Booking &amp; Press</p>
+    <h2>Get in touch</h2>
+    <p>For festival and venue bookings, press inquiries, and anything else — reach out directly. We respond slowly but always.</p>
+    <a href="mailto:pappelbaummusic@gmail.com" class="contact-email">pappelbaummusic@gmail.com</a>
+    <div class="contact-links">
+      <a href="https://open.spotify.com/artist/1zGuLgtk8n8zzMNl2agpC3" target="_blank">Spotify</a>
+      <a href="https://www.youtube.com/@pappelbaum" target="_blank">YouTube</a>
+    </div>
+  </div>
+</div>
+
+<footer>Pappelbaum — Each Eternal Day — Berlin, 2025 &nbsp;·&nbsp; Press kit</footer>
+
+<script>
+const videos = [
+  { id: 'TNbK0ZBJ3gs', title: 'Roots', credit: 'Vanderpool', note: 'Darkness and light of entangled souls. Sacred imagery, dense and earthy.' },
+  { id: 'tbq9T0ONioI', title: 'Alles schläft', credit: 'Polzin', note: 'Love at a distance. In German — winter wind, a landscape that sleeps.' },
+  { id: 'e13cJsHM6mo', title: 'Time', credit: 'Vanderpool', note: 'The return. Connection, awakening, surrender — there\'s time this time.' },
+  { id: 'LbKn_4SkFrY', title: 'Domino', credit: 'Polzin', note: 'The lost self in a world of repeating illusion. A heron, a lake, a silver skin.' },
+  { id: '1CUUDYL68EQ', title: 'Pappelbaum', credit: 'Vanderpool & Polzin', note: 'Letting go into death. In German. The title track. Du schwindest auch.' },
+];
+let featured = 4, animating = false;
+function thumbUrl(id) { return `https://img.youtube.com/vi/${id}/mqdefault.jpg`; }
+function embedUrl(id) { return `https://www.youtube.com/embed/${id}?rel=0`; }
+function render() {
+  const f = videos[featured];
+  document.getElementById('featuredIframe').src = embedUrl(f.id);
+  document.getElementById('featuredTitle').textContent = f.title;
+  document.getElementById('featuredCredit').textContent = f.credit;
+  document.getElementById('featuredNote').textContent = f.note;
+  const grid = document.getElementById('thumbsGrid');
+  grid.innerHTML = '';
+  videos.forEach((v, i) => {
+    if (i === featured) return;
+    const wrap = document.createElement('div');
+    wrap.className = 'pp-thumb'; wrap.dataset.index = i;
+    const videoEl = document.createElement('div');
+    videoEl.className = 'pp-thumb-video';
+    videoEl.innerHTML = `<img src="${thumbUrl(v.id)}" alt="${v.title}"><div class="pp-thumb-video-label">${v.title}</div><div class="pp-thumb-play"></div>`;
+    const card = document.createElement('div');
+    card.className = 'pp-thumb-card';
+    card.innerHTML = `<div class="pp-thumb-card-title">${v.title}</div><div class="pp-thumb-card-credit">${v.credit}</div><div class="pp-thumb-card-note">${v.note}</div>`;
+    wrap.appendChild(videoEl);
+    wrap.appendChild(card);
+    wrap.addEventListener('mouseenter', () => card.classList.add('visible'));
+    wrap.addEventListener('mouseleave', () => card.classList.remove('visible'));
+    wrap.addEventListener('click', () => swapTo(i));
+    grid.appendChild(wrap);
+  });
+}
+function swapTo(nextIndex) {
+  if (animating) return; animating = true;
+  const fw = document.getElementById('featuredWrap');
+  const th = document.querySelector(`.pp-thumb[data-index="${nextIndex}"] .pp-thumb-video`);
+  if (!th) { animating = false; return; }
+  const fR = fw.getBoundingClientRect(), tR = th.getBoundingClientRect();
+  const flyIn = document.createElement('div');
+  flyIn.className = 'pp-flying';
+  flyIn.style.cssText = `left:${tR.left}px;top:${tR.top}px;width:${tR.width}px;height:${tR.height}px;transition:all 0.42s cubic-bezier(0.4,0,0.2,1);`;
+  flyIn.innerHTML = `<iframe src="${embedUrl(videos[nextIndex].id)}" allowfullscreen></iframe>`;
+  document.body.appendChild(flyIn);
+  const flyOut = document.createElement('div');
+  flyOut.className = 'pp-flying';
+  flyOut.style.cssText = `left:${fR.left}px;top:${fR.top}px;width:${fR.width}px;height:${fR.height}px;transition:all 0.42s cubic-bezier(0.4,0,0.2,1);`;
+  flyOut.innerHTML = `<img src="${thumbUrl(videos[featured].id)}" style="width:100%;height:100%;object-fit:cover;opacity:0.6;">`;
+  document.body.appendChild(flyOut);
+  fw.style.opacity = '0';
+  th.closest('.pp-thumb').style.opacity = '0';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    flyIn.style.left = fR.left + 'px'; flyIn.style.top = fR.top + 'px';
+    flyIn.style.width = fR.width + 'px'; flyIn.style.height = fR.height + 'px';
+    flyOut.style.left = tR.left + 'px'; flyOut.style.top = tR.top + 'px';
+    flyOut.style.width = tR.width + 'px'; flyOut.style.height = tR.height + 'px';
+  }));
+  setTimeout(() => {
+    featured = nextIndex; render();
+    fw.style.opacity = '1';
+    document.querySelectorAll('.pp-thumb').forEach(t => t.style.opacity = '1');
+    flyIn.remove(); flyOut.remove(); animating = false;
+  }, 450);
+}
+render();
+</script>
+</body>
+</html>
