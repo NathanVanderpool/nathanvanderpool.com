@@ -155,9 +155,20 @@
   body.role-sing .tag { display: inline; }
   body.role-sing .solo { color: var(--slate); font-style: italic; }
   body.role-sing .echo { color: var(--ink); font-style: italic; }
-  .staff-box { display: none; position: relative; max-height: 26rem; overflow: auto; background: #fbf6ec;
+  /* The sheet music gets most of the screen, with its own size buttons and a full-screen mode */
+  .staff-box { display: none; position: relative; max-height: 72vh; max-height: 72svh; overflow: auto; background: #fbf6ec;
                border: 2px solid var(--ink); border-radius: 8px; }
   body.view-staff .staff-box { display: block; }
+  .staff-tools { display: none; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem; margin: 0 0 .5rem; }
+  body.view-staff .staff-tools { display: flex; }
+  .staff-tools .zoom { display: inline-flex; align-items: center; gap: .3rem; }
+  .staff-tools .zoom-lead { font-size: .9rem; color: var(--ink-soft); }
+  .staff-tools .staff-play { display: none; margin-right: auto; }
+  body.staff-full { overflow: hidden; }
+  body.staff-full .staff-wrap { position: fixed; inset: 0; z-index: 30; background: var(--kraft); display: flex; flex-direction: column;
+               padding: .5rem .5rem calc(.5rem + env(safe-area-inset-bottom, 0px)); }
+  body.staff-full .staff-box { flex: 1; max-height: none; }
+  body.staff-full .staff-tools .staff-play { display: inline-flex; }
   body.view-staff #roll, body.view-staff .legend-line { display: none; }
   #staff svg { display: block; }
   .bar-mark { position: absolute; display: none; background: rgba(192,99,61,.18); border-bottom: 3px solid var(--rust); pointer-events: none; }
@@ -550,7 +561,18 @@
         </div>
         <p class="legend-line"><span class="key-you"></span><b class="lg-you">Your line</b> <span class="key-nathan"></span><b class="lg-nathan">Nathan</b><em class="lg-pair" id="lgOther" hidden><span class="key-other"></span><b class="lg-other"></b></em></p>
         <canvas id="roll" aria-label="Your line and the other line, moving as the music plays"></canvas>
-        <div class="staff-box" id="staffBox"><div id="staff"></div><div class="bar-mark" id="barMark"></div></div>
+        <div class="staff-wrap" id="staffWrap">
+          <div class="staff-tools" role="group" aria-label="Sheet music">
+            <button class="play staff-play" id="staffPlay">Play</button>
+            <span class="zoom">
+              <button class="plain" id="zoomOut" aria-label="Smaller music">−</button>
+              <span class="zoom-lead" aria-hidden="true">Size</span>
+              <button class="plain" id="zoomIn" aria-label="Bigger music">+</button>
+            </span>
+            <button class="pick small" id="staffFull" aria-pressed="false">Full screen</button>
+          </div>
+          <div class="staff-box" id="staffBox"><div id="staff"></div><div class="bar-mark" id="barMark"></div></div>
+        </div>
         <div class="ctl-row">
           <button class="play" id="playBtn">Play</button>
           <button class="pick small" id="firstNoteBtn">Your next note</button>
@@ -702,7 +724,7 @@ function parseChord(sym) {
 }
 
 const SONG_KEY = parsePitch(SONG.key).pc;
-const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, part: (SONG.backing[0] || {}).voice || 'alto' };
+const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, zoom: null, part: (SONG.backing[0] || {}).voice || 'alto' };
 
 function instOffset() { return state.readAs === 'capo' ? -state.capo : OFFSET[state.readAs]; }
 const move = () => state.shift + instOffset();
@@ -1532,9 +1554,11 @@ function renderStaff(pass = 0) {
   if (state.view !== 'staff' || !SC || !SC.bars) return;
   if (!window.Vex) { host.innerHTML = '<p class="staff-note">The sheet music needs an internet connection to load.</p>'; return; }
   const BW = box.clientWidth - 4; if (BW <= 0) return;
-  const S = BW < 600 ? .72 : 1, W = BW / S;   /* phones get the music drawn a bit smaller so more fits */
-  const k = [state.staves, state.part, BW, MULTI()].join('|'); if (k === STAFF.key) return;
-  if (!pass) STAFF.extra = {};   // extra width per bar, found by the word check below
+  const S = state.zoom ?? zoomDefault(), W = BW / S;   /* the size buttons set S; phones start smaller so more fits */
+  /* words stay readable however small the music gets: at least about 9.5px on screen */
+  const LF = Math.max(12, 9.5 / S), LS = LF / 12;
+  const k = [state.staves, state.part, BW, MULTI(), S].join('|'); if (k === STAFF.key) return;
+  if (!pass) { STAFF.extra = {}; STAFF.pad = {}; }   // extra width per bar, and room kept after its last note, found by the word check below
   STAFF.key = k; host.innerHTML = '';
   const VF = Vex.Flow, both = MULTI() || state.staves === 'both';
   const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
@@ -1546,14 +1570,25 @@ function renderStaff(pass = 0) {
     let f = SC.keys[0][1]; SC.keys.forEach(([b, x]) => { if (b <= bar) f = x; });
     return vexKeySig(keyName(SONG_KEY + 7 * (f - SC.keys[0][1])));
   };
-  const bars = scopeBars(), headW = 100;
+  /* Stretches where every line shown rests become one bar marked with the count, the way printed parts do it */
+  const restsAll = b => parts.every(([v]) => {
+    const r = b.sec.rest?.[v];
+    return (r && b.bar >= r[0] && b.bar <= r[1]) || SC.bars[v][b.bar - 1].every(it => it.r);
+  });
+  const bars = [];
+  scopeBars().forEach(b => {
+    const last = bars[bars.length - 1];
+    if (last && last.sec === b.sec && last.bar + (last.count || 1) === b.bar && restsAll(b) && last.allRest && ksAt(b.bar) === ksAt(last.bar)) last.count = (last.count || 1) + 1;
+    else bars.push(Object.assign({}, b, { allRest: restsAll(b) }));
+  });
+  const headW = 100;
 
   /* 1. Build every bar's notes first, so we know how much room each bar really needs */
   const built = bars.map((b, bi) => {
     const ks = ksAt(b.bar), prevKs = bi ? ksAt(bars[bi - 1].bar) : ks;
     const voices = parts.map(([v, clef, annot]) => {
       const tuplet = [];
-      const r = b.sec.rest?.[v], silent = r && b.bar >= r[0] && b.bar <= r[1];
+      const r = b.sec.rest?.[v], silent = (r && b.bar >= r[0] && b.bar <= r[1]) || b.count > 1;
       const notes = (silent ? [{ r: 1, d: 'w', o: 0, m: 1 }] : SC.bars[v][b.bar - 1]).map(it => {
         it = Object.assign({}, it);
         const n = new VF.StaveNote({ clef, keys: [it.r ? (clef === 'bass' ? 'd/3' : 'b/4') : it.k],
@@ -1562,7 +1597,7 @@ function renderStaff(pass = 0) {
         if (v === 'baritone') n.setStyle({ fillStyle: '#6b7178', strokeStyle: '#6b7178' });
         else if (MULTI() && v === state.part) n.setStyle({ fillStyle: '#97401f', strokeStyle: '#97401f' });   // your line, in your color
         if (it.l) {   /* an invisible copy of the syllable makes the spacing leave room for the words */
-          const an = new VF.Annotation(it.l + ' ').setFont('Arial', 14);
+          const an = new VF.Annotation(it.l + ' ').setFont('Arial', LF + LS * 2);
           an.setStyle({ fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)' });
           n.addModifier(an, 0);
         }
@@ -1593,7 +1628,7 @@ function renderStaff(pass = 0) {
     const fmt = new VF.Formatter();
     voices.forEach(o => fmt.joinVoices([o.voice]));
     const need = fmt.preCalculateMinTotalWidth(voices.map(o => o.voice));
-    return { b, voices, fmt, ks, prevKs, need: Math.max(60, need + 22) + (ks !== prevKs ? 50 : 0) + (STAFF.extra[bars.indexOf(b)] || 0) };
+    return { b, voices, fmt, ks, prevKs, need: (b.count > 1 ? 110 : Math.max(60, need + 22)) + (ks !== prevKs ? 50 : 0) + (STAFF.extra[bars.indexOf(b)] || 0) };
   });
 
   /* 2. Pack bars into lines and share out the spare width */
@@ -1618,15 +1653,15 @@ function renderStaff(pass = 0) {
   let cursor = 6;
   const sys = layout.map(ln => {
     const L = { top: cursor, staveY: [], lyricY: [] };
-    cursor += 16;                                   // room for the section label
+    cursor += 4 + 12 * LS;                          // room for the section label
     parts.forEach((_, pi) => {
       const top = Math.max(...ln.map(bt => bt.voices[pi].top)), bot = Math.min(...ln.map(bt => bt.voices[pi].bot));
       const words = ln.some(bt => bt.voices[pi].words);
       const staveY = cursor - Y(top);
       L.staveY.push(staveY);
       const lowest = staveY + Y(bot);
-      L.lyricY.push(lowest + 15);                   // baseline of the words, just under the lowest mark
-      cursor = (words ? lowest + 22 : lowest + 6) + 10;
+      L.lyricY.push(lowest + 15 * LS);              // baseline of the words, just under the lowest mark
+      cursor = (words ? lowest + 30 * LS - 8 : lowest + 6) + 10;   // bigger words (small music) get a little more room under them
     });
     cursor += 14; L.bottom = cursor;
     return L;
@@ -1649,13 +1684,17 @@ function renderStaff(pass = 0) {
     });
     const startX = Math.max(...staves.map(st => st.getNoteStartX()));
     staves.forEach(st => st.setNoteStartX(startX));
-    fmt.format(voices.map(o => o.voice), x + w - startX - 14);
+    fmt.format(voices.map(o => o.voice), x + w - startX - 14 - (STAFF.pad[i] || 0));
     voices.forEach(o => {
+      if (b.count > 1) {   // a multi-bar rest: the thick bar with the number of bars over it
+        new VF.MultiMeasureRest(b.count, { number_of_measures: b.count }).setStave(o.st).setContext(ctx).draw();
+        return;
+      }
       o.voice.draw(ctx, o.st);
       o.beams.forEach(bm => bm.setContext(ctx).draw());
       if (o.tuplet.length) new VF.Tuplet(o.tuplet, { num_notes: 3, notes_occupied: 2, location: VF.Tuplet.LOCATION_TOP })
         .setContext(ctx).draw();
-      ctx.save(); ctx.openGroup('lyric'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', 12);
+      ctx.save(); ctx.openGroup('lyric'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', LF);
       if (o.v === 'baritone') ctx.setFillStyle('#4a4f55');
       const ly = L.lyricY[voices.indexOf(o)];
       o.notes.forEach(n => { if (n._it.l) { ctx.fillText(n._it.l, n.getAbsoluteX() - 2, ly); words.push({ bar: i, v: o.v, x: n.getAbsoluteX() - 2, w: ctx.measureText(n._it.l).width, end: x + w, line }); } });
@@ -1668,8 +1707,9 @@ function renderStaff(pass = 0) {
       new VF.StaveConnector(staves[0], lastSt).setType('singleLeft').setContext(ctx).draw();
     }
     if (staves.length > 1) new VF.StaveConnector(staves[0], lastSt).setType('singleRight').setContext(ctx).draw();
-    if (b.label) { ctx.save(); ctx.openGroup('label'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', 12, 'bold'); ctx.fillText(b.label, x + 4, y0 + 12); ctx.closeGroup(); ctx.restore(); }
-    STAFF.boxes.push({ x: x * S, y: (y0 + 14) * S, w: w * S, h: (L.bottom - y0 - 22) * S });
+    if (b.label) { ctx.save(); ctx.openGroup('label'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', LF, 'bold'); ctx.fillText(b.label, x + 4, y0 + LF); ctx.closeGroup(); ctx.restore(); }
+    const n = b.count || 1;   // one box per bar of the song, so the marker follows playback through a multi-bar rest too
+    for (let j = 0; j < n; j++) STAFF.boxes.push({ x: (x + w * j / n) * S, y: (y0 + 14) * S, w: w / n * S, h: (L.bottom - y0 - 22) * S });
   });
   /* ties, including across bar and line breaks */
   Object.values(seq).forEach(ns => ns.forEach((n, i) => {
@@ -1683,12 +1723,17 @@ function renderStaff(pass = 0) {
   Object.keys(seq).forEach(v => {
     const ws = words.filter(w => w.v === v);
     ws.forEach((w, j) => {
-      const nx = ws[j + 1], limit = nx && nx.line === w.line ? nx.x : w.end;
-      const over = w.x + w.w + 4 - limit;
-      if (over > 0) { STAFF.extra[w.bar] = (STAFF.extra[w.bar] || 0) + over * 1.5 + 10; crowded = true; }
+      const nx = ws[j + 1], limit = nx && nx.line === w.line ? Math.min(nx.x, w.end) : w.end;   // never past the bar line either
+      const over = w.x + w.w + 4 * LS - limit;
+      if (over <= 0) return;
+      crowded = true;
+      STAFF.extra[w.bar] = (STAFF.extra[w.bar] || 0) + over * 1.5 + 10 * LS;
+      /* the bar's last word runs into the bar line: widening alone won't help, since the notes spread to fill the bar,
+         so keep that much room after the last note */
+      if (limit === w.end && !(nx && nx.bar === w.bar)) STAFF.pad[w.bar] = (STAFF.pad[w.bar] || 0) + over + 2;
     });
   });
-  if (crowded && pass < 4) { STAFF.key = ''; renderStaff(pass + 1); }
+  if (crowded && pass < 8) { STAFF.key = ''; renderStaff(pass + 1); }
 }
 function markStaff(beat) {
   const mark = document.getElementById('barMark');
@@ -1699,11 +1744,41 @@ function markStaff(beat) {
   if (bx.y < box.scrollTop || bx.y + bx.h > box.scrollTop + box.clientHeight) box.scrollTop = bx.y - 10;
   if (bx.x < box.scrollLeft || bx.x + Math.min(bx.w, box.clientWidth) > box.scrollLeft + box.clientWidth) box.scrollLeft = bx.x - 10;
 }
+/* Sheet music size: S is the drawing scale. Phones start small enough to show a phrase at a time. */
+const ZOOMS = [.4, .48, .56, .65, .75, .85, 1, 1.15, 1.3];
+function zoomDefault() { const w = document.getElementById('staffBox').clientWidth; return w < 600 ? .56 : .75; }
+function setZoom(dir) {
+  const cur = state.zoom ?? zoomDefault();
+  let i = ZOOMS.findIndex(z => z >= cur - 1e-6); if (i < 0) i = ZOOMS.length - 1;
+  if (ZOOMS[i] > cur + 1e-6 && dir < 0) i--;   // between two steps: smaller goes to the one below
+  else i += dir;
+  state.zoom = ZOOMS[Math.max(0, Math.min(ZOOMS.length - 1, i))];
+  syncZoom(); remember(); STAFF.key = ''; renderStaff(); drawRoll();
+}
+function syncZoom() {
+  const cur = state.zoom ?? zoomDefault();
+  document.getElementById('zoomOut').disabled = cur <= ZOOMS[0] + 1e-6;
+  document.getElementById('zoomIn').disabled = cur >= ZOOMS[ZOOMS.length - 1] - 1e-6;
+}
+document.getElementById('zoomOut').onclick = () => setZoom(-1);
+document.getElementById('zoomIn').onclick = () => setZoom(1);
+function setStaffFull(on) {
+  document.body.classList.toggle('staff-full', on);
+  const b = document.getElementById('staffFull');
+  b.textContent = on ? 'Close' : 'Full screen'; b.setAttribute('aria-pressed', on);
+  STAFF.key = ''; renderStaff(); drawRoll();
+}
+document.getElementById('staffFull').onclick = () => setStaffFull(!document.body.classList.contains('staff-full'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('staff-full')) setStaffFull(false); });
+document.getElementById('staffPlay').onclick = () => document.getElementById('playBtn').click();
+new MutationObserver(() => { document.getElementById('staffPlay').textContent = document.getElementById('playBtn').textContent; })
+  .observe(document.getElementById('playBtn'), { childList: true, characterData: true, subtree: true });
 function setPracticeView(v) {
   state.view = v;
   document.body.classList.toggle('view-staff', v === 'staff');
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
-  renderStaff(); drawRoll();
+  if (v !== 'staff' && document.body.classList.contains('staff-full')) setStaffFull(false);
+  renderStaff(); drawRoll(); if (v === 'staff') syncZoom();
 }
 document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => setPracticeView(b.dataset.view));
 
@@ -1865,7 +1940,7 @@ function setInst(inst, save = true) {
   if (save) { remember(); renderAll(); }
 }
 function remember() {
-  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part })); } catch (e) {}
+  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part, zoom: state.zoom })); } catch (e) {}
 }
 document.querySelectorAll('[data-role]').forEach(b => b.onclick = () => setRole(b.dataset.role));
 document.querySelectorAll('[data-inst]').forEach(b => b.onclick = () => setInst(state.inst === b.dataset.inst ? null : b.dataset.inst));
@@ -1874,6 +1949,7 @@ let saved = null;
 try { saved = JSON.parse(localStorage.getItem('ss-' + SONG.slug) || 'null'); } catch (e) {}
 if (saved?.role === 'both') saved.role = 'play';   // older visits
 if (saved?.part && SONG.backing.some(b => b.voice === saved.part)) state.part = saved.part;
+if (typeof saved?.zoom === 'number') state.zoom = saved.zoom;
 setRole(saved?.role || 'play', false, !!saved);
 if (saved) document.getElementById('startHint').hidden = true;
 if (saved?.inst && saved.role === 'play') setInst(saved.inst, false);
