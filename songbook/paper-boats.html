@@ -115,6 +115,15 @@
   .legend-line b { font-weight: 400; }
   .key-you { background: var(--rust-ink); }
   .key-nathan { background: var(--slate); }
+  .lg-pair { display: inline-flex; align-items: center; gap: .35rem; font-style: normal; white-space: nowrap; }
+  .lg-pair[hidden] { display: none; }
+  .legend-line .key-other { background: transparent; border: 2px solid var(--ink); margin-left: .8rem; box-sizing: border-box; }
+  /* Songs with more than one backing part: every line shows, and each one can be switched on or off for listening */
+  .voices-row { display: none; }
+  body.multi-part .voices-row { display: flex; }
+  body.multi-part #balanceRow { display: none; }
+  .voices-lead { font-size: .95rem; margin-right: .2rem; }
+  .voices-row .pick .tick { display: inline-block; width: 1.1em; }
   .listen { display: flex; align-items: center; gap: .7rem; margin: .4rem auto .7rem; max-width: 26rem; }
   .pp { flex: none; width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid var(--ink); background: var(--rust);
         display: grid; place-items: center; cursor: pointer; padding: 0; }
@@ -539,7 +548,7 @@
           <button class="pick small" data-view="roll" aria-pressed="true">Moving lines</button>
           <button class="pick small" data-view="staff" aria-pressed="false">Sheet music</button>
         </div>
-        <p class="legend-line"><span class="key-you"></span><b class="lg-you">Your line</b> <span class="key-nathan"></span><b class="lg-nathan">Nathan</b></p>
+        <p class="legend-line"><span class="key-you"></span><b class="lg-you">Your line</b> <span class="key-nathan"></span><b class="lg-nathan">Nathan</b><em class="lg-pair" id="lgOther" hidden><span class="key-other"></span><b class="lg-other"></b></em></p>
         <canvas id="roll" aria-label="Your line and the other line, moving as the music plays"></canvas>
         <div class="staff-box" id="staffBox"><div id="staff"></div><div class="bar-mark" id="barMark"></div></div>
         <div class="ctl-row">
@@ -551,6 +560,7 @@
           <button class="pick small" data-bal="together" aria-pressed="false"><b>2</b> Both lines</button>
           <button class="pick small" data-bal="nathan" aria-pressed="false"><b>3</b> Just Nathan</button>
         </div>
+        <div class="ctl-row voices-row" role="group" aria-label="Lines you hear" id="voicesRow"></div>
       </section>
       <h2><span class="not-sing">Play it through</span><span class="sing-only">Sing along</span></h2>
       <p class="who-sings" id="whoSings"></p>
@@ -692,7 +702,7 @@ function parseChord(sym) {
 }
 
 const SONG_KEY = parsePitch(SONG.key).pc;
-const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', part: (SONG.backing[0] || {}).voice || 'alto' };
+const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, part: (SONG.backing[0] || {}).voice || 'alto' };
 
 function instOffset() { return state.readAs === 'capo' ? -state.capo : OFFSET[state.readAs]; }
 const move = () => state.shift + instOffset();
@@ -925,6 +935,7 @@ function renderAll() {
   document.body.classList.toggle('no-chords', !SONG.sections.some(sec => sec.lines.some(l => chordsOf(lineSrc(l)).length)));
   renderPartPick();
   renderWhoSings();
+  if (window.SCORE) renderVoices();
   document.getElementById('printForm').innerHTML = 'Form: ' + SONG.sections.map(x => `<b>${esc(x.part)}</b>`).join(' ') + (SONG.credit ? ' &nbsp; ' + esc(SONG.credit) : '');
   renderSong(); renderParts(); renderKey(); watchPlace(); renderRiff(); if (window.SCORE) { renderRange(); if (!TL.events.length) buildTimeline(); drawRoll(); } }
 
@@ -979,6 +990,7 @@ document.getElementById('clickBtn').onclick = e => {
     e.target.textContent = 'Start click';
     return;
   }
+  phoneSound();
   ac = ac || new (window.AudioContext || window.webkitAudioContext)();
   ac.resume();
   beat = 0; nextTime = ac.currentTime + .05;
@@ -1013,7 +1025,7 @@ function renderPartPick() {
   box.innerHTML = '<span class="role-lead small">My part</span>' + SONG.backing.map(b =>
     `<button class="pick small" data-part="${b.voice}" aria-pressed="${b.voice === state.part}">${esc(SC.voices[b.voice].name)}</button>`).join('');
   box.querySelectorAll('[data-part]').forEach(b => b.onclick = () => {
-    state.part = b.dataset.part; remember();
+    state.part = b.dataset.part; remember(); renderVoices();
     const was = P.on; stopPlayer(); STAFF.key = ''; buildTimeline(); renderAll(); renderStaff(); if (was) startPlayer();
   });
 }
@@ -1060,14 +1072,49 @@ function buildTimeline() {
   if (off - reach >= 2) inst.push([reach, off]);
   TL = { events, secs, total: off, alone: alone.filter(([a, b]) => b - a >= 2), inst: inst.filter(([a, b]) => a === 0 && b >= SC.beatsPerBar) };   // only the intro is marked
 }
+/* More than one backing part: all lines show and play, and each can be switched off and on */
+const MULTI = () => !!(window.SCORE && SONG.backing.length > 1);
+const VOICE_ORDER = () => [...SONG.backing.map(b => b.voice), 'baritone'].filter(v => SC.voices[v]);
+const voiceLabel = v => v === 'baritone' ? 'Nathan' : SC.voices[v].name;
+function renderVoices() {
+  const box = document.getElementById('voicesRow'); if (!box) return;
+  if (!MULTI()) { box.innerHTML = ''; return; }
+  box.innerHTML = '<span class="voices-lead">Hear:</span>' + VOICE_ORDER().map(v =>
+    `<button class="pick small" data-voice="${v}" aria-pressed="${!state.muted[v]}"><span class="tick" aria-hidden="true">${state.muted[v] ? '' : '✓'}</span>${esc(voiceLabel(v))}${v === state.part ? ' (you)' : ''}</button>`).join('');
+  box.querySelectorAll('[data-voice]').forEach(b => b.onclick = () => {
+    state.muted[b.dataset.voice] = !state.muted[b.dataset.voice];
+    renderVoices(); drawRoll();
+  });
+  const other = SONG.backing.map(b => b.voice).filter(v => v !== state.part);
+  document.getElementById('lgOther').hidden = !other.length;
+  document.querySelector('.lg-other').textContent = other.map(v => SC.voices[v].name).join(', ');
+}
 function voiceGain(v) {
+  if (MULTI()) return state.muted[v] ? 0 : v === state.part ? .6 : v === 'baritone' ? .5 : .45;
   if (state.bal === 'nathan') return v === 'baritone' ? .8 : 0;
   if (state.bal === 'bg') return v === state.part ? .8 : 0;
   return v === state.part || v === 'baritone' ? .6 : .25;   // the other backing parts sit underneath
 }
 
+/* iPhones mute page tones (Web Audio) when the ring/silent switch is on silent, though the mp3 still plays.
+   Asking for "playback" sound fixes that: through navigator.audioSession where Safari has it (iOS 16.4+),
+   and on older iPhones by playing a moment of silence through an <audio> element on the first tap. */
+function phoneSound() {
+  if (phoneSound.done) return;
+  phoneSound.done = true;
+  try { if (navigator.audioSession) { navigator.audioSession.type = 'playback'; return; } } catch (e) {}
+  try {
+    const n = 4410, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const str = (o, t) => { for (let i = 0; i < t.length; i++) v.setUint8(o + i, t.charCodeAt(i)); };
+    str(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); str(8, 'WAVEfmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 44100, true); v.setUint32(28, 88200, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); str(36, 'data'); v.setUint32(40, n * 2, true);
+    const a = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })));
+    a.setAttribute('playsinline', ''); a.play().catch(() => {});
+  } catch (e) {}
+}
 let ac2 = null;
-function audio() { ac2 = ac2 || new (window.AudioContext || window.webkitAudioContext)(); ac2.resume(); return ac2; }
+function audio() { phoneSound(); ac2 = ac2 || new (window.AudioContext || window.webkitAudioContext)(); ac2.resume(); return ac2; }
 function tone(ctx, out, time, dur, midi, gain) {
   if (gain <= 0) return;
   const f = 440 * Math.pow(2, (midi - 69) / 12), g = ctx.createGain();
@@ -1479,12 +1526,12 @@ function renderStaff(pass = 0) {
   if (!window.Vex) { host.innerHTML = '<p class="staff-note">The sheet music needs an internet connection to load.</p>'; return; }
   const BW = box.clientWidth - 4; if (BW <= 0) return;
   const S = BW < 600 ? .72 : 1, W = BW / S;   /* phones get the music drawn a bit smaller so more fits */
-  const k = [state.staves, state.part, BW].join('|'); if (k === STAFF.key) return;
+  const k = [state.staves, state.part, BW, MULTI()].join('|'); if (k === STAFF.key) return;
   if (!pass) STAFF.extra = {};   // extra width per bar, found by the word check below
   STAFF.key = k; host.innerHTML = '';
-  const VF = Vex.Flow, both = state.staves === 'both';
+  const VF = Vex.Flow, both = MULTI() || state.staves === 'both';
   const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
-  const parts = both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
+  const parts = MULTI() ? VOICE_ORDER().map(vc) : both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
   const KS = vexKeySig(keyName(SONG_KEY));
   const bars = scopeBars(), headW = 100;
 
@@ -1499,6 +1546,7 @@ function renderStaff(pass = 0) {
           duration: it.d + (it.r ? 'r' : ''), dots: it.o || 0, align_center: !!it.m, auto_stem: true });
         for (let d = 0; d < (it.o || 0); d++) VF.Dot.buildAndAttach([n], { all: true });
         if (v === 'baritone') n.setStyle({ fillStyle: '#6b7178', strokeStyle: '#6b7178' });
+        else if (MULTI() && v === state.part) n.setStyle({ fillStyle: '#97401f', strokeStyle: '#97401f' });   // your line, in your color
         if (it.l) {   /* an invisible copy of the syllable makes the spacing leave room for the words */
           const an = new VF.Annotation(it.l + ' ').setFont('Arial', 14);
           an.setStyle({ fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)' });
@@ -1599,11 +1647,12 @@ function renderStaff(pass = 0) {
       ctx.closeGroup(); ctx.restore();
       (seq[o.v] ||= []).push(...o.notes);
     });
-    if (both && col === 0) {
-      new VF.StaveConnector(staves[0], staves[1]).setType('brace').setContext(ctx).draw();
-      new VF.StaveConnector(staves[0], staves[1]).setType('singleLeft').setContext(ctx).draw();
+    const lastSt = staves[staves.length - 1];
+    if (staves.length > 1 && col === 0) {
+      new VF.StaveConnector(staves[0], lastSt).setType('brace').setContext(ctx).draw();
+      new VF.StaveConnector(staves[0], lastSt).setType('singleLeft').setContext(ctx).draw();
     }
-    if (both) new VF.StaveConnector(staves[0], staves[1]).setType('singleRight').setContext(ctx).draw();
+    if (staves.length > 1) new VF.StaveConnector(staves[0], lastSt).setType('singleRight').setContext(ctx).draw();
     if (b.label) { ctx.save(); ctx.openGroup('label'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', 12, 'bold'); ctx.fillText(b.label, x + 4, y0 + 12); ctx.closeGroup(); ctx.restore(); }
     STAFF.boxes.push({ x: x * S, y: (y0 + 14) * S, w: w * S, h: (L.bottom - y0 - 22) * S });
   });
@@ -1667,10 +1716,13 @@ function drawRoll() {
   TL.events.forEach(e => {
     const ex = x(e.t), ew = Math.max(3, e.d * ppb - 2); if (ex + ew < 0 || ex > w) return;
     const me = e.v === words;
+    const other = e.v !== state.part && e.v !== 'baritone';   // another backing part: drawn as an outline
     g.fillStyle = e.v === state.part ? col('--rust-ink') : col('--slate');
-    if (e.v !== state.part && e.v !== 'baritone') g.globalAlpha = .25;   // the other backing parts, faint
-    g.globalAlpha = me ? 1 : .55;
-    g.beginPath(); g.roundRect ? g.roundRect(ex, y(e.m) - 4, ew, 8, 3) : g.rect(ex, y(e.m) - 4, ew, 8); g.fill();
+    g.strokeStyle = col('--ink'); g.lineWidth = 1.5;
+    g.globalAlpha = (me ? 1 : other ? .8 : .55) * (MULTI() && state.muted[e.v] ? .3 : 1);   // a line switched off goes faint
+    g.beginPath(); g.roundRect ? g.roundRect(ex, y(e.m) - 4, ew, 8, 3) : g.rect(ex, y(e.m) - 4, ew, 8);
+    if (other) g.stroke(); else g.fill();
+    g.lineWidth = 1;
     g.globalAlpha = 1;
     /* words under your line, and under Nathan's whenever he sings alone */
     if (e.s && (me || e.solo)) { g.fillStyle = me ? col('--ink') : col('--slate'); g.fillText(e.s, ex, y(e.m) + 17); }
