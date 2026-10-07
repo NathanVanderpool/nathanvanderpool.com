@@ -161,6 +161,8 @@
   body.view-staff .staff-box { display: block; }
   .staff-tools { display: none; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem; margin: 0 0 .5rem; }
   body.view-staff .staff-tools { display: flex; }
+  .show-row { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+  .show-row .pick .tick { display: inline-block; width: 1.1em; }
   .staff-tools .zoom { display: inline-flex; align-items: center; gap: .3rem; }
   .staff-tools .zoom-lead { font-size: .9rem; color: var(--ink-soft); }
   .staff-tools .staff-play { display: none; margin-right: auto; }
@@ -562,6 +564,7 @@
         <canvas id="roll" aria-label="Your line and the other line, moving as the music plays"></canvas>
         <div class="staff-wrap" id="staffWrap">
           <div class="staff-tools" role="group" aria-label="Sheet music">
+            <div class="show-row" id="showRow" role="group" aria-label="Lines shown in the sheet music"></div>
             <button class="play staff-play" id="staffPlay">Play</button>
             <span class="zoom">
               <button class="plain" id="zoomOut" aria-label="Smaller music">−</button>
@@ -700,7 +703,7 @@ function parseChord(sym) {
 }
 
 const SONG_KEY = parsePitch(SONG.key).pc;
-const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, zoom: null, part: (SONG.backing[0] || {}).voice || 'alto' };
+const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, hidden: {}, zoom: null, part: (SONG.backing[0] || {}).voice || 'alto' };
 
 function instOffset() { return state.readAs === 'capo' ? -state.capo : OFFSET[state.readAs]; }
 const move = () => state.shift + instOffset();
@@ -1030,7 +1033,7 @@ function renderPartPick() {
   box.innerHTML = '<span class="role-lead small">My part</span>' + SONG.backing.map(b =>
     `<button class="pick small" data-part="${b.voice}" aria-pressed="${b.voice === state.part}">${esc(SC.voices[b.voice].name)}</button>`).join('');
   box.querySelectorAll('[data-part]').forEach(b => b.onclick = () => {
-    state.part = b.dataset.part; remember(); renderVoices();
+    state.part = b.dataset.part; remember(); renderVoices(); renderShow();
     const was = P.on; stopPlayer(); STAFF.key = ''; buildTimeline(); renderAll(); renderStaff(); if (was) startPlayer();
   });
 }
@@ -1533,12 +1536,14 @@ function renderStaff(pass = 0) {
   const S = state.zoom ?? zoomDefault(), W = BW / S;   /* the size buttons set S; phones start smaller so more fits */
   /* words stay readable however small the music gets: at least about 9.5px on screen */
   const LF = Math.max(12, 9.5 / S), LS = LF / 12;
-  const k = [state.staves, state.part, BW, MULTI(), S].join('|'); if (k === STAFF.key) return;
+  const k = [JSON.stringify(state.hidden), state.part, BW, MULTI(), S].join('|'); if (k === STAFF.key) return;
   if (!pass) { STAFF.extra = {}; STAFF.pad = {}; }   // extra width per bar, and room kept after its last note, found by the word check below
   STAFF.key = k; host.innerHTML = '';
-  const VF = Vex.Flow, both = MULTI() || state.staves === 'both';
+  const VF = Vex.Flow;
   const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
-  const parts = MULTI() ? VOICE_ORDER().map(vc) : both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
+  /* the lines shown: every line unless switched off under "Show" (your own line always stays if everything else is off) */
+  let shown = SHOW_ORDER().filter(v => !state.hidden[v]); if (!shown.length) shown = [state.part];
+  const parts = shown.map(vc);
   const KS = vexKeySig(keyName(SONG_KEY));
   /* a key change in the score (SC.keys: [bar, fifths]) changes the key signature from that bar on */
   const ksAt = bar => {
@@ -1720,6 +1725,20 @@ function markStaff(beat) {
   if (bx.y < box.scrollTop || bx.y + bx.h > box.scrollTop + box.clientHeight) box.scrollTop = bx.y - 10;
   if (bx.x < box.scrollLeft || bx.x + Math.min(bx.w, box.clientWidth) > box.scrollLeft + box.clientWidth) box.scrollLeft = bx.x - 10;
 }
+/* Which lines the sheet music shows: tap a line off to read just your own part (handy on a phone) */
+const SHOW_ORDER = () => MULTI() ? VOICE_ORDER() : [state.part, 'baritone'].filter(v => SC.voices[v]);
+function renderShow() {
+  const box = document.getElementById('showRow'); if (!box || !SC) return;
+  const order = SHOW_ORDER();
+  box.innerHTML = '<span class="voices-lead">Show:</span>' + order.map(v => {
+    const on = !state.hidden[v], last = on && order.filter(x => !state.hidden[x]).length === 1;
+    return `<button class="pick small" data-show="${v}" aria-pressed="${on}"${last ? ' disabled title="At least one line stays"' : ''}><span class="tick" aria-hidden="true">${on ? '✓' : ''}</span>${esc(voiceLabel(v))}${v === state.part ? ' (you)' : ''}</button>`;
+  }).join('');
+  box.querySelectorAll('[data-show]').forEach(b => b.onclick = () => {
+    state.hidden[b.dataset.show] = !state.hidden[b.dataset.show];
+    remember(); renderShow(); STAFF.key = ''; renderStaff(); drawRoll();
+  });
+}
 /* Sheet music size: S is the drawing scale. Phones start small enough to show a phrase at a time. */
 const ZOOMS = [.4, .48, .56, .65, .75, .85, 1, 1.15, 1.3];
 function zoomDefault() { const w = document.getElementById('staffBox').clientWidth; return w < 600 ? .56 : .75; }
@@ -1754,7 +1773,7 @@ function setPracticeView(v) {
   document.body.classList.toggle('view-staff', v === 'staff');
   document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
   if (v !== 'staff' && document.body.classList.contains('staff-full')) setStaffFull(false);
-  renderStaff(); drawRoll(); if (v === 'staff') syncZoom();
+  renderStaff(); drawRoll(); if (v === 'staff') { syncZoom(); renderShow(); }
 }
 document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => setPracticeView(b.dataset.view));
 
@@ -1832,8 +1851,6 @@ document.getElementById('form').addEventListener('click', e => {
 });
 document.querySelectorAll('[data-bal]').forEach(b => b.onclick = () => {
   state.bal = b.dataset.bal;
-  state.staves = state.bal === 'bg' ? 'alto' : 'both';   // step 1 shows your staff; steps 2 and 3 show both
-  renderStaff();
   document.querySelectorAll('[data-bal]').forEach(x => x.setAttribute('aria-pressed', x === b));
 });
 document.querySelectorAll('[data-fade]').forEach(b => b.onclick = () => {
@@ -1916,7 +1933,7 @@ function setInst(inst, save = true) {
   if (save) { remember(); renderAll(); }
 }
 function remember() {
-  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part, zoom: state.zoom })); } catch (e) {}
+  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part, zoom: state.zoom, hidden: state.hidden })); } catch (e) {}
 }
 document.querySelectorAll('[data-role]').forEach(b => b.onclick = () => setRole(b.dataset.role));
 document.querySelectorAll('[data-inst]').forEach(b => b.onclick = () => setInst(state.inst === b.dataset.inst ? null : b.dataset.inst));
@@ -1926,6 +1943,7 @@ try { saved = JSON.parse(localStorage.getItem('ss-' + SONG.slug) || 'null'); } c
 if (saved?.role === 'both') saved.role = 'play';   // older visits
 if (saved?.part && SONG.backing.some(b => b.voice === saved.part)) state.part = saved.part;
 if (typeof saved?.zoom === 'number') state.zoom = saved.zoom;
+if (saved?.hidden && typeof saved.hidden === 'object') state.hidden = saved.hidden;
 setRole(saved?.role || 'play', false, !!saved);
 if (saved) document.getElementById('startHint').hidden = true;
 if (saved?.inst && saved.role === 'play') setInst(saved.inst, false);
