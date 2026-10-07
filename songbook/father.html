@@ -1,0 +1,1760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Father | Secret Songbook</title>
+<meta name="description" content="Father by Secret Chord Collective: words, chords, and your part to learn and sing along.">
+<meta property="og:title" content="Father | Secret Songbook">
+<meta property="og:description" content="Words, chords, and your part to learn and sing along.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Staatliches&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kraft: #d9c29a;
+    --kraft-light: #e7d6b3;
+    --ink: #1c1915;
+    --ink-soft: #4a4238;
+    --rust: #c0633d;
+    --rust-ink: #97401f;
+    --mustard: #d4a33b;
+    --slate: #454b52;
+    --display: "Staatliches", "Arial Narrow", Impact, sans-serif;
+    --bar-h: 3.9rem;
+    --body: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+  html { scroll-padding-top: 9.5rem; }
+  body {
+    margin: 0;
+    background: var(--kraft);
+    color: var(--ink);
+    font-family: var(--body);
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+  /* Color blocks in the corners, borrowed from the logo's worn print patches */
+  body::before {
+    content: "";
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      linear-gradient(var(--rust), var(--rust)) right 0 top 0 / 9vw 20vh no-repeat,
+      linear-gradient(var(--slate), var(--slate)) left 0 bottom 0 / 7vw 30vh no-repeat,
+      linear-gradient(var(--rust), var(--rust)) left 7vw bottom 8vh / 6vw 14vh no-repeat,
+      linear-gradient(var(--mustard), var(--mustard)) right 0 bottom 26vh / 5vw 9vh no-repeat;
+    opacity: .45;
+    display: none;
+  }
+  @media (min-width: 1600px) { body::before { display: block; } }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  select { max-width: 100%; }
+  button, select, input { font: inherit; color: inherit; }
+  :focus-visible { outline: 3px solid var(--rust-ink); outline-offset: 2px; }
+
+  .wrap { max-width: 46rem; margin: 0 auto; padding: 0 1.25rem; }
+
+  /* Header */
+  header.song-head { padding: 2.5rem 0 1.75rem; text-align: center; }
+  header.song-head img { display: block; margin: 0 auto .75rem; width: 168px; height: 168px; border-radius: 50%; object-fit: cover; background: var(--kraft-light); }
+  .collective { margin: 0; font-size: 1.05rem; color: var(--ink-soft); }
+  .collective a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  h1 {
+    font-family: var(--display); font-weight: 400;
+    font-size: clamp(3.2rem, 11vw, 6rem); line-height: .9; letter-spacing: .01em;
+    margin: .1em 0 .15em;
+  }
+  .facts { display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.5rem; margin: 0; font-size: 1rem; }
+  .facts div { display: flex; gap: .4rem; }
+  .facts dt { color: var(--ink-soft); }
+  .facts dd { margin: 0; font-weight: 700; }
+  .source { margin: .6rem 0 0; font-size: 1rem; color: var(--ink-soft); }
+
+  /* Role picker */
+  .role { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .4rem; margin: 1.1rem 0 0; }
+  .role-lead { font-family: var(--display); font-size: 1.6rem; margin-right: .2rem; }
+  .pick { border: 2px solid var(--ink); background: var(--kraft-light); border-radius: 999px; padding: .3rem .95rem; cursor: pointer; font-size: 1.05rem; }
+  .pick.small { font-size: .95rem; padding: .2rem .75rem; }
+  .pick[aria-pressed="true"] { background: var(--ink); color: var(--kraft); }
+  .pick:hover { box-shadow: 0 0 0 2px var(--ink); }
+  .inst { display: none; margin-top: .6rem; }
+  body.role-play.role-chosen .inst { display: flex; }
+  .start { margin: 1.2rem 0 -.6rem; font-family: var(--display); font-size: 1.3rem; color: var(--rust-ink);
+           transform: translateX(-5.5rem) rotate(-5deg); }
+  .start span { display: inline-block; font-family: var(--body); font-size: 1.6rem; transform: translateY(.35rem); }
+  .role-note { margin: .6rem 0 0; font-size: .95rem; color: var(--ink-soft); min-height: 1.4em; }
+
+  /* Singing: words first, player tools out of the way */
+  body.role-sing [data-for="play"] { display: none !important; }
+  body.role-sing .parts { display: none; }
+  body.role-sing .line { font-size: 1.45rem; }
+  @media (min-width: 1000px) { body.role-sing .layout { grid-template-columns: 1fr; max-width: 46rem; margin: 0 auto; } }
+  /* Playing: chords lead, words become the cue */
+  body.role-play [data-for="sing"] { display: none !important; }
+
+
+  /* Practice (singers) */
+  .practice { display: none; margin-top: 1.5rem; }
+  body.role-sing .practice { display: block; }
+  .practice h2 { margin-top: 0; }
+  .ctl-row { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .6rem; margin: .6rem 0; }
+  .range-line { display: none; margin: .2rem 0 0; font-size: 1.05rem; }
+  body.role-sing .range-line { display: block; }
+  .hear { border: 0; background: none; padding: 0 .15rem; text-decoration: underline; cursor: pointer; color: var(--rust-ink); font-weight: 700; }
+  #roll { display: block; width: 100%; height: 190px; background: var(--kraft-light); border: 2px solid var(--ink); border-radius: 8px; touch-action: pan-y; cursor: grab; }
+  #roll.dragging { cursor: grabbing; }
+  .play { font-family: var(--display); font-size: 1.4rem; padding: .25rem 1.3rem .15rem; border: 2px solid var(--ink); border-radius: 999px; background: var(--rust); cursor: pointer; }
+  .play[aria-pressed="true"] { background: var(--ink); color: var(--kraft); }
+  .legend-line { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; font-size: .95rem; margin: .6rem 0 .35rem; }
+  .legend-line span { width: 1.4rem; height: .55rem; border-radius: 3px; display: inline-block; }
+  .legend-line .key-nathan { margin-left: .8rem; }
+  .legend-line b { font-weight: 400; }
+  .key-you { background: var(--rust-ink); }
+  .key-nathan { background: var(--slate); }
+  .listen { display: flex; align-items: center; gap: .7rem; margin: .4rem auto .7rem; max-width: 26rem; }
+  .pp { flex: none; width: 3rem; height: 3rem; border-radius: 50%; border: 2px solid var(--ink); background: var(--rust);
+        display: grid; place-items: center; cursor: pointer; padding: 0; }
+  .pp-icon { width: 0; height: 0; border-style: solid; border-width: .55rem 0 .55rem .9rem;
+             border-color: transparent transparent transparent var(--ink); margin-left: .2rem; }
+  .pp[aria-pressed="true"] { background: var(--ink); }
+  .pp[aria-pressed="true"] .pp-icon { width: .8rem; height: 1.05rem; border: 0; margin: 0;
+             border-left: .28rem solid var(--kraft); border-right: .28rem solid var(--kraft); }
+  .listen input[type="range"] { flex: 1; min-width: 6rem; accent-color: var(--ink); }
+  .rec-time { font-size: .9rem; white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  /* No mp3 yet: the player stays as a placeholder */
+  .listen.missing .pp { background: var(--kraft-light); border-color: var(--ink-soft); cursor: default; }
+  .listen.missing .pp-icon { border-left-color: var(--ink-soft); }
+  .listen.missing input { opacity: .45; }
+  #form a.hearing { outline: 3px dashed var(--ink); outline-offset: -3px; }
+  .tag { display: none; font-size: .7rem; font-weight: 700; font-style: normal; letter-spacing: .02em; border-radius: 3px;
+         padding: .05rem .3rem; margin-right: .3rem; vertical-align: .2em; line-height: 1.2; }
+  .tag.nathan { background: var(--slate); color: var(--kraft-light); }
+  .tag.you { background: var(--rust-ink); color: var(--kraft-light); }
+  .who-sings { display: none; font-size: 1rem; background: var(--kraft-light); border-left: 4px solid var(--rust-ink); padding: .5rem .75rem; margin: .25rem 0 0; }
+  .who-sings .tag { display: inline; }
+  body.role-sing .who-sings { display: block; }
+  body.role-sing .tag { display: inline; }
+  body.role-sing .solo { color: var(--slate); font-style: italic; }
+  body.role-sing .echo { color: var(--ink); font-style: italic; }
+  .staff-box { display: none; position: relative; max-height: 26rem; overflow: auto; background: #fbf6ec;
+               border: 2px solid var(--ink); border-radius: 8px; }
+  body.view-staff .staff-box { display: block; }
+  body.view-staff #roll, body.view-staff .legend-line { display: none; }
+  #staff svg { display: block; }
+  .bar-mark { position: absolute; display: none; background: rgba(192,99,61,.18); border-bottom: 3px solid var(--rust); pointer-events: none; }
+  .staff-note { padding: 1rem; font-size: 1rem; }
+  .fade-row { display: none; }
+  body.role-sing .fade-row { display: flex; }
+  .fade-lead { font-weight: 700; font-size: 1rem; }
+  .tag.rest { background: transparent; color: var(--ink-soft); border: 1px solid var(--ink-soft); }
+  .sing-only { display: none; }
+  body.role-sing .sing-only { display: inline; }
+  body.role-sing .not-sing { display: none; }
+  .steps b { font-weight: 700; margin-right: .2rem; }
+  .settings { font-size: .9rem; color: var(--ink-soft); gap: .3rem .5rem; }
+  .settings select { font-size: .9rem; padding: .05rem .3rem; }
+  /* first word of a line: tap to hear your starting note (singing view only) */
+  body.role-sing .fn { text-decoration: underline dotted var(--rust-ink); text-decoration-thickness: 2px; text-underline-offset: 4px; cursor: pointer; position: relative; }
+  body.role-sing .fn.sounding::after { content: attr(data-note); position: absolute; left: 0; top: -1.6em; font-size: .8rem; font-weight: 700; font-style: normal;
+      background: var(--rust-ink); color: var(--kraft-light); padding: .05rem .35rem; border-radius: 3px; white-space: nowrap; }
+  /* singing: the recording player is pinned in the bar instead of the view buttons */
+  body.role-sing .bar .toggle, body.role-sing .bar .spacer { display: none; }
+  body.role-sing .bar .wrap { flex-wrap: nowrap; }
+  body.role-sing .bar .plain { flex: none; order: 2; }
+  .bar .listen { margin: 0 auto; max-width: 40rem; width: 100%; }
+  /* on touch screens every control gets a finger-sized target */
+  @media (pointer: coarse) {
+    .pick, .pick.small, .plain, .toggle, .play { min-height: 44px; }
+    .listen input[type="range"] { height: 44px; }
+    .hear { padding: .5rem .2rem; margin: -.5rem 0; }
+  }
+  .riff { margin-top: 2rem; }
+  body.role-sing .riff { display: none; }
+  .riff h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; margin: 0 0 .25rem; letter-spacing: .02em; }
+  .riff-views { display: none; gap: .4rem; }
+  .capo-row { display: none; flex-wrap: wrap; align-items: center; gap: .3rem .6rem; margin: .2rem 0 .6rem; }
+  body.riff-capo .capo-row { display: flex; }
+  .capo-row label { font-weight: 700; }
+  .capo-shapes { flex-basis: 100%; margin: 0; font-size: .95rem; }
+  body.riff-tabbable .riff-views { display: inline-flex; }
+  .riff-box { background: #fbf6ec; border: 2px solid var(--ink); border-radius: 8px; overflow-x: auto; padding: .5rem .25rem .25rem; }
+  .riff-key { margin: 0 .5rem .2rem; font-size: .95rem; }
+  .riff-box { position: relative; }
+  .riff-cursor { position: absolute; width: 3px; background: var(--rust); border-radius: 2px; pointer-events: none; box-shadow: 0 0 0 3px rgba(192,99,61,.18); }
+  .riff-key b { font-weight: 700; }
+  #riffMusic svg { display: block; }
+  @media print { .riff .ctl-row, .capo-row { display: none !important; } .riff-box { border: 0; overflow: visible; padding: 0; background: none; }
+    #riffMusic svg { width: 100% !important; height: auto !important; } .riff { break-inside: avoid; margin-top: 3mm; } .riff h2 { font-size: 14pt; } }
+  .setting-now { font-weight: 700; color: var(--kraft-light); background: var(--rust-ink); border-radius: 4px; padding: 0 .45rem; }
+  body.role-sing .setting-now { display: none; }
+  .sheet-badge { font-family: var(--body); font-size: .75rem; font-weight: 700; margin-left: .4rem; vertical-align: .15em;
+                 background: var(--rust-ink); color: var(--kraft-light); border-radius: 3px; padding: .05rem .3rem; }
+  .sheet-badge:empty { display: none; }
+  @media print { .setting-now { color: #000; background: none; border: 1pt solid #000; } }
+  body.no-score .practice, body.no-score .range-line { display: none !important; }
+  body.no-chords .parts, body.no-chords #capoRow, body.no-chords .row:has(#numbers) { display: none !important; }
+  .part-pick { display: none; margin-top: .5rem; }
+  body.role-sing.multi-part .part-pick { display: flex; }
+  .ghost { color: transparent; text-decoration: underline; text-decoration-color: var(--ink-soft); text-decoration-thickness: 1px; }
+
+  /* Toolbar */
+  .bar {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--kraft);
+    border-bottom: 2px solid var(--ink);
+    padding: .75rem 0 .75rem;
+    padding-top: calc(.75rem + env(safe-area-inset-top, 0px));
+  }
+  .bar .wrap { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+  .toggle {
+    font-family: var(--display); font-size: 1.35rem; letter-spacing: .04em;
+    padding: .2rem .9rem .1rem; border: 2px solid var(--ink); border-radius: 999px;
+    background: transparent; cursor: pointer;
+  }
+  .toggle[aria-pressed="true"] { background: var(--ink); color: var(--kraft); }
+  .bar .spacer { flex: 1; }
+  .plain {
+    border: 2px solid var(--ink); background: transparent; border-radius: 6px;
+    padding: .2rem .7rem; cursor: pointer; font-size: 1rem;
+  }
+  .plain:hover, .toggle:hover { box-shadow: 0 0 0 2px var(--ink); }
+
+  /* Sheets panel */
+  #sheets { display: none; margin: 1.25rem 0 0; background: var(--kraft-light); border: 2px solid var(--ink); border-radius: 10px; padding: 1rem 1.1rem 1.1rem; }
+  body.sheets-on #sheets { display: block; }
+  .sheets-head { display: none; }
+  .row { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; padding: .55rem 0; border-top: 1px solid rgba(28,25,21,.18); }
+  .row:first-child { border-top: 0; padding-top: 0; }
+  .row > .label { min-width: 7.5rem; font-weight: 700; }
+  .stepper { display: inline-flex; align-items: center; gap: .4rem; }
+  .stepper output { min-width: 3.2rem; text-align: center; font-weight: 700; font-size: 1.2rem; }
+  .hint { font-size: .95rem; color: var(--ink-soft); }
+  select, input[type="number"] { background: var(--kraft); border: 2px solid var(--ink); border-radius: 6px; padding: .15rem .4rem; }
+  input[type="number"] { width: 4.5rem; }
+  .check { display: inline-flex; align-items: center; gap: .4rem; cursor: pointer; }
+  .check input { width: 1.1rem; height: 1.1rem; accent-color: var(--ink); }
+  .soon { opacity: .6; }
+
+
+  /* Form strip: the one bold element. Sticks under the toolbar so you always know where you are. */
+  nav.form { position: sticky; top: var(--bar-h); z-index: 4; background: var(--kraft); padding: .6rem 0; border-bottom: 1px solid rgba(28,25,21,.25); }
+  #form { display: flex; gap: .3rem; }
+  #form a {
+    flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: .1rem;
+    text-decoration: none; color: var(--ink); padding: .7rem .45rem .35rem; border-radius: 3px;
+    border: 2px solid transparent;
+  }
+  #form a b { font-weight: 700; font-size: 1.3rem; line-height: 1; }
+  #form a span { font-size: .8rem; line-height: 1.1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  #form a.here { border-color: var(--ink); box-shadow: inset 0 -5px 0 var(--ink); }
+  .pa  { background: var(--mustard); color: var(--ink); }
+  .pb1 { background: var(--rust); color: var(--ink); }
+  .pb2 { background: var(--rust-ink); color: var(--kraft-light) !important; }
+
+  /* Headings */
+  main > h2, .parts > h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; margin: 2rem 0 .25rem; letter-spacing: .02em; }
+  .lede { margin: 0 0 1rem; color: var(--ink-soft); font-size: 1rem; }
+  .badge { font-weight: 700; font-size: 1.15rem; line-height: 1; padding: .3rem .5rem; border-radius: 4px; min-width: 2.4rem; text-align: center; }
+  .cap { font-size: 1rem; color: var(--ink-soft); font-weight: 400; }
+
+  /* The parts */
+  .card { border: 2px solid var(--ink); border-radius: 8px; padding: .8rem .9rem .9rem; margin-bottom: .8rem; background: var(--kraft-light); }
+  .card h3 { display: flex; align-items: center; gap: .6rem; margin: 0 0 .4rem; }
+  .card p { margin: 0 0 .6rem; font-size: 1rem; }
+  .grid-row { display: flex; flex-wrap: wrap; gap: .3rem; align-items: center; margin-top: .35rem; }
+  .blk { border: 2px solid var(--ink); border-radius: 5px; padding: .1rem .45rem; min-width: 3rem; text-align: center; font-weight: 700; color: var(--rust-ink); background: var(--kraft); }
+  .times { font-weight: 700; margin-left: .2rem; }
+  .blk small { display: block; font-weight: 400; font-size: .75rem; color: var(--ink); white-space: nowrap; }
+
+  /* Song */
+  main { padding-bottom: 3rem; }
+  section.part { margin-top: 1.9rem; }
+  section.part h3 { display: flex; align-items: center; gap: .6rem; margin: 0 0 .6rem; }
+
+  .line { display: flex; flex-wrap: wrap; align-items: flex-end; margin: 0 0 .45rem; font-size: 1.25rem; }
+  .seg { display: inline-flex; flex-direction: column; white-space: pre-wrap; max-width: 100%; }
+  .ch { font-weight: 700; font-style: normal; color: var(--rust-ink); font-size: 1.05rem; line-height: 1.2; padding-right: .5rem; min-height: 1.2em; }   /* chords are never italic, even inside an italic echo */
+  .ch.run { font-weight: 500; letter-spacing: .03em; }   /* a run of single notes, lighter than a chord */
+  .ch:empty { padding-right: 0; }
+  body.chords-on .seg.stretched .ly::after { content: '-'; }   /* a spot with no chord adds no space */
+  .ly { line-height: 1.35; }
+  .seg.gap .ly { min-width: 3.75rem; }
+  .ly.has-hold { display: flex; align-items: flex-end; min-height: 1.35em; }   /* a hold with no word keeps a full line's height, so its chord sits level with the others */
+  .join-gap { display: none; }
+  .chs { display: flex; }
+  body:not(.chords-on) .chs { display: none; }
+  body:not(.lyrics-on) .chs { gap: .35rem; }
+  body.chords-on .pgroup { display: flex; flex-wrap: wrap; align-items: flex-end; margin: 0 0 .45rem; }
+  body.chords-on .pgroup > .line { display: contents; }
+  body.chords-on .pgroup > .echo { display: flex; align-items: flex-end; margin: 0 0 0 .4rem; }
+  .echo .seg { display: inline-flex; flex-direction: column; white-space: pre-wrap; }
+  body:not(.chords-on) .echo .seg { display: inline; }
+  body.chords-on .join-gap { display: inline-flex; }
+  body:not(.chords-on) .seg.join-gap { display: none; }
+  body:not(.chords-on) .lead { display: none; }   /* the indent under the chords isn't needed without them */
+  body:not(.chords-on) .seg.gap { display: none; }
+  body:not(.chords-on) .echo { margin-left: var(--echo-x, 0px); }   /* singers: the echo starts under the word it echoes */
+  body:not(.chords-on) .seg.hold-only { display: none; }   /* without chords, one hold line after the word is enough */
+  body:not(.chords-on) .rest-line:not(:has(.tag)) { display: none; }   /* one Rest for a run of resting lines */
+  .hold { flex: 1; min-width: 1.5rem; border-bottom: 2px solid currentColor; margin-bottom: .3em; }
+  body:not(.chords-on) .ly.has-hold { display: inline; }
+  body:not(.chords-on) .hold { display: inline-block; flex: none; width: 1.6em; min-width: 0; margin: 0; height: .9em; }
+  .echo { margin: -.3rem 0 .5rem 1.5rem; font-style: italic; color: var(--ink-soft); }
+
+  /* iPad landscape and up: the parts stay beside the song as a reference */
+  @media (min-width: 1000px) {
+    .wrap { max-width: 68rem; }
+    .layout { display: grid; grid-template-columns: 19rem 1fr; gap: 3rem; align-items: start; }
+    .parts { position: sticky; top: calc(var(--bar-h) + 5.2rem); max-height: calc(100vh - var(--bar-h) - 6rem); overflow: auto; padding-bottom: 1rem; }
+    header.song-head, .extras, footer { max-width: 46rem; margin-left: auto; margin-right: auto; }
+  }
+
+  /* View modes */
+  body:not(.chords-on) .line { display: block; }
+  body:not(.chords-on) .seg { display: inline; }
+  body:not(.chords-on) .seg.gap .ly { display: inline; }
+  body:not(.chords-on) .ch { display: none; }
+  body:not(.lyrics-on) .ly { display: none; }
+  body:not(.lyrics-on) .echo:not(:has(.has-chord)) { display: none; }
+  body:not(.lyrics-on) .line { gap: .35rem; }
+  body:not(.lyrics-on) .seg:not(.has-chord) { display: none; }
+  body:not(.lyrics-on) .ch { border: 2px solid var(--ink); border-radius: 6px; padding: .15rem .5rem; min-width: 3.2rem; text-align: center; background: var(--kraft-light); }
+  .empty { display: none; margin-top: 2rem; }
+  body:not(.lyrics-on):not(.chords-on) .empty { display: block; }
+  body:not(.lyrics-on):not(.chords-on) section.part { display: none; }
+
+  /* Extras */
+  .extras { border-top: 2px solid var(--ink); margin-top: 3rem; padding-top: 1.5rem; }
+  .extras h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; margin: 0 0 1rem; }
+  .extras h3 { font-size: 1.2rem; margin: 0 0 .5rem; }
+  .poem p { margin: 0 0 .75rem; max-width: 36rem; font-size: 1.1rem; line-height: 1.6; }
+  .cite { font-size: .95rem; color: var(--ink-soft); }
+
+  footer { padding: 2rem 0 3rem; font-size: .95rem; color: var(--ink-soft); }
+
+  @media (max-width: 700px) {
+    :root { --bar-h: 0px; }
+    html { scroll-padding-top: 5.5rem; }
+    body { padding-bottom: 5.5rem; }
+    .bar { position: fixed; top: auto; bottom: 0; left: 0; right: 0; border-bottom: 0; border-top: 2px solid var(--ink);
+           padding: .6rem 0 calc(.6rem + env(safe-area-inset-bottom, 0px)); }
+    .bar .wrap { justify-content: center; }
+    nav.form { top: 0; padding-top: calc(.5rem + env(safe-area-inset-top, 0px)); }
+    #sheets { position: fixed; left: .5rem; right: .5rem; bottom: calc(4.3rem + env(safe-area-inset-bottom, 0px)); z-index: 6;
+              max-height: 70vh; overflow: auto; margin: 0; box-shadow: 0 -6px 24px rgba(28,25,21,.35); }
+    .sheets-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .5rem;
+                   font-family: var(--display); font-size: 1.5rem; }
+    .row > .label { min-width: 100%; }
+  }
+  @media (max-width: 520px) {
+    header.song-head img { width: 128px; height: 128px; }
+    #form a { padding: .5rem .3rem .3rem; }
+    #form a b { font-size: 1.1rem; }
+    #form a span { display: none; }
+    body.role-sing #form a span { display: block; font-size: .6rem; white-space: nowrap; overflow: hidden; }
+    body.role-sing #form a { align-items: flex-start; padding: .45rem .25rem .3rem; }
+    #form a { align-items: center; padding: .55rem .2rem; }
+    .line { font-size: 1.12rem; }
+    .bar .plain, .bar .spacer { display: none; }
+    .toggle { font-size: 1.2rem; }
+  }
+  /* Print: one clean chart page, following whatever view is on screen (key, instrument, lyrics/chords, singing marks) */
+  .print-form { display: none; }
+  @page { size: A4; margin: 14mm 14mm 12mm; }
+  @media print {
+    body::before, .bar, #sheets, nav.form, .parts, main > h2, .start, .role, .role-note, .listen, audio,
+    .practice, .extras, footer, .empty, .source, .fade-row { display: none !important; }
+    :root { padding: 0; }
+    body { background: #fff; font-size: 10pt; padding: 0; }
+    .wrap { max-width: none; padding: 0; }
+    .layout { display: block !important; }
+    header.song-head { display: grid; grid-template-columns: auto 1fr; gap: 0 5mm; align-items: center; text-align: left; padding: 0 0 3mm; max-width: none; border-bottom: 1.5pt solid #000; margin: 0; }
+    header.song-head img { width: 20mm; height: 20mm; margin: 0; }
+    header.song-head a { text-decoration: none; }
+    .collective { font-size: 9pt; }
+    h1 { font-size: 30pt; margin: 0; }
+    .facts { justify-content: flex-start; font-size: 10pt; }
+    .print-form { display: block; margin: 1mm 0 0; font-size: 10pt; }
+    .print-form b { font-weight: 700; margin-right: .6mm; }
+    #song { columns: 2; column-gap: 9mm; margin-top: 4mm; }
+    section.part { break-inside: avoid; margin: 0 0 4mm; }
+    section.part h3 { margin: 0 0 1.5mm; }
+    .badge { font-size: 9pt; padding: .5mm 1.5mm; min-width: 0; }
+    .cap { font-size: 8.5pt; }
+    .line, body.role-sing .line { font-size: 10.5pt; margin: 0 0 1.2mm; }
+    .ch { font-size: 8.5pt; }
+    .seg.gap .ly { min-width: 8mm; }
+    .who-sings { font-size: 8.5pt; padding: 1mm 2mm; margin: 3mm 0 0; }
+    .echo { margin: -.5mm 0 1.2mm 4mm; font-size: 9.5pt; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body class="lyrics-on chords-on">
+
+<div class="wrap">
+  <header class="song-head">
+    <!-- Logo: drop the file at this path. Not embedded. -->
+    <a href="songbook.html"><img src="assets/scc-logo.jpg" alt="Secret Chord Collective logo, back to the Secret Songbook"></a>
+    <div>
+      <p class="collective"><a href="songbook.html">Secret Songbook</a></p>
+      <h1>Father</h1>
+      <div class="listen" id="listen">
+        <button class="pp" id="recBtn" aria-label="Play" aria-pressed="false"><span class="pp-icon" aria-hidden="true"></span></button>
+        <input type="range" id="recSeek" min="0" max="1000" value="0" aria-label="Position in the song">
+        <span class="rec-time" id="recTime">0:00</span>
+      </div>
+      <audio id="rec" preload="metadata"></audio>
+      <dl class="facts">
+        <div><dt>Key</dt><dd id="factKey">Gm</dd></div>
+        <div><dt>Tempo</dt><dd>105 bpm</dd></div>
+        <div class="setting-now" id="settingNow" hidden></div>
+      </dl>
+      <p class="print-form" id="printForm"></p>
+      <p class="start" id="startHint">Start here <span aria-hidden="true">⤵</span></p>
+      <div class="role" role="group" aria-label="What you are doing">
+        <span class="role-lead">I am</span>
+        <button class="pick" data-role="sing" aria-pressed="false">singing</button>
+        <button class="pick" data-role="play" aria-pressed="false">playing</button>
+      </div>
+      <div class="role inst" role="group" aria-label="Your instrument">
+        <button class="pick small" data-inst="guitar" aria-pressed="false">Guitar</button>
+        <button class="pick small" data-inst="uke" aria-pressed="false">Ukulele</button>
+        <button class="pick small" data-inst="keys" aria-pressed="false">Keys</button>
+        <button class="pick small" data-inst="bass" aria-pressed="false">Bass</button>
+        <button class="pick small" data-inst="bb" aria-pressed="false">B♭ instrument</button>
+        <button class="pick small" data-inst="eb" aria-pressed="false">E♭ instrument</button>
+        <button class="pick small" data-inst="f" aria-pressed="false">French horn</button>
+      </div>
+      <p class="role-note" id="roleNote"></p>
+      <p class="range-line" id="rangeBox"></p>
+      <div class="role part-pick" id="partPick" role="group" aria-label="Your part"></div>
+
+    </div>
+  </header>
+</div>
+
+<nav class="bar" aria-label="Page view">
+  <div class="wrap">
+    <button class="toggle" data-mode="sheets" aria-pressed="false">Sheets<span class="sheet-badge" id="sheetBadge"></span></button>
+    <span class="spacer"></span>
+    <button class="plain" onclick="window.print()">Print</button>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div id="sheets" aria-label="Sheets tools">
+    <div class="sheets-head"><span>Sheets</span><button class="plain" id="sheetsDone">Done</button></div>
+    <div data-for="play" class="row print-keep">
+      <span class="label">Key</span>
+      <span class="stepper">
+        <button class="plain" id="keyDown" aria-label="Transpose down a half step">−</button>
+        <output id="keyOut">Gm</output>
+        <button class="plain" id="keyUp" aria-label="Transpose up a half step">+</button>
+      </span>
+      <button class="plain" id="keyReset">Original key</button>
+    </div>
+    <div data-for="play" class="row">
+      <label class="label" for="readAs">Read as</label>
+      <select id="readAs">
+        <option value="concert">Concert pitch</option>
+        <option value="bb">B♭ instrument</option>
+        <option value="eb">E♭ instrument</option>
+        <option value="f">French horn</option>
+        <option value="capo">Capo shapes (guitar, uke)</option>
+      </select>
+      <span id="capoWrap" hidden>
+        <label for="capo">Capo fret</label>
+        <input type="number" id="capo" min="1" max="9" value="3">
+      </span>
+      <span class="hint" id="readHint"></span>
+    </div>
+    <div class="row">
+      <span class="label">Show</span>
+      <label class="check"><input type="checkbox" id="showLyrics" checked> Words</label>
+      <label class="check"><input type="checkbox" id="showChords" checked> Chords</label>
+    </div>
+    <div data-for="play" class="row">
+      <span class="label">Chords as</span>
+      <label class="check"><input type="checkbox" id="numbers"> Numbers instead of chord names</label>
+      <label class="check"><input type="checkbox" id="tones"> Chord tones</label>
+    </div>
+    <div class="row">
+      <span class="label">Click</span>
+      <button class="plain" id="clickBtn">Start click</button>
+      <label for="bpm">bpm</label>
+      <input type="number" id="bpm" min="40" max="200" value="92">
+    </div>
+  </div>
+
+</div>
+
+<nav class="form" aria-label="Song form"><div class="wrap" id="form"></div></nav>
+
+<div class="wrap">
+  <section class="riff" id="riff" aria-labelledby="riffTitle">
+    <h2 id="riffTitle">The riff</h2>
+    <div class="capo-row" id="capoRow">
+      <label for="capoPick">Capo</label>
+      <select id="capoPick"></select>
+      <p class="capo-shapes" id="capoShapes"></p>
+    </div>
+    <div class="ctl-row">
+      <button class="play" id="riffPlay">Hear it</button>
+      <span class="riff-views" role="group" aria-label="How to read the riff">
+        <button class="pick small" data-riffview="notes" aria-pressed="true">Sheet music</button>
+        <button class="pick small" data-riffview="tab" aria-pressed="false">Tab</button>
+      </span>
+    </div>
+    <div class="riff-box">
+      <p class="riff-key" id="riffKey"></p>
+      <div id="riffMusic"></div>
+      <div class="riff-cursor" id="riffCursor" hidden></div>
+    </div>
+  </section>
+  <div class="layout">
+    <aside class="parts" aria-labelledby="partsTitle">
+      <h2 id="partsTitle">The parts</h2>
+      <p class="lede">Learn these three and you know the song. The strip at the top shows the order.</p>
+      <div id="partCards"></div>
+    </aside>
+    <main>
+      <section class="practice" id="practice" aria-labelledby="practiceTitle">
+        <h2 id="practiceTitle">Learn your part</h2>
+        <div class="ctl-row" role="group" aria-label="How to see the music">
+          <button class="pick small" data-view="roll" aria-pressed="true">Moving lines</button>
+          <button class="pick small" data-view="staff" aria-pressed="false">Sheet music</button>
+        </div>
+        <p class="legend-line"><span class="key-you"></span><b class="lg-you">Your line</b> <span class="key-nathan"></span><b class="lg-nathan">Nathan</b></p>
+        <canvas id="roll" aria-label="Your line and the other line, moving as the music plays"></canvas>
+        <div class="staff-box" id="staffBox"><div id="staff"></div><div class="bar-mark" id="barMark"></div></div>
+        <div class="ctl-row">
+          <button class="play" id="playBtn">Play</button>
+          <button class="pick small" id="firstNoteBtn">Your next note</button>
+        </div>
+        <div class="ctl-row steps" role="group" aria-label="What you hear" id="balanceRow">
+          <button class="pick small" data-bal="bg" aria-pressed="true"><b>1</b> Just your line</button>
+          <button class="pick small" data-bal="together" aria-pressed="false"><b>2</b> Both lines</button>
+          <button class="pick small" data-bal="nathan" aria-pressed="false"><b>3</b> Just Nathan</button>
+        </div>
+      </section>
+      <h2><span class="not-sing">Play it through</span><span class="sing-only">Sing along</span></h2>
+      <p class="who-sings" id="whoSings"></p>
+      <div class="ctl-row fade-row" role="group" aria-label="How much of the words to show">
+        <span class="fade-lead">Learn the words:</span>
+        <button class="pick small" data-fade="0" aria-pressed="true">All</button>
+        <button class="pick small" data-fade="1" aria-pressed="false">First letters</button>
+        <button class="pick small" data-fade="2" aria-pressed="false">Blanks</button>
+      </div>
+      <div id="song"></div>
+      <p class="empty">Turn on words or chords under Sheets to see the song.</p>
+    </main>
+  </div>
+
+
+  <footer>The Secret Songbook is made by Secret Chord Collective.</footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.3/build/cjs/vexflow-bravura.js"></script>
+<script src="father-score.js"></script>
+<script>
+/* ---------- The song ----------
+   Chords go in square brackets right before the syllable they land on.
+   A chord on a rest is written [E♭]  [] before the next word, so the word comes after the chord.
+   join: true runs a line on from the one before it for players (with chords showing); singers still see it as its own line.
+   Words in {curly braces} are Nathan singing alone; everything else the backing vocal sings too.
+   starts: [score bar of each line] pins hummed lines to their bars, for the first-note buttons.
+   A line with no words is a rest for the singers. rest: { alto: [first bar, last bar] } silences
+   that voice for those score bars in that section only (the score repeats A1's bars for the last A2).
+   A chord with no words after it is held or played in the gap.  */
+const SONG = {
+  slug: 'father', credit: '',
+  key: 'B♭', minor: false,
+  /* The lines singers learn here, by score part. */
+  backing: [{ voice: 'alto', range: 'tenor or baritone' }],
+  /* The recording. marks = the second each section starts in the mp3, by section id (v1, v2, ch1, v3, ch2) plus end. */
+  recording: { src: 'secretchordcollective_father.mp3', marks: null },   // TODO: add the mp3 to the repo, next to this file
+  parts: {
+    A: { cls: 'pa',  about: 'The verses.' },
+    B: { cls: 'pb1', about: 'The chorus: "father above, father below."' }
+  },
+  sections: [
+    { id: 'v1', part: 'A', caption: 'verse 1', lines: [
+      "[Eb]  []{quiet [F]violence [Bb]washes down the [Eb]drain}",
+      "[Eb]  []{he said that [F]silence pro[Bb]tects the family [Eb]name}",
+      "and he [Gm]waited {[Gm/F]decades to ex[Eb]plain}"
+    ]},
+    { id: 'v2', part: 'A', caption: 'verse 2', lines: [
+      "[Eb]  []{in the [F]darkness I} [Bb]only felt the [Eb]walls",
+      "[Eb]  []{someone [F]cryin’} [Bb]somewhere down the [Eb]hall",
+      "and he [Gm]waited {[Gm/F]decades to ex[Eb]plain}",
+      "{[Gm]pain spreads like [Gm/F]venom} in my [Eb]veins"
+    ]},
+    { id: 'ch1', part: 'B', caption: 'chorus', lines: [
+      "[Bb]father up above [Eb]  []{can I learn to live in} [Bb]love___[Eb]___",
+      "[Bb]father down below [Eb]  []{went and left me on my} [Bb]own___[F]___"
+    ]},
+    { id: 'v3', part: 'A', caption: 'verse 3', lines: [
+      "[Eb]  []{should I [F]wash my hands to} [Bb]clear an easy [Eb]start",
+      { c: "[Eb]  []{like Pontius [F]Pilate pre[Bb]tend} I play no [Eb]part", echo: '(am I Judas?)', echoAt: 'start' },
+      "{or} [Gm]let it {[Gm/F]break my [Eb]  []heart}",
+      "[Gm]let it [Gm/F]break my [Eb]  []heart"
+    ]},
+    { id: 'ch2', part: 'B', caption: 'chorus', lines: [
+      "[Bb]father up above [Eb]  []{can I} learn to live in [Bb]love___[Eb]___",
+      "[Bb]father down below [Eb]  []{went and} left me on my [Bb]own___[F]___",
+      "{all a[Eb]lone___[Eb9]___} [Eb]  "
+    ]}
+  ]
+};
+
+/* ---------- Music helpers ---------- */
+const KEY_NAMES = ['C','D♭','D','E♭','E','F','F♯','G','A♭','A','B♭','B'];
+const MINOR_NAMES = ['Cm','C♯m','Dm','E♭m','Em','Fm','F♯m','Gm','G♯m','Am','B♭m','Bm'];
+const LETTERS = 'CDEFGAB', NATURAL = [0,2,4,5,7,9,11];
+const LETTER = { C:0, D:2, E:4, F:5, G:7, A:9, B:11 };
+const ACC = { 0:'', 1:'♯', 2:'𝄪', 11:'♭', 10:'𝄫' };
+const STEP = [0,1,1,2,2,3,4,4,5,5,6,6];                 // letter steps above a root, by semitone
+const TONE_STEP = { 0:0, 2:1, 3:2, 4:2, 5:3, 7:4, 9:5, 10:6, 11:6, 14:1 };
+const QUALITY = {                                        // intervals above the root
+  '': [0,4,7], 'm': [0,3,7], '7': [0,4,7,10], 'm7': [0,3,7,10], 'maj7': [0,4,7,11],
+  '9': [0,4,7,10,14], 'm9': [0,3,7,10,14], 'maj9': [0,4,7,11,14], 'add9': [0,4,7,14],
+  'sus2': [0,2,7], 'sus4': [0,5,7], '6': [0,4,7,9], 'm6': [0,3,7,9], '6sus4': [0,5,7,9], '7sus4': [0,5,7,10], 'm(add9)': [0,3,7,14], 'madd9': [0,3,7,14]
+};
+const DEGREE = ['1','♭2','2','♭3','3','4','♭5','5','♭6','6','♭7','7'];
+const OFFSET = { concert: 0, bb: 2, eb: 9, f: 7 };
+const mod = n => ((n % 12) + 12) % 12;
+
+function parsePitch(s) {
+  const m = /^([A-G])([#b♯♭]?)/.exec(s);
+  if (!m) return null;
+  let pc = LETTER[m[1]];
+  if (m[2] === '#' || m[2] === '♯') pc++;
+  if (m[2] === 'b' || m[2] === '♭') pc--;
+  return { pc: mod(pc), len: m[0].length };
+}
+function parseChord(sym) {
+  const [main, bass] = sym.split('/');
+  const r = parsePitch(main);
+  if (!r) return null;
+  return { root: r.pc, quality: main.slice(r.len), bass: bass ? parsePitch(bass)?.pc : null };
+}
+
+const SONG_KEY = parsePitch(SONG.key).pc;
+const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', part: (SONG.backing[0] || {}).voice || 'alto' };
+
+function instOffset() { return state.readAs === 'capo' ? -state.capo : OFFSET[state.readAs]; }
+const move = () => state.shift + instOffset();
+const PLAIN_FLAT = ['C','D♭','D','E♭','E','F','G♭','G','A♭','A','B♭','B'];
+const PLAIN_SHARP = ['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
+function noteName(letterIdx, pc) {
+  const l = mod7(letterIdx), acc = ACC[mod(pc - NATURAL[l])];
+  const name = LETTERS[l] + (acc ?? '?');
+  /* Players read B faster than C♭, and F faster than E♯ */
+  if (acc === undefined || /^(C♭|F♭|E♯|B♯)$/.test(name) || /𝄪|𝄫/.test(name))
+    return (acc === '♯' || acc === '𝄪' ? PLAIN_SHARP : PLAIN_FLAT)[mod(pc)];
+  return name;
+}
+const mod7 = n => ((n % 7) + 7) % 7;
+function keyName(pc) { return (SONG.minor ? MINOR_NAMES : KEY_NAMES)[mod(pc)]; }
+/* Spell a note (given in the original key) after transposition, using its
+   scale degree in the new key, so borrowed chords keep flats (E♭ in F, B♭ in C). */
+function spell(pc) {
+  const k = mod(SONG_KEY + move()), kl = LETTERS.indexOf(keyName(k)[0]);
+  const deg = mod(pc - SONG_KEY);
+  return noteName(kl + STEP[deg], mod(pc + move()));
+}
+function spellTone(rootPc, interval) {
+  const r = spell(rootPc), rl = LETTERS.indexOf(r[0]);
+  return noteName(rl + TONE_STEP[interval], mod(rootPc + move() + interval));
+}
+
+function chordName(sym) {
+  const c = parseChord(sym);
+  if (!c) return sym;
+  return spell(c.root) + c.quality + (c.bass != null ? '/' + spell(c.bass) : '');
+}
+function chordNumber(sym) {
+  const c = parseChord(sym);
+  if (!c) return sym;
+  const n = DEGREE[mod(c.root - SONG_KEY)] + c.quality;
+  return c.bass != null ? n + '/' + DEGREE[mod(c.bass - SONG_KEY)] : n;
+}
+function chordTones(sym) {
+  const c = parseChord(sym);
+  const iv = c && QUALITY[c.quality];
+  if (!iv) return '';
+  const t = iv.map(i => spellTone(c.root, i));
+  if (c.bass != null && !iv.some(i => mod(c.root + i) === c.bass)) t.unshift(spell(c.bass));
+  return t.join(' ');
+}
+/* A run of notes, written [~D E D G Bb]: where the score asks for the notes themselves, not a chord.
+   The notes move with the key, the instrument and the capo, like chords do. */
+const isRun = sym => typeof sym === 'string' && sym[0] === '~';
+function runText(sym) {
+  return sym.slice(1).trim().split(/\s+/).map(n => { const p = parsePitch(n); if (!p) return n;
+    return state.numbers ? DEGREE[mod(p.pc - SONG_KEY)] : spell(p.pc); }).join(' ');
+}
+const chHTML = c => `<b class="ch${isRun(c) ? ' run' : ''}">${c ? esc(shown(c)) : ''}</b>`;
+function shown(sym) {
+  if (isRun(sym)) return runText(sym);
+  if (state.inst === 'bass') {                       // bass reads the note it plays: the root, or the slash note
+    const c = parseChord(sym); if (!c) return sym;
+    const pc = c.bass != null ? c.bass : c.root;
+    return state.numbers ? DEGREE[mod(pc - SONG_KEY)] : spell(pc);
+  }
+  return state.numbers ? chordNumber(sym) : chordName(sym);
+}
+
+/* ---------- Rendering ---------- */
+function segments(src) {
+  const out = [], re = /\[([^\]]*)\]/g;   // [] (empty) starts a new chordless spot: "[E♭]  []can" puts the word after the chord
+  let last = 0, chord = null, m;
+  while ((m = re.exec(src))) {
+    if (m.index > last || chord !== null) out.push({ chord, text: src.slice(last, m.index) });
+    chord = m[1]; last = re.lastIndex;
+  }
+  out.push({ chord, text: src.slice(last) });
+  return out.filter(s => s.chord || s.text);
+}
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
+
+const lineSrc = l => typeof l === 'string' ? l : (l.parts?.[state.part]?.c ?? l.c);
+const lineEcho = l => typeof l === 'string' ? null : (l.parts ? l.parts[state.part]?.echo : l.echo);
+/* "day___[D♭add9]___[B♭9]___": the word holds under every chord, so those chords ride on the word, never on a line of their own */
+function mergeHolds(list) {
+  const out = [];
+  list.forEach(s => {
+    const t = s.text.replace(/[{}]/g, '').trim();
+    const prev = out[out.length - 1], prevWords = prev ? prev.text.replace(/[{}_]/g, '').trim().split(/\s+/).filter(Boolean).length : 0;
+    // ride on the held word only when that spot holds just the one word; otherwise the chord sits over the hold line itself
+    if (prev && s.chord && /^_+$/.test(t) && prev.chord && prevWords === 1) (prev.more ||= []).push(s.chord);   // a held word without a chord keeps the new chord over the hold itself
+    else out.push({ ...s });
+  });
+  return out;
+}
+const chordsOf = src => segments(src).filter(g => g.chord && !isRun(g.chord)).map(g => g.chord);
+const partCls = sec => SONG.parts[sec.part].cls;
+
+let FIRST = {}, ECHO = {};
+/* the echo, e.g. "(to the sky)": its first word also plays your note */
+function echoHTML(text, m) {
+  let done = m == null;
+  return segments(text).map(sg => {
+    let t = esc(sg.text);
+    const k = !done && /^([^A-Za-z]*)([A-Za-z']+)([\s\S]*)$/.exec(sg.text);
+    if (k) { done = true; t = esc(k[1]) + `<span class="fn" data-m="${m}" data-note="${midiName(m)}">${esc(k[2])}</span>` + esc(k[3]); }
+    return `<span class="seg${sg.chord ? ' has-chord' : ''}">${chHTML(sg.chord)}<span class="ly">${t}</span></span>`;
+  }).join('');
+}
+const echoWords = e => e.replace(/\[[^\]]*\]/g, '');
+/* Singing view: the alto's echo starts right under the last word of Nathan's line before it ("sky") */
+/* A word split by a wide chord (a-bandoned under "Cm"): show the hyphen, the way chord charts do. Only when it's actually pulled apart. */
+function markStretched() {
+  document.querySelectorAll('#song .seg.midword').forEach(sg => {
+    sg.classList.remove('stretched');
+    if (!document.body.classList.contains('chords-on')) return;
+    const ly = sg.querySelector('.ly'), r = document.createRange(); r.selectNodeContents(ly);
+    if (sg.getBoundingClientRect().width - r.getBoundingClientRect().width > 6) sg.classList.add('stretched');
+  });
+}
+window.addEventListener('resize', markStretched);
+function alignEchoes() {
+  document.querySelectorAll('#song .echo').forEach(e => {
+    e.style.removeProperty('--echo-x');
+    if (document.body.classList.contains('chords-on') || e.dataset.at === 'start') return;
+    const line = e.previousElementSibling; if (!line || !line.classList.contains('line')) return;
+    const w = document.createTreeWalker(line, NodeFilter.SHOW_TEXT); let n, last = null;
+    while ((n = w.nextNode())) {
+      if (!n.parentElement.offsetParent || n.parentElement.closest('.ch, .tag')) continue;
+      const re = /[A-Za-z']+/g; let m; while ((m = re.exec(n.textContent))) last = [n, m.index, m[0].length];
+    }
+    if (!last) return;
+    const r = document.createRange(); r.setStart(last[0], last[1]); r.setEnd(last[0], last[1] + last[2]);
+    e.style.setProperty('--echo-x', Math.max(0, r.getBoundingClientRect().left - line.getBoundingClientRect().left) + 'px');
+  });
+}
+window.addEventListener('resize', alignEchoes);
+document.fonts && document.fonts.ready.then(alignEchoes);
+function renderSong() {
+  if (window.SCORE) SONG.sections.forEach(sec => FIRST[sec.id] = firstNotes(sec));
+  document.getElementById('song').innerHTML = SONG.sections.map(sec => `
+    <section class="part" id="${sec.id}" aria-label="${esc(sec.part + ', ' + sec.caption)}">
+      <h3><span class="badge ${partCls(sec)}">${esc(sec.part)}</span><span class="cap">${esc(sec.caption)}</span></h3>
+      ${sec.lines.map((l, li) => {
+        const fm = FIRST[sec.id]?.[li]; let wrapped = fm == null;
+        let solo = false, lineText = false;   // lineText: words already shown on this line
+        const list = mergeHolds(segments(lineSrc(l)));
+        const segs = list.map((s, si) => {
+          let html = '';
+          s.text.split(/([{}])/).forEach(part => {
+            if (part === '{') { solo = true; html += '<span class="tag nathan">Nathan</span>'; return; }
+            if (part === '}') { solo = false; return; }
+            if (!part) return;
+            const had = lineText; if (/[A-Za-z]/.test(part)) lineText = true;
+            if (!had) { const lw = /^(\s+)/.exec(part); if (lw) { html += `<span class="lead">${esc(lw[1])}</span>`; part = part.slice(lw[1].length); } }   // indent before a line's first word: shown only with chords
+            if (solo) { html += `<span class="solo">${esc(part)}</span>`; return; }
+            const m = !wrapped && /^(\s*)(\S+)([\s\S]*)$/.exec(part);
+            if (m) { wrapped = true; html += (m[1] ? (had ? esc(m[1]) : `<span class="lead">${esc(m[1])}</span>`) : '') + `<span class="fn" data-m="${fm}" data-note="${midiName(fm)}">${fadeText(m[2])}</span>` + fadeText(m[3]); }
+            else html += fadeText(part);
+          });
+          const bare = s.text.replace(/[{}]/g, '');
+          const nextText = (list[si + 1]?.text || '').replace(/[{}]/g, '');
+          const midword = /[A-Za-z’']$/.test(bare) && /^[A-Za-z’']/.test(nextText);   // a chord change in the middle of a word
+          return `<span class="seg${s.chord ? ' has-chord' : ''}${bare.trim() || !s.chord ? '' : ' gap'}${/^_+$/.test(bare.trim()) ? ' hold-only' : ''}${midword ? ' midword' : ''}">` +
+            (s.more ? `<span class="chs">${chHTML(s.chord)}${s.more.map(chHTML).join('')}</span>`
+                    : chHTML(s.chord)) +
+            /* held notes (___) draw as one unbroken line under the chords, however wide they are */
+            (/_{2,}/.test(html) ? `<span class="ly has-hold">${html.replace(/_{2,}/g, '<span class="hold"></span>')}</span>` : `<span class="ly">${html || ' '}</span>`) + `</span>`;
+        }).join('');
+        const rest = !/[A-Za-z]/.test(lineSrc(l).replace(/\[[^\]]*\]/g, ''));
+        const prevRest = li > 0 && !/[A-Za-z]/.test(lineSrc(sec.lines[li - 1]).replace(/\[[^\]]*\]/g, ''));
+        const open = l.join ? '' : (li ? '</div>' : '') + '<div class="pgroup">';
+        const gap = l.join ? '<span class="seg join-gap"><b class="ch"></b><span class="ly"> </span></span>' : '';
+        return open + `<div class="line${rest ? ' rest-line' : ''}">${rest && !prevRest ? '<span class="tag rest">Rest</span>' : ''}${gap}${segs}</div>` + (lineEcho(l) ? `<div class="echo"${l.echoAt === 'start' ? ' data-at="start"' : ''}>${echoHTML(lineEcho(l), ECHO[sec.id + ':' + li])}</div>` : '') + (li === sec.lines.length - 1 ? '</div>' : '');
+      }).join('')}
+    </section>`).join('');
+  requestAnimationFrame(alignEchoes);
+  requestAnimationFrame(markStretched);
+
+  document.getElementById('form').innerHTML = SONG.sections.map(sec =>
+    `<a class="${partCls(sec)}" href="#${sec.id}" data-id="${sec.id}"><b>${esc(sec.part)}</b><span>${esc(sec.caption)}</span></a>`).join('');
+}
+
+/* The parts: each part's chords once, taken from its first appearance.
+   Identical rows in a row collapse into one with a repeat count. */
+function renderParts() {
+  document.getElementById('partCards').innerHTML = Object.entries(SONG.parts).filter(([, meta]) => !meta.card).map(([name, meta]) => {
+    const names = [name, ...Object.keys(SONG.parts).filter(k => SONG.parts[k].card === name)];
+    const first = SONG.sections.find(s => s.part === name);
+    const rows = [];
+    /* lines joined for players read as one row of chords */
+    (meta.rows || first.lines.reduce((acc, l) => { const c = chordsOf(lineSrc(l)); if (l.join && acc.length) acc[acc.length - 1].push(...c); else acc.push(c); return acc; }, [])).forEach(r => {
+      const last = rows[rows.length - 1];
+      if (last && last.chords.join() === r.join()) last.times++; else rows.push({ chords: r, times: 1 });
+    });
+    const where = SONG.sections.filter(s => names.includes(s.part)).map(s => s.caption);
+    const blk = c => `<span class="blk">${esc(shown(c))}${state.tones && chordTones(c) ? `<small>${esc(chordTones(c))}</small>` : ''}</span>`;
+    return `<div class="card">
+      <h3>${names.map(n => `<span class="badge ${meta.cls}">${esc(n)}</span>`).join('')}<span class="cap">${esc([...new Set(where)].join(', '))}</span></h3>
+      <p>${esc(meta.about)}</p>
+      ${rows.map(r => `<div class="grid-row">${r.chords.map(blk).join('')}` +
+        (r.times > 1 ? `<span class="times">×${r.times}</span>` : '') + `</div>`).join('')}
+    </div>`;
+  }).join('');
+}
+
+function renderKey() {
+  const concert = keyName(SONG_KEY + state.shift);
+  document.getElementById('keyOut').textContent = concert;
+  const written = keyName(SONG_KEY + move());
+  const setting = state.readAs === 'capo' ? `capo ${state.capo}, ${written} shapes`
+    : state.readAs !== 'concert' ? `written in ${written} for ${RIFF_FOR[state.readAs]?.name || 'your instrument'}` : '';
+  document.getElementById('factKey').textContent = concert + (state.shift ? ` (original ${keyName(SONG_KEY)})` : '');
+  const badge = document.getElementById('settingNow');
+  badge.textContent = setting ? setting[0].toUpperCase() + setting.slice(1) : '';
+  badge.hidden = !setting;
+  document.getElementById('sheetBadge').textContent = state.readAs === 'capo' ? `Capo ${state.capo}` : state.readAs !== 'concert' ? written : '';
+  const hint = document.getElementById('readHint');
+  if (state.readAs === 'concert') hint.textContent = '';
+  else if (state.readAs === 'capo') hint.textContent = `Play ${written} shapes with a capo on fret ${state.capo}.`;
+  else hint.textContent = `Your part reads in ${written}.`;
+  document.getElementById('capoWrap').hidden = state.readAs !== 'capo';
+}
+
+function renderWhoSings() {
+  const solo = SONG.sections.some(sec => sec.lines.some(l => lineSrc(l).includes('{')));
+  const parts = [];
+  if (solo) parts.push('You sing everything in dark type, together with Nathan. Where you see <span class="tag nathan">Nathan</span> and gray words, he sings alone and you rest.');
+  if (window.SCORE) parts.push('Tap the first word of a line to hear your starting note.');
+  const el = document.getElementById('whoSings'); el.innerHTML = parts.join(' '); el.hidden = !parts.length;
+}
+function renderAll() {
+  document.body.classList.toggle('no-score', !window.SCORE);
+  document.body.classList.toggle('no-chords', !SONG.sections.some(sec => sec.lines.some(l => chordsOf(lineSrc(l)).length)));
+  renderPartPick();
+  renderWhoSings();
+  document.getElementById('printForm').innerHTML = 'Form: ' + SONG.sections.map(x => `<b>${esc(x.part)}</b>`).join(' ') + (SONG.credit ? ' &nbsp; ' + esc(SONG.credit) : '');
+  renderSong(); renderParts(); renderKey(); watchPlace(); renderRiff(); if (window.SCORE) { renderRange(); if (!TL.events.length) buildTimeline(); drawRoll(); } }
+
+/* Light up the part you're reading in the form strip */
+let observer = null;
+function watchPlace() {
+  if (observer) observer.disconnect();
+  if (!('IntersectionObserver' in window)) return;
+  observer = new IntersectionObserver(entries => entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    document.querySelectorAll('#form a').forEach(a => a.classList.toggle('here', a.dataset.id === e.target.id));
+  }), { rootMargin: '-35% 0px -55% 0px' });
+  document.querySelectorAll('section.part').forEach(el => observer.observe(el));
+}
+
+/* ---------- Controls ---------- */
+document.getElementById('sheetsDone').onclick = () => document.querySelector('[data-mode=sheets]').click();
+document.querySelectorAll('.toggle').forEach(btn => btn.addEventListener('click', () => {
+  const mode = btn.dataset.mode;
+  state[mode] = !state[mode];
+  btn.setAttribute('aria-pressed', state[mode]);
+  document.body.classList.toggle(mode + '-on', state[mode]);
+}));
+document.getElementById('keyUp').onclick = () => { state.shift = state.shift >= 6 ? -5 : state.shift + 1; renderAll(); };
+document.getElementById('keyDown').onclick = () => { state.shift = state.shift <= -5 ? 6 : state.shift - 1; renderAll(); };
+document.getElementById('keyReset').onclick = () => { state.shift = 0; renderAll(); };
+document.getElementById('readAs').onchange = e => { state.readAs = e.target.value; remember(); renderAll(); };
+document.getElementById('capo').oninput = e => { state.capo = Math.max(1, Math.min(9, +e.target.value || 1)); remember(); renderAll(); };
+document.getElementById('numbers').onchange = e => { state.numbers = e.target.checked; renderAll(); };
+document.getElementById('tones').onchange = e => { state.tones = e.target.checked; renderParts(); };
+
+/* ---------- Click track (4/4, accent on 1) ---------- */
+let ac = null, clickTimer = null, nextTime = 0, beat = 0;
+function tick(time, accent) {
+  const o = ac.createOscillator(), g = ac.createGain();
+  o.frequency.value = accent ? 1500 : 1000;
+  g.gain.setValueAtTime(accent ? .5 : .3, time);
+  g.gain.exponentialRampToValueAtTime(.001, time + .05);
+  o.connect(g); g.connect(ac.destination);
+  o.start(time); o.stop(time + .06);
+}
+function schedule() {
+  const bpm = Math.max(40, Math.min(200, +document.getElementById('bpm').value || 92));
+  while (nextTime < ac.currentTime + .12) {
+    tick(nextTime, beat % 4 === 0);
+    nextTime += 60 / bpm; beat++;
+  }
+}
+document.getElementById('clickBtn').onclick = e => {
+  if (clickTimer) {
+    clearInterval(clickTimer); clickTimer = null;
+    e.target.textContent = 'Start click';
+    return;
+  }
+  ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+  ac.resume();
+  beat = 0; nextTime = ac.currentTime + .05;
+  clickTimer = setInterval(schedule, 25);
+  e.target.textContent = 'Stop click';
+};
+
+/* ---------- Learn by heart ---------- */
+function fadeText(text) {
+  if (!state.fade) return esc(text);
+  return text.split(/(\s+)/).map(tok => {
+    if (!/[A-Za-z]/.test(tok)) return esc(tok);
+    const m = /^([^A-Za-z]*)([A-Za-z])(.*)$/.exec(tok);
+    const keep = state.fade === 1 ? m[1] + m[2] : m[1];
+    const hide = state.fade === 1 ? m[3] : m[2] + m[3];
+    return esc(keep) + `<span class="ghost">${esc(hide)}</span>`;
+  }).join('');
+}
+
+/* ---------- Singing: parts, range and the practice player ---------- */
+const SC = window.SCORE;
+const OTHER = { alto: 'baritone', baritone: 'alto' };
+function midiName(m) { return spell(mod(m)) + (Math.floor((m + state.shift) / 12) - 1); }
+function rangeOf(v) {
+  const ns = SC.voices[v].notes, ps = ns.map(n => n[2]);
+  return { lo: Math.min(...ps), hi: Math.max(...ps), first: ns[0][2] };
+}
+function renderPartPick() {
+  const box = document.getElementById('partPick'), many = window.SCORE && SONG.backing.length > 1;
+  document.body.classList.toggle('multi-part', !!many);
+  if (!many) return;
+  box.innerHTML = '<span class="role-lead small">My part</span>' + SONG.backing.map(b =>
+    `<button class="pick small" data-part="${b.voice}" aria-pressed="${b.voice === state.part}">${esc(SC.voices[b.voice].name)}</button>`).join('');
+  box.querySelectorAll('[data-part]').forEach(b => b.onclick = () => {
+    state.part = b.dataset.part; remember();
+    const was = P.on; stopPlayer(); STAFF.key = ''; buildTimeline(); renderAll(); renderStaff(); if (was) startPlayer();
+  });
+}
+function renderRange() {
+  const box = document.getElementById('rangeBox'); if (!box || !SC) return;
+  document.querySelector('.lg-you').textContent = `Your line (${SC.voices[state.part].name.toLowerCase()})`;
+  document.querySelector('.lg-nathan').textContent = `Nathan (${SC.voices.baritone.name.toLowerCase()})`;
+  const hear = m => `<button class="hear" data-hear="${m}">${midiName(m)}</button>`;
+  const parts = SONG.backing.map(x => { const r = rangeOf(x.voice); return `${/^[aeiou]/i.test(x.range) ? 'an' : 'a'} ${x.range} range of ${hear(r.lo)} to ${hear(r.hi)}`; });
+  const list = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0];
+  box.innerHTML = `This song requires ${list}.`;
+  box.querySelectorAll('[data-hear]').forEach(b => b.onclick = () => hearNote(+b.dataset.hear));
+}
+
+let TL = { events: [], secs: [], total: 0, alone: [], inst: [] };
+function buildTimeline() {
+  if (!SC) return;
+  const ids = SONG.sections.map(s => s.id);
+  const events = [], secs = []; let off = 0;
+  ids.forEach(id => {
+    const [f, t] = SC.ranges[id], a = (f - 1) * SC.beatsPerBar, b = t * SC.beatsPerBar;
+    const sec = SONG.sections.find(s => s.id === id);
+    secs.push({ id, at: off, len: b - a, label: sec.part + ' ' + sec.caption });
+    Object.entries(SC.voices).forEach(([v, voice]) => voice.notes.forEach(n => {
+      const r = sec.rest?.[v], bar = Math.floor(n[0] / SC.beatsPerBar) + 1;
+      if (r && bar >= r[0] && bar <= r[1]) return;
+      if (n[0] >= a && n[0] < b) events.push({ v, t: off + n[0] - a, d: n[1], m: n[2], s: n[3] });
+    }));
+    off += b - a;
+  });
+  events.sort((x, y) => x.t - y.t);
+  /* stretches where the baritone sings and the alto doesn't */
+  const alto = events.filter(e => e.v === state.part), alone = [];
+  events.filter(e => e.v === 'baritone').forEach(e => {
+    const covered = alto.some(a => a.t < e.t + e.d - .01 && a.t + a.d > e.t + .01);
+    if (covered) return;
+    e.solo = true;   /* Nathan alone: his words go under his line */
+    const last = alone[alone.length - 1];
+    if (last && e.t - last[1] < 1.01) last[1] = Math.max(last[1], e.t + e.d); else alone.push([e.t, e.t + e.d]);
+  });
+  /* stretches where nobody sings: the band plays on its own */
+  const inst = []; let reach = 0;
+  events.forEach(e => { if (e.t - reach >= 2) inst.push([reach, e.t]); reach = Math.max(reach, e.t + e.d); });
+  if (off - reach >= 2) inst.push([reach, off]);
+  TL = { events, secs, total: off, alone: alone.filter(([a, b]) => b - a >= 2), inst: inst.filter(([a, b]) => a === 0 && b >= SC.beatsPerBar) };   // only the intro is marked
+}
+function voiceGain(v) {
+  if (state.bal === 'nathan') return v === 'baritone' ? .8 : 0;
+  if (state.bal === 'bg') return v === state.part ? .8 : 0;
+  return v === state.part || v === 'baritone' ? .6 : .25;   // the other backing parts sit underneath
+}
+
+let ac2 = null;
+function audio() { ac2 = ac2 || new (window.AudioContext || window.webkitAudioContext)(); ac2.resume(); return ac2; }
+function tone(ctx, out, time, dur, midi, gain) {
+  if (gain <= 0) return;
+  const f = 440 * Math.pow(2, (midi - 69) / 12), g = ctx.createGain();
+  g.gain.setValueAtTime(0, time);
+  g.gain.linearRampToValueAtTime(gain * .22, time + .03);
+  g.gain.setValueAtTime(gain * .22, Math.max(time + .03, time + dur - .06));
+  g.gain.linearRampToValueAtTime(0, time + dur);
+  g.connect(out);
+  [[1, 1], [2, .3], [3, .12]].forEach(([mul, amp]) => {
+    const o = ctx.createOscillator(), og = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f * mul; og.gain.value = amp;
+    o.connect(og); og.connect(g); o.start(time); o.stop(time + dur + .02);
+  });
+}
+function hearNote(m) { const c = audio(); tone(c, c.destination, c.currentTime + .02, 1.2, m + state.shift, .9); }
+
+const P = { on: false, t0: 0, spb: .65, idx: 0, out: null, timer: null, raf: null, pos: -1 };   // pos = where you are when stopped, in beats
+/* ---------- Nathan's recording ---------- */
+const REC = document.getElementById('rec');
+const MARKS = () => SONG.recording.marks;
+let recMissing = false;
+REC.src = SONG.recording.src;
+const fmt = t => isFinite(t) ? Math.floor(t / 60) + ':' + String(Math.floor(t % 60)).padStart(2, '0') : '0:00';
+function sectionEnd(id) {
+  const m = MARKS(), i = SONG.sections.findIndex(s => s.id === id), next = SONG.sections[i + 1];
+  return (next && m[next.id] != null) ? m[next.id] : (m.end ?? REC.duration);
+}
+function syncRecUI() {
+  if (recMissing) return;
+  const btn = document.getElementById('recBtn'), playing = !REC.paused;
+  btn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
+  btn.setAttribute('aria-pressed', playing);
+  document.getElementById('recTime').textContent = fmt(REC.currentTime) + ' / ' + fmt(REC.duration);
+  if (REC.duration) document.getElementById('recSeek').value = Math.round(REC.currentTime / REC.duration * 1000);
+  const m = MARKS();
+  if (m) {
+    const now = SONG.sections.find(s => m[s.id] != null && REC.currentTime >= m[s.id] && REC.currentTime < sectionEnd(s.id));
+    document.querySelectorAll('#form a').forEach(a => a.classList.toggle('hearing', playing && now && a.dataset.id === now.id));
+  }
+}
+REC.addEventListener('timeupdate', syncRecUI);
+REC.addEventListener('play', syncRecUI);
+REC.addEventListener('pause', syncRecUI);
+REC.addEventListener('loadedmetadata', syncRecUI);
+REC.addEventListener('error', () => {
+  recMissing = true;
+  document.getElementById('listen').classList.add('missing');
+  document.getElementById('recBtn').disabled = true; document.getElementById('recSeek').disabled = true;
+  document.getElementById('recTime').textContent = 'Recording coming soon';
+});
+document.getElementById('recBtn').onclick = () => { stopPlayer(); REC.paused ? REC.play() : REC.pause(); };
+document.getElementById('recSeek').oninput = e => { if (REC.duration) REC.currentTime = e.target.value / 1000 * REC.duration; };
+/* Tapping a part in the strip while the recording plays jumps the recording there */
+document.getElementById('form').addEventListener('click', e => {
+  const a = e.target.closest('a'), m = MARKS();
+  if (a && m && !REC.paused && m[a.dataset.id] != null) REC.currentTime = m[a.dataset.id];
+});
+
+
+function startPlayer(from = P.pos) {
+  if (!SC) return;
+  REC.pause();
+  const c = audio();
+  P.spb = 60 / SC.bpm;
+  P.out = c.createGain(); P.out.connect(c.destination);
+  const start = c.currentTime + .1;
+  if (from > 0) {
+    P.t0 = start - from * P.spb;
+    P.idx = TL.events.findIndex(e => e.t >= from - .01); if (P.idx < 0) P.idx = TL.events.length;
+  } else {
+    for (let i = 0; i < SC.beatsPerBar; i++) countClick(c, P.out, start + i * P.spb, i === 0);
+    P.t0 = start + SC.beatsPerBar * P.spb; P.idx = 0;
+  }
+  P.on = true;
+  P.timer = setInterval(pump, 25);
+  const btn = document.getElementById('playBtn'); btn.textContent = 'Pause'; btn.setAttribute('aria-pressed', 'true');
+  frame();
+}
+function countClick(c, out, time, accent) {
+  const o = c.createOscillator(), g = c.createGain();
+  o.frequency.value = accent ? 1500 : 1000;
+  g.gain.setValueAtTime(accent ? .35 : .22, time); g.gain.exponentialRampToValueAtTime(.001, time + .05);
+  o.connect(g); g.connect(out); o.start(time); o.stop(time + .06);
+}
+function pump() {
+  const c = ac2, horizon = c.currentTime + .25;
+  while (P.idx < TL.events.length && P.t0 + TL.events[P.idx].t * P.spb < horizon) {
+    const e = TL.events[P.idx++];
+    tone(c, P.out, P.t0 + e.t * P.spb, e.d * P.spb, e.m + state.shift, voiceGain(e.v));
+  }
+  if (c.currentTime > P.t0 + TL.total * P.spb) {
+    stopPlayer(); P.pos = -1; drawRoll();
+  }
+}
+const nowBeat = () => !P.on ? P.pos : (ac2.currentTime - P.t0) / P.spb;
+function stopPlayer() {
+  if (!P.on) return;
+  P.pos = Math.max(-1, nowBeat());
+  P.on = false; clearInterval(P.timer); cancelAnimationFrame(P.raf);
+  /* fade out and unplug the output that was playing. Keep hold of that one: a restart right after
+     (jumping to a section, letting go of a drag) makes a new output, which must not be unplugged */
+  const out = P.out;
+  try { out.gain.setTargetAtTime(0, ac2.currentTime, .02); setTimeout(() => out.disconnect(), 200); } catch (e) {}
+  const btn = document.getElementById('playBtn'); btn.textContent = 'Play'; btn.setAttribute('aria-pressed', 'false');
+  drawRoll();
+}
+/* ---------- Your first note, per lyric line ----------
+   Lines are matched to the alto's words in the score, in order; the first word you sing in a line gets its pitch. */
+const normWord = w => { const n = w.toLowerCase().replace(/[^a-z']/g, ''); return /^m+$/.test(n) ? 'mm' : n; };
+function altoWords(sec) {
+  if (!SC) return [];
+  const [f, t] = SC.ranges[sec.id], a = (f - 1) * SC.beatsPerBar, b = t * SC.beatsPerBar, r = sec.rest?.[state.part];
+  const words = []; let cur = null;
+  SC.voices[state.part].notes.forEach(n => {
+    const bar = Math.floor(n[0] / SC.beatsPerBar) + 1;
+    if (n[0] < a || n[0] >= b || (r && bar >= r[0] && bar <= r[1])) return;
+    if (cur) cur.end = n[0] + n[1];
+    if (!n[3]) return;
+    const syl = n[3];
+    if (cur && cur.open) { cur.text += syl.replace(/-$/, ''); cur.open = syl.endsWith('-'); return; }
+    cur = { text: syl.replace(/-$/, ''), m: n[2], t: n[0], end: n[0] + n[1], open: syl.endsWith('-') };
+    words.push(cur);
+  });
+  words.forEach(w => w.n = normWord(w.text));
+  return words;
+}
+function firstNotes(sec) {
+  const words = altoWords(sec); let p = 0;
+  return sec.lines.map(l => {
+    const sung = lineSrc(l).replace(/\[[^\]]*\]/g, '').replace(/\{[^}]*\}/g, ' ').split(/\s+/).map(normWord).filter(Boolean);
+    if (!sung.length) {
+      if (lineEcho(l)) { let first = null; echoWords(lineEcho(l)).split(/\s+/).map(normWord).filter(Boolean).forEach(w => { for (let k = p; k < Math.min(words.length, p + 8); k++) if (words[k].n === w) { if (!first) first = words[k]; p = k + 1; break; } }); ECHO[sec.id + ':' + sec.lines.indexOf(l)] = first ? first.m : null; }
+      return null;
+    }
+    if (sec.starts) {   /* hummed lines: take the first alto note from the line's bar */
+      const from = (sec.starts[sec.lines.indexOf(l)] - 1) * SC.beatsPerBar;
+      return words.find(w => w.t >= from - .01)?.m ?? null;
+    }
+    const match = list => { let first = null;
+      list.forEach(w => { for (let k = p; k < Math.min(words.length, p + 8); k++) if (words[k].n === w) { if (!first) first = words[k]; p = k + 1; break; } });
+      return first ? first.m : null; };
+    const key = sec.id + ':' + sec.lines.indexOf(l), echoList = lineEcho(l) ? echoWords(lineEcho(l)).split(/\s+/).map(normWord).filter(Boolean) : null;
+    if (echoList && l.echoAt === 'start') ECHO[key] = match(echoList);   // an echo sung at the start of the line comes first in the score
+    const m = match(sung);
+    if (echoList && l.echoAt !== 'start') ECHO[key] = match(echoList);
+    return m;
+  });
+}
+document.getElementById('song').addEventListener('click', e => {
+  const w = e.target.closest('.fn'); if (!w || !document.body.classList.contains('role-sing')) return;
+  hearNote(+w.dataset.m); w.classList.add('sounding'); setTimeout(() => w.classList.remove('sounding'), 1400);
+});
+/* your next note from wherever the player is (the start, a section you jumped to, or where you paused) */
+document.getElementById('firstNoteBtn').onclick = () => {
+  const at = Math.max(0, nowBeat()), e = TL.events.find(x => x.v === state.part && x.t >= at - .01) || TL.events.find(x => x.v === state.part);
+  if (e) hearNote(e.m);
+};
+
+/* ---------- The riff ----------
+   Written in the reader's key (B♭ and E♭ horns, capo shapes, any transposition), with the sounding key shown above.
+   write = octaves the written part sits from the score; sound = where the instrument actually plays it.
+   Guitar and bass music is written an octave above where it sounds, as is standard. tab = open strings, high to low. */
+const RIFF_FOR = {
+  keys:   { name: 'keys',    clef: 'treble', write: 0,   sound: 0 },
+  guitar: { name: 'guitar',  clef: 'treble', annot: '8vb', write: 0,   sound: -12, tab: [64, 59, 55, 50, 45, 40] },
+  uke:    { name: 'ukulele', clef: 'treble', write: 0,   sound: 0,   tab: [69, 64, 60, 67] },
+  bass:   { name: 'bass',    clef: 'bass', annot: '8vb', write: -12, sound: -24, tab: [43, 38, 33, 28] },
+  bb:     { name: 'B♭ instruments', clef: 'treble', write: 0, sound: 0 },
+  eb:     { name: 'E♭ instruments', clef: 'treble', write: 0, sound: 0 },
+  f:      { name: 'French horn', clef: 'treble', write: 0, sound: 0 }
+};
+const ACCS = { '♯': 1, '♭': -1, '𝄪': 2, '𝄫': -2 };
+function vexKey(p, write) {             // a sounding score pitch, as this reader sees it written
+  const name = spell(mod(p)), wm = p + move() + write, letter = name[0];
+  const acc = [...name.slice(1)].reduce((a, c) => a + (ACCS[c] || 0), 0);
+  const oct = (wm - acc - LETTER[letter]) / 12 - 1;
+  return letter.toLowerCase() + ({ 1: '#', '-1': 'b', 2: '##', '-2': 'bb' }[acc] || '') + '/' + oct;
+}
+const vexKeySig = name => name.replace('♭', 'b').replace('♯', '#');
+/* frets for the tab: the path through the riff that keeps the hand as still as possible, low on the neck */
+function riffFrets(notes, inst) {
+  const capo = state.readAs === 'capo' ? state.capo : 0;
+  const cands = notes.map(n => {
+    let s = n.p + state.shift + inst.sound, c = [];
+    for (const shift of [0, 12, -12, 24]) {
+      c = inst.tab.map((o, i) => ({ str: i + 1, fret: s + shift - o - capo })).filter(x => x.fret >= 0 && x.fret <= 15);
+      if (c.length) break;
+    }
+    return c;
+  });
+  const best = cands.map(c => c.map(() => ({ cost: Infinity, from: -1 })));
+  cands.forEach((c, i) => c.forEach((x, j) => {
+    const own = .25 * x.fret;
+    if (!i) { best[i][j] = { cost: own, from: -1 }; return; }
+    cands[i - 1].forEach((y, k) => {
+      const move = (x.fret && y.fret) ? Math.abs(x.fret - y.fret) : 0, cost = best[i - 1][k].cost + move + own + .3 * Math.abs(x.str - y.str);
+      if (cost < best[i][j].cost) best[i][j] = { cost, from: k };
+    });
+  }));
+  const out = []; let j = best.length ? best[best.length - 1].reduce((a, b, k, arr) => b.cost < arr[a].cost ? k : a, 0) : -1;
+  for (let i = best.length - 1; i >= 0; i--) { out[i] = cands[i][j]; j = best[i][j].from; }
+  return out;
+}
+const riffInst = () => RIFF_FOR[state.inst] || RIFF_FOR.keys;
+const RBEATS = { w: 4, h: 2, q: 1, '8': .5, '16': .25 };
+let RIFF_POS = [];   // where each note sits on the page, for the playback line
+let riffView = 'notes';
+/* Capo, for guitar and ukulele: each choice is named by its shapes, and the chosen one lists every chord shape in the song */
+function renderCapo() {
+  const show = state.inst === 'guitar' || state.inst === 'uke';
+  document.body.classList.toggle('riff-capo', show);
+  if (!show) return;
+  const pick = document.getElementById('capoPick'), now = state.readAs === 'capo' ? state.capo : 0;
+  pick.innerHTML = Array.from({ length: 8 }, (_, n) => {
+    const shape = keyName(SONG_KEY + state.shift - n).replace('m', ' minor');
+    return `<option value="${n}"${n === now ? ' selected' : ''}>${n ? `Fret ${n}: ${shape} shapes` : 'No capo'}</option>`;
+  }).join('');
+  const chords = [];
+  SONG.sections.forEach(sec => sec.lines.forEach(l => chordsOf(lineSrc(l)).forEach(c => { if (!chords.includes(c)) chords.push(c); })));
+  document.getElementById('capoShapes').innerHTML = now
+    ? `Chord shapes with this capo: <b>${chords.map(c => esc(chordName(c))).join(', ')}</b>`
+    : `Chords without a capo: <b>${chords.map(c => esc(chordName(c))).join(', ')}</b>`;
+}
+document.getElementById('capoPick').onchange = e => {
+  const n = +e.target.value;
+  state.readAs = n ? 'capo' : 'concert'; if (n) state.capo = n;
+  document.getElementById('readAs').value = state.readAs; document.getElementById('capo').value = state.capo;
+  remember(); renderAll();
+};
+/* print: lay the riff out at page width, whatever screen it was opened on */
+let PRINTING = false;
+const toPrint = on => { PRINTING = on; renderRiff(); };
+window.addEventListener('beforeprint', () => toPrint(true));
+window.addEventListener('afterprint', () => toPrint(false));
+window.matchMedia && window.matchMedia('print').addEventListener?.('change', e => toPrint(e.matches));
+function renderRiff(trim = 0) {
+  const host = document.getElementById('riffMusic'), box = host.parentNode;
+  if (!SC || !SC.riff) {
+    const sec = document.getElementById('riff');
+    sec.querySelectorAll('h2, .ctl-row, .riff-box').forEach(e => e.hidden = true);
+    renderCapo();
+    sec.hidden = !(state.inst === 'guitar' || state.inst === 'uke');
+    return;
+  }
+  const inst = riffInst(), tab = riffView === 'tab' && !!inst.tab;
+  document.body.classList.toggle('riff-tabbable', !!inst.tab);
+  /* what key it sounds in, and what key it's written in for you */
+  const sounds = keyName(SONG_KEY + state.shift), written = keyName(SONG_KEY + move());
+  const full = n => n.replace('m', ' minor').replace(/^([A-G][♭♯]?)$/, '$1 major');
+  let note = `Sounds in <b>${full(sounds)}</b>.`;
+  if (state.readAs === 'capo') note = `Sounds in <b>${full(sounds)}</b>, the concert key. With the capo on fret ${state.capo} you're reading <b>${full(written)}</b> shapes.`;
+  else if (written !== sounds) note += ` Written for ${inst.name} in <b>${full(written)}</b>.`;
+  if (!tab && inst.annot) note += ` ${inst.name[0].toUpperCase() + inst.name.slice(1)} music is written an octave above where it sounds.`;
+  if (tab) note += ` Tab for ${inst.name}${state.readAs === 'capo' ? ', frets counted from the capo' : ''}.`;
+  document.getElementById('riffKey').innerHTML = note;
+  renderCapo();
+  if (!window.Vex) { host.innerHTML = '<p class="staff-note">The music needs an internet connection to load.</p>'; return; }
+  host.innerHTML = '';
+  const VF = Vex.Flow, BW = PRINTING ? 720 : box.clientWidth - 8, S = BW < 600 ? .78 : 1, W = BW / S - trim;
+  const flat = SC.riff.flatMap((bar, b) => bar.map(it => ({ ...it, bar: b })));
+  const sounding = flat.filter((it, i) => !it.r && !(i && flat[i - 1].tie));
+  const frets = tab ? riffFrets(sounding, inst) : [];
+  let fi = 0, riffT = 0; const seq = [];
+  const built = SC.riff.map((bar, b) => {
+    const notes = bar.map(it => {
+      let n;
+      if (tab) {
+        if (it.r) n = new VF.GhostNote({ duration: it.d });
+        else {
+          const prev = seq[seq.length - 1];
+          const held = prev && prev._it.tie && !prev._it.r;   // a tied note shows its fret in brackets, as tab does
+          const pos = held ? prev._pos : frets[fi++];
+          n = new VF.TabNote({ positions: [held ? { str: pos.str, fret: '(' + pos.fret + ')' } : pos], duration: it.d }, true); n._pos = pos;
+        }
+      } else {
+        n = new VF.StaveNote({ clef: inst.clef, keys: [it.r ? (inst.clef === 'bass' ? 'd/3' : 'b/4') : vexKey(it.p, inst.write)],
+          duration: it.d + (it.r ? 'r' : ''), auto_stem: true, align_center: !!it.m });
+      }
+      n._it = it; n._t = riffT; riffT += RBEATS[it.d] * (it.o ? 1.5 : 1); seq.push(n); return n;
+    });
+    const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+    if (!tab) VF.Accidental.applyAccidentals([voice], vexKeySig(written));
+    let beams = [];
+    try { beams = VF.Beam.generateBeams(notes.filter(n => tab ? n instanceof VF.TabNote : !n.isRest()), { groups: [new VF.Fraction(1, 4)] }); } catch (e) {}
+    const fmt = new VF.Formatter().joinVoices([voice]);
+    return { notes, voice, beams, fmt, need: Math.max(60, fmt.preCalculateMinTotalWidth([voice]) * 1.2 + 34) };
+  });
+  /* how wide the clef, key and time signature really are at the start of a line */
+  const head = first => { const t = tab ? new VF.TabStave(0, 0, 400) : new VF.Stave(0, 0, 400);
+    if (tab) t.addClef('tab'); else t.addClef(inst.clef, 'default', inst.annot).addKeySignature(vexKeySig(written));
+    if (first) t.addTimeSignature('4/4');
+    return t.getNoteStartX() + 14; };
+  const headFirst = head(true), headOther = head(false);
+  const lines = []; let cur = [], used = 0;
+  built.forEach(bt => { const headW = lines.length ? headOther : headFirst; const add = bt.need + (cur.length ? 0 : headW);
+    if (cur.length && used + add > W - 10) { lines.push(cur); cur = []; used = 0; }
+    cur.push(bt); used += add; });
+  if (cur.length) lines.push(cur);
+  const lineH = tab ? 150 : 120;
+  const renderer = new VF.Renderer(host, VF.Renderer.Backends.SVG);
+  renderer.resize(BW, (lines.length * lineH + 20) * S);
+  const ctx = renderer.getContext(); ctx.scale(S, S);
+  lines.forEach((ln, li) => {
+    const headW = li ? headOther : headFirst;
+    const mins = ln.map((bt, j) => bt.need + (j ? 0 : headW)), sum = mins.reduce((a, c) => a + c, 0), scale = Math.max(1, (W - 10) / sum);
+    let x = 5;
+    ln.forEach((bt, j) => {
+      const w = mins[j] * scale, y = li * lineH + (tab ? 10 : 6);
+      const st = tab ? new VF.TabStave(x, y, w, { num_lines: inst.tab.length }) : new VF.Stave(x, y, w);
+      if (j === 0) {
+        if (tab) st.addClef('tab');
+        else { st.addClef(inst.clef, 'default', inst.annot); st.addKeySignature(vexKeySig(written)); }
+        if (li === 0) st.addTimeSignature('4/4');
+      }
+      st.setContext(ctx).draw();
+      bt.fmt.format([bt.voice], x + w - st.getNoteStartX() - 12);
+      bt.voice.draw(ctx, st);
+      bt.beams.forEach(bm => bm.setContext(ctx).draw());
+      x += w;
+    });
+  });
+  seq.forEach((n, i) => {
+    if (!n._it.tie || !seq[i + 1] || seq[i + 1]._it.r) return;
+    const m = seq[i + 1], same = Math.abs(n.getStave().getY() - m.getStave().getY()) < 5;
+    const T = tab ? VF.TabTie : VF.StaveTie;
+    (same ? [[n, m]] : [[n, null], [null, m]]).forEach(([f, l]) => new T({ first_note: f, last_note: l, first_indices: [0], last_indices: [0] }).setContext(ctx).draw());
+  });
+  /* remember where every note and rest sits, so the playback line can follow the music */
+  RIFF_POS = seq.map((n, i) => {
+    const st = n.getStave(), nx = seq[i + 1];
+    const sameLine = nx && Math.abs(nx.getStave().getY() - st.getY()) < 5;
+    const lines = tab ? inst.tab.length - 1 : 4;
+    return { t: n._t, x: n.getAbsoluteX() * S, x2: (sameLine ? nx.getAbsoluteX() : st.getX() + st.getWidth() - 4) * S,
+             y0: (st.getYForLine(0) - 14) * S, y1: (st.getYForLine(lines) + 14) * S };
+  });
+  /* last check: if anything was drawn past the right edge, lay it out again with less room per line */
+  const svg = host.querySelector('svg'), bb = svg.getBBox(), over = (bb.x + bb.width) * S - BW;
+  /* VexFlow's scaling already sets the viewBox, which is also what lets print shrink the riff to the page; leave it alone */
+  if (over > 1 && trim < 400) renderRiff(trim + over / S + 30);
+}
+document.querySelectorAll('[data-riffview]').forEach(b => b.onclick = () => {
+  riffView = b.dataset.riffview;
+  document.querySelectorAll('[data-riffview]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  renderRiff();
+});
+/* hear the riff at sounding pitch, at the song's tempo */
+let riffOut = null;
+document.getElementById('riffPlay').onclick = e => {
+  const btn = e.currentTarget;
+  if (riffOut) { const o = riffOut; riffOut = null; o.gain.setTargetAtTime(0, ac2.currentTime, .02); setTimeout(() => o.disconnect(), 200); btn.textContent = 'Hear it'; return; }
+  const c = audio(); stopPlayer(); REC.pause();
+  const out = c.createGain(); out.connect(c.destination); riffOut = out;
+  const spb = 60 / SC.bpm, beats = { w: 4, h: 2, q: 1, '8': .5, '16': .25 };
+  let t = 0, held = null; const t0 = c.currentTime + .1;
+  SC.riff.flat().forEach(it => {
+    const d = beats[it.d] * (it.o ? 1.5 : 1);
+    if (!it.r) { if (held) held.d += d; else held = { t, d, p: it.p }; if (!it.tie) { tone(c, out, t0 + held.t * spb, held.d * spb, held.p + state.shift, .8); held = null; } }
+    t += d;
+  });
+  btn.textContent = 'Stop';
+  /* the playback line: moves through each note in time, like a score program */
+  const cur = document.getElementById('riffCursor'), host = document.getElementById('riffMusic'), box = host.parentNode;
+  const follow = () => {
+    if (riffOut !== out) { cur.hidden = true; return; }
+    const beat = (c.currentTime - t0) / spb;
+    if (beat >= t) { riffOut = null; btn.textContent = 'Hear it'; cur.hidden = true; return; }
+    let i = RIFF_POS.length - 1; while (i > 0 && RIFF_POS[i].t > beat) i--;
+    const a = RIFF_POS[i], b = RIFF_POS[i + 1], f = b ? Math.min(1, Math.max(0, (beat - a.t) / (b.t - a.t))) : 0;
+    const svg = host.querySelector('svg');
+    if (svg && beat >= 0) {
+      const sr = svg.getBoundingClientRect(), br = box.getBoundingClientRect();
+      const left = sr.left - br.left + box.scrollLeft, top = sr.top - br.top + box.scrollTop;
+      Object.assign(cur.style, { left: (left + a.x + (a.x2 - a.x) * f) + 'px', top: (top + a.y0) + 'px', height: (a.y1 - a.y0) + 'px' });
+      cur.hidden = false;
+      const r = cur.getBoundingClientRect();
+      if (r.top < 70 || r.bottom > window.innerHeight - 80) window.scrollBy({ top: r.top - window.innerHeight / 3, behavior: 'smooth' });
+    }
+    requestAnimationFrame(follow);
+  };
+  requestAnimationFrame(follow);
+};
+
+/* ---------- Sheet music (drawn with VexFlow) ---------- */
+let STAFF = { boxes: [], key: '' };
+function scopeBars() {
+  const ids = SONG.sections.map(s => s.id), list = [];
+  ids.forEach(id => {
+    const [f, t] = SC.ranges[id], sec = SONG.sections.find(s => s.id === id);
+    for (let b = f; b <= t; b++) list.push({ bar: b, sec, label: b === f ? sec.part + ' ' + sec.caption : null });
+  });
+  return list;
+}
+function renderStaff(pass = 0) {
+  const host = document.getElementById('staff'), box = document.getElementById('staffBox');
+  if (state.view !== 'staff' || !SC || !SC.bars) return;
+  if (!window.Vex) { host.innerHTML = '<p class="staff-note">The sheet music needs an internet connection to load.</p>'; return; }
+  const BW = box.clientWidth - 4; if (BW <= 0) return;
+  const S = BW < 600 ? .72 : 1, W = BW / S;   /* phones get the music drawn a bit smaller so more fits */
+  const k = [state.staves, state.part, BW].join('|'); if (k === STAFF.key) return;
+  if (!pass) STAFF.extra = {};   // extra width per bar, found by the word check below
+  STAFF.key = k; host.innerHTML = '';
+  const VF = Vex.Flow, both = state.staves === 'both';
+  const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
+  const parts = both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
+  const KS = vexKeySig(keyName(SONG_KEY));
+  const bars = scopeBars(), headW = 100;
+
+  /* 1. Build every bar's notes first, so we know how much room each bar really needs */
+  const built = bars.map(b => {
+    const voices = parts.map(([v, clef, annot]) => {
+      const tuplet = [];
+      const r = b.sec.rest?.[v], silent = r && b.bar >= r[0] && b.bar <= r[1];
+      const notes = (silent ? [{ r: 1, d: 'w', o: 0, m: 1 }] : SC.bars[v][b.bar - 1]).map(it => {
+        it = Object.assign({}, it);
+        const n = new VF.StaveNote({ clef, keys: [it.r ? (clef === 'bass' ? 'd/3' : 'b/4') : it.k],
+          duration: it.d + (it.r ? 'r' : ''), dots: it.o || 0, align_center: !!it.m, auto_stem: true });
+        for (let d = 0; d < (it.o || 0); d++) VF.Dot.buildAndAttach([n], { all: true });
+        if (v === 'baritone') n.setStyle({ fillStyle: '#6b7178', strokeStyle: '#6b7178' });
+        if (it.l) {   /* an invisible copy of the syllable makes the spacing leave room for the words */
+          const an = new VF.Annotation(it.l + ' ').setFont('Arial', 14);
+          an.setStyle({ fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)' });
+          n.addModifier(an, 0);
+        }
+        if (it.t) tuplet.push(n);
+        n._it = it; return n;
+      });
+      const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+      VF.Accidental.applyAccidentals([voice], KS);
+      /* beams settle the stem directions, so make them now: the vertical layout below depends on them */
+      const beams = VF.Beam.generateBeams(notes.filter(n => !n.isRest()), { groups: [new VF.Fraction(1, 4)] });
+      /* how far this bar reaches above and below the staff, in staff lines (stems, ledger notes, ties, triplet brackets) */
+      let top = 7.6, bot = annot === '8vb' ? -1.4 : 1;   // the treble clef reaches over two lines above the staff; an 8vb clef's 8 hangs below it
+      notes.forEach(n => {
+        if (n.isRest()) return;
+        const ls = n.getKeyProps().map(k => k.line), hi = Math.max(...ls), lo = Math.min(...ls), up = n.getStemDirection() > 0;
+        const stem = /^(w|h)$/.test(n._it?.d || '') && n._it.d === 'w' ? 0 : 3.5;
+        top = Math.max(top, hi + .6 + (up ? stem : 0));
+        bot = Math.min(bot, lo - .6 - (up ? 0 : stem) - (n._it?.tie && up ? 1.2 : 0));
+      });
+      if (tuplet.length) {
+        const ls = tuplet.flatMap(n => n.getKeyProps().map(k => k.line)), up = tuplet[0].getStemDirection() > 0;
+        /* VexFlow puts the bracket at least 15px over the top line, with the number above that */
+        top = Math.max(top, 5 + 2.5, Math.max(...ls) + (up ? 3.5 : 0)) + 3;
+      }
+      const words = notes.some(n => n._it?.l);
+      return { v, clef, annot, voice, notes, tuplet, beams, top, bot, words };
+    });
+    const fmt = new VF.Formatter();
+    voices.forEach(o => fmt.joinVoices([o.voice]));
+    const need = fmt.preCalculateMinTotalWidth(voices.map(o => o.voice));
+    return { b, voices, fmt, need: Math.max(60, need + 22) + (STAFF.extra[bars.indexOf(b)] || 0) };
+  });
+
+  /* 2. Pack bars into lines and share out the spare width */
+  const layout = []; let cur = [], used = 0;
+  built.forEach(bt => {
+    const add = bt.need + (cur.length ? 0 : headW);
+    if (cur.length && used + add > W - 10) { layout.push(cur); cur = []; used = 0; }
+    cur.push(bt); used += bt.need + (cur.length === 1 ? headW : 0);
+  });
+  if (cur.length) layout.push(cur);
+  let fullW = W;
+  layout.forEach((ln, li) => {
+    const mins = ln.map((bt, j) => bt.need + (j ? 0 : headW)), sum = mins.reduce((a, c) => a + c, 0);
+    const scale = Math.max(1, (W - 10) / sum); let x = 5;
+    ln.forEach((bt, j) => { Object.assign(bt, { line: li, col: j, x, w: mins[j] * scale }); x += bt.w; });
+    fullW = Math.max(fullW, x + 5);   // a very busy bar can be wider than a phone; the box scrolls sideways
+  });
+
+  /* 3. Stack each line of music from what it actually contains, so words never sit on notes, ties or brackets:
+        content top of each staff, staff, its lowest mark, then its words, then the next staff */
+  const tmp = new VF.Stave(0, 0, 100), Y = line => tmp.getYForNote(line);
+  let cursor = 6;
+  const sys = layout.map(ln => {
+    const L = { top: cursor, staveY: [], lyricY: [] };
+    cursor += 16;                                   // room for the section label
+    parts.forEach((_, pi) => {
+      const top = Math.max(...ln.map(bt => bt.voices[pi].top)), bot = Math.min(...ln.map(bt => bt.voices[pi].bot));
+      const words = ln.some(bt => bt.voices[pi].words);
+      const staveY = cursor - Y(top);
+      L.staveY.push(staveY);
+      const lowest = staveY + Y(bot);
+      L.lyricY.push(lowest + 15);                   // baseline of the words, just under the lowest mark
+      cursor = (words ? lowest + 22 : lowest + 6) + 10;
+    });
+    cursor += 14; L.bottom = cursor;
+    return L;
+  });
+
+  /* 4. Draw */
+  const renderer = new VF.Renderer(host, VF.Renderer.Backends.SVG);
+  renderer.resize(fullW * S, (cursor + 10) * S);
+  const ctx = renderer.getContext();
+  ctx.scale(S, S);
+  const seq = {}, words = [];
+  STAFF.boxes = [];
+  built.forEach((bt, i) => {
+    const { b, voices, fmt, line, col, x, w } = bt, L = sys[line], y0 = L.top;
+    const staves = voices.map((o, pi) => {
+      const st = new VF.Stave(x, L.staveY[pi], w);
+      if (col === 0) { st.addClef(o.clef, 'default', o.annot).addKeySignature(KS); if (i === 0) st.addTimeSignature('4/4'); }
+      st.setContext(ctx).draw(); o.st = st; return st;
+    });
+    const startX = Math.max(...staves.map(st => st.getNoteStartX()));
+    staves.forEach(st => st.setNoteStartX(startX));
+    fmt.format(voices.map(o => o.voice), x + w - startX - 14);
+    voices.forEach(o => {
+      o.voice.draw(ctx, o.st);
+      o.beams.forEach(bm => bm.setContext(ctx).draw());
+      if (o.tuplet.length) new VF.Tuplet(o.tuplet, { num_notes: 3, notes_occupied: 2, location: VF.Tuplet.LOCATION_TOP })
+        .setContext(ctx).draw();
+      ctx.save(); ctx.openGroup('lyric'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', 12);
+      if (o.v === 'baritone') ctx.setFillStyle('#4a4f55');
+      const ly = L.lyricY[voices.indexOf(o)];
+      o.notes.forEach(n => { if (n._it.l) { ctx.fillText(n._it.l, n.getAbsoluteX() - 2, ly); words.push({ bar: i, v: o.v, x: n.getAbsoluteX() - 2, w: ctx.measureText(n._it.l).width, end: x + w, line }); } });
+      ctx.closeGroup(); ctx.restore();
+      (seq[o.v] ||= []).push(...o.notes);
+    });
+    if (both && col === 0) {
+      new VF.StaveConnector(staves[0], staves[1]).setType('brace').setContext(ctx).draw();
+      new VF.StaveConnector(staves[0], staves[1]).setType('singleLeft').setContext(ctx).draw();
+    }
+    if (both) new VF.StaveConnector(staves[0], staves[1]).setType('singleRight').setContext(ctx).draw();
+    if (b.label) { ctx.save(); ctx.openGroup('label'); ctx.setFont('Atkinson Hyperlegible, Arial, sans-serif', 12, 'bold'); ctx.fillText(b.label, x + 4, y0 + 12); ctx.closeGroup(); ctx.restore(); }
+    STAFF.boxes.push({ x: x * S, y: (y0 + 14) * S, w: w * S, h: (L.bottom - y0 - 22) * S });
+  });
+  /* ties, including across bar and line breaks */
+  Object.values(seq).forEach(ns => ns.forEach((n, i) => {
+    if (!n._it.tie || !ns[i + 1]) return;
+    const m = ns[i + 1], same = Math.abs(n.getStave().getY() - m.getStave().getY()) < 5;
+    (same ? [[n, m]] : [[n, null], [null, m]]).forEach(([f, l]) =>
+      new VF.StaveTie({ first_note: f, last_note: l, first_indices: [0], last_indices: [0] }).setContext(ctx).draw());
+  }));
+  /* word check: if a syllable runs into the next one (or past its bar), give that bar more room and lay out again */
+  let crowded = false;
+  Object.keys(seq).forEach(v => {
+    const ws = words.filter(w => w.v === v);
+    ws.forEach((w, j) => {
+      const nx = ws[j + 1], limit = nx && nx.line === w.line ? nx.x : w.end;
+      const over = w.x + w.w + 4 - limit;
+      if (over > 0) { STAFF.extra[w.bar] = (STAFF.extra[w.bar] || 0) + over * 1.5 + 10; crowded = true; }
+    });
+  });
+  if (crowded && pass < 4) { STAFF.key = ''; renderStaff(pass + 1); }
+}
+function markStaff(beat) {
+  const mark = document.getElementById('barMark');
+  if (state.view !== 'staff' || beat < 0 || !STAFF.boxes.length) { mark.style.display = 'none'; return; }
+  const bx = STAFF.boxes[Math.min(STAFF.boxes.length - 1, Math.floor(beat / SC.beatsPerBar))];
+  Object.assign(mark.style, { display: 'block', left: bx.x + 'px', top: bx.y + 'px', width: bx.w + 'px', height: bx.h + 'px' });
+  const box = document.getElementById('staffBox');
+  if (bx.y < box.scrollTop || bx.y + bx.h > box.scrollTop + box.clientHeight) box.scrollTop = bx.y - 10;
+  if (bx.x < box.scrollLeft || bx.x + Math.min(bx.w, box.clientWidth) > box.scrollLeft + box.clientWidth) box.scrollLeft = bx.x - 10;
+}
+function setPracticeView(v) {
+  state.view = v;
+  document.body.classList.toggle('view-staff', v === 'staff');
+  document.querySelectorAll('[data-view]').forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
+  renderStaff(); drawRoll();
+}
+document.querySelectorAll('[data-view]').forEach(b => b.onclick = () => setPracticeView(b.dataset.view));
+
+function frame() { drawRoll(); if (P.on) P.raf = requestAnimationFrame(frame); }
+
+function drawRoll() {
+  if (SC) markStaff(nowBeat());
+  const cv = document.getElementById('roll'); if (!cv || !SC || !cv.clientWidth) return;
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== w * dpr) { cv.width = w * dpr; cv.height = h * dpr; }
+  const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.clearRect(0, 0, w, h);
+  const css = getComputedStyle(document.body), col = n => css.getPropertyValue(n).trim();
+  const beat = nowBeat();
+  const ppb = 48, x0 = w * .22, x = t => x0 + (t - beat) * ppb;
+  const all = Object.values(SC.voices).flatMap(v => v.notes.map(n => n[2] + state.shift));
+  const lo = Math.min(...all) - 1, hi = Math.max(...all) + 1, y = m => 22 + (hi - m) / (hi - lo) * (h - 50);
+  g.font = '12px "Atkinson Hyperlegible", sans-serif';
+  for (let b = 0; b <= TL.total; b += SC.beatsPerBar) {
+    const bx = x(b); if (bx < -2 || bx > w + 2) continue;
+    g.strokeStyle = 'rgba(28,25,21,.12)'; g.beginPath(); g.moveTo(bx, 0); g.lineTo(bx, h); g.stroke();
+  }
+  TL.secs.forEach(s => { const sx = x(s.at); if (sx > -150 && sx < w) { g.fillStyle = col('--ink'); g.font = 'bold 13px "Atkinson Hyperlegible", sans-serif'; g.fillText(s.label, sx + 4, 14); } });
+  g.font = '12px "Atkinson Hyperlegible", sans-serif';
+  const words = state.bal === 'nathan' ? 'baritone' : state.part;   // syllables under the line you're following
+  TL.events.forEach(e => {
+    const ex = x(e.t), ew = Math.max(3, e.d * ppb - 2); if (ex + ew < 0 || ex > w) return;
+    const me = e.v === words;
+    g.fillStyle = e.v === state.part ? col('--rust-ink') : col('--slate');
+    if (e.v !== state.part && e.v !== 'baritone') g.globalAlpha = .25;   // the other backing parts, faint
+    g.globalAlpha = me ? 1 : .55;
+    g.beginPath(); g.roundRect ? g.roundRect(ex, y(e.m) - 4, ew, 8, 3) : g.rect(ex, y(e.m) - 4, ew, 8); g.fill();
+    g.globalAlpha = 1;
+    /* words under your line, and under Nathan's whenever he sings alone */
+    if (e.s && (me || e.solo)) { g.fillStyle = me ? col('--ink') : col('--slate'); g.fillText(e.s, ex, y(e.m) + 17); }
+  });
+  /* Label the stretches where only Nathan sings, so you know to rest */
+  g.font = 'italic 12px "Atkinson Hyperlegible", sans-serif'; g.fillStyle = col('--slate');
+  TL.alone.forEach(([a, b]) => { const ax = x(a); if (ax < w && x(b) > 0) { g.fillRect(ax, h - 16, (b - a) * ppb, 3); g.fillText('Nathan alone, you rest', Math.max(ax, 4), h - 22); } });
+  /* Instrumental stretches: shade them, and say so plainly while the playhead is inside one */
+  TL.inst.forEach(([a, b]) => {
+    const ax = x(a), bx = x(b); if (bx < 0 || ax > w) return;
+    g.fillStyle = 'rgba(69,75,82,.08)'; g.fillRect(ax, 20, bx - ax, h - 20);
+    g.fillStyle = col('--ink-soft'); g.font = 'italic 12px "Atkinson Hyperlegible", sans-serif';
+    g.fillText('Instrumental', Math.max(ax + 4, 4), h - 22);
+  });
+  /* Only at the opening: a big "Instrumental" with a countdown, gone one bar before you come in */
+  const entry = TL.events.find(e => e.v === state.part);
+  const left = entry ? entry.t - beat : 0;
+  if (P.on && entry && entry.t >= SC.beatsPerBar && beat < entry.t && left > SC.beatsPerBar + .01) {
+    const bars = Math.ceil(left / SC.beatsPerBar - 1e-6);
+    g.fillStyle = 'rgba(247,239,224,.92)'; g.fillRect(w * .6 - 120, h / 2 - 32, 240, 58);
+    g.fillStyle = col('--ink'); g.textAlign = 'center';
+    g.font = 'bold 20px "Atkinson Hyperlegible", sans-serif'; g.fillText(beat < 0 ? 'Count-in' : 'Instrumental', w * .6, h / 2 - 6);
+    g.font = '14px "Atkinson Hyperlegible", sans-serif'; g.fillText(`You come in in ${bars} bars`, w * .6, h / 2 + 16);
+    g.textAlign = 'left';
+  }
+  g.strokeStyle = col('--ink'); g.lineWidth = 2; g.beginPath(); g.moveTo(x0, 0); g.lineTo(x0, h); g.stroke(); g.lineWidth = 1;
+}
+
+/* The song-structure strip: in the singing view, while Learn your part is on screen, a tap moves the
+   practice player to that section instead of scrolling the page. Anywhere else it scrolls to the words. */
+document.getElementById('form').addEventListener('click', e => {
+  const a = e.target.closest('a'); if (!a || !SC) return;
+  const sec = TL.secs.find(x => x.id === a.dataset.id); if (!sec) return;
+  const pr = document.getElementById('practice').getBoundingClientRect();
+  const practiceShowing = document.body.classList.contains('role-sing') && pr.bottom > 120 && pr.top < window.innerHeight * .6;
+  if (!practiceShowing) return;
+  e.preventDefault();
+  const was = P.on; if (was) stopPlayer();
+  P.pos = sec.at; drawRoll();
+  if (was) startPlayer(sec.at);
+});
+document.querySelectorAll('[data-bal]').forEach(b => b.onclick = () => {
+  state.bal = b.dataset.bal;
+  state.staves = state.bal === 'bg' ? 'alto' : 'both';   // step 1 shows your staff; steps 2 and 3 show both
+  renderStaff();
+  document.querySelectorAll('[data-bal]').forEach(x => x.setAttribute('aria-pressed', x === b));
+});
+document.querySelectorAll('[data-fade]').forEach(b => b.onclick = () => {
+  state.fade = +b.dataset.fade;
+  document.querySelectorAll('[data-fade]').forEach(x => x.setAttribute('aria-pressed', x === b));
+  renderSong();
+});
+document.getElementById('playBtn').onclick = () => P.on ? stopPlayer() : startPlayer();
+window.addEventListener('resize', () => { drawRoll(); renderStaff(); renderRiff(); });
+
+/* Drag the moving lines left and right to go back or forward. Playing pauses while you drag and picks up where you let go. */
+(() => {
+  const cv = document.getElementById('roll'); let drag = null;
+  cv.addEventListener('pointerdown', e => {
+    if (!SC) return;
+    const was = P.on; if (was) stopPlayer();
+    drag = { x: e.clientX, beat: Math.max(0, P.pos), was };
+    cv.setPointerCapture(e.pointerId); cv.classList.add('dragging');
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!drag) return;
+    P.pos = Math.min(TL.total, Math.max(0, drag.beat - (e.clientX - drag.x) / 48));
+    drawRoll();
+  });
+  const end = () => {
+    if (!drag) return;
+    const was = drag.was; drag = null; cv.classList.remove('dragging');
+    if (was) startPlayer(P.pos);
+  };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+})();
+
+/* ---------- Who you are ----------
+   Choosing a role sets the view for you. Words and chords can still be switched under Sheets. */
+const NOTES = { sing: '', play: 'Pick your instrument, or just play from the chart.' };
+const INST_NOTES = {
+  guitar: 'Pick a capo above the riff. The chords and the riff change to match.',
+  uke: 'Pick a capo above the riff. The chords and the riff change to match.',
+  keys: 'Chord tones are showing in the parts, so you can see every note.',
+  bass: 'Showing roots only. Slash chords show the bass note.',
+  bb: 'Written for B♭ instruments.',
+  eb: 'Written for E♭ instruments.',
+  f: 'Written for French horn.'
+};
+function setView(mode, on) {
+  state[mode] = on;
+  document.body.classList.toggle(mode + '-on', on);
+  document.getElementById(mode === 'lyrics' ? 'showLyrics' : 'showChords').checked = on;
+  requestAnimationFrame(alignEchoes);
+  requestAnimationFrame(markStretched);
+}
+document.getElementById('showLyrics').onchange = e => setView('lyrics', e.target.checked);
+document.getElementById('showChords').onchange = e => setView('chords', e.target.checked);
+function setRole(role, save = true, chosen = save) {
+  state.role = role;
+  document.body.classList.remove('role-sing', 'role-play');
+  document.body.classList.add('role-' + role);
+  document.querySelectorAll('[data-role]').forEach(b => b.setAttribute('aria-pressed', chosen && b.dataset.role === role));
+  document.body.classList.toggle('role-chosen', chosen);
+  setView('lyrics', true);
+  setView('chords', role !== 'sing');
+  if (role !== 'play') setInst(null, false);
+  if (role !== 'sing') { state.fade = 0; stopPlayer(); }
+  document.querySelectorAll('[data-fade]').forEach(b => b.setAttribute('aria-pressed', +b.dataset.fade === state.fade));
+  document.getElementById('roleNote').textContent = !chosen ? '' : state.inst ? INST_NOTES[state.inst] : NOTES[role];
+  if (save) { remember(); document.getElementById('startHint').hidden = true; }
+  if (role === 'sing') state.shift = 0;          // singers sing along with Nathan, in his key
+  const listen = document.getElementById('listen');
+  if (role === 'sing') document.querySelector('.bar .wrap').appendChild(listen);
+  else document.querySelector('header.song-head h1').after(listen);
+  renderAll();
+}
+function setInst(inst, save = true) {
+  state.inst = inst;
+  document.querySelectorAll('[data-inst]').forEach(b => b.setAttribute('aria-pressed', b.dataset.inst === inst));
+  const readAs = { bb: 'bb', eb: 'eb', f: 'f' }[inst] || 'concert';
+  state.readAs = readAs; document.getElementById('readAs').value = readAs;
+  state.tones = inst === 'keys'; document.getElementById('tones').checked = state.tones;
+  document.getElementById('roleNote').textContent = inst ? INST_NOTES[inst] : NOTES[state.role];
+  if (save) { remember(); renderAll(); }
+}
+function remember() {
+  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part })); } catch (e) {}
+}
+document.querySelectorAll('[data-role]').forEach(b => b.onclick = () => setRole(b.dataset.role));
+document.querySelectorAll('[data-inst]').forEach(b => b.onclick = () => setInst(state.inst === b.dataset.inst ? null : b.dataset.inst));
+
+let saved = null;
+try { saved = JSON.parse(localStorage.getItem('ss-' + SONG.slug) || 'null'); } catch (e) {}
+if (saved?.role === 'both') saved.role = 'play';   // older visits
+if (saved?.part && SONG.backing.some(b => b.voice === saved.part)) state.part = saved.part;
+setRole(saved?.role || 'play', false, !!saved);
+if (saved) document.getElementById('startHint').hidden = true;
+if (saved?.inst && saved.role === 'play') setInst(saved.inst, false);
+if (saved?.role === 'play' && saved.readAs === 'capo' && (saved.inst === 'guitar' || saved.inst === 'uke')) {
+  state.readAs = 'capo'; state.capo = saved.capo || 3;
+  document.getElementById('readAs').value = 'capo'; document.getElementById('capo').value = state.capo;
+}
+renderAll();
+</script>
+</body>
+</html>
