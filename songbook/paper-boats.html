@@ -810,13 +810,17 @@ function echoHTML(text, m) {
 }
 const echoWords = e => e.replace(/\[[^\]]*\]/g, '');
 /* Singing view: the alto's echo starts right under the last word of Nathan's line before it ("sky") */
-/* A word split by a wide chord (a-bandoned under "Cm"): show the hyphen, the way chord charts do. Only when it's actually pulled apart. */
+/* A word split by a wide chord (a-bandoned under "Cm"), or split across two lines on a narrow screen: show the hyphen,
+   the way chord charts do. Only when it's actually pulled apart. */
 function markStretched() {
   document.querySelectorAll('#song .seg.midword').forEach(sg => {
     sg.classList.remove('stretched');
     if (!document.body.classList.contains('chords-on')) return;
     const ly = sg.querySelector('.ly'), r = document.createRange(); r.selectNodeContents(ly);
     if (sg.getBoundingClientRect().width - r.getBoundingClientRect().width > 6) sg.classList.add('stretched');
+    /* ...or when the rest of the word wraps onto the next line (re- / nounced on a phone) */
+    let nx = sg.nextElementSibling; while (nx && !nx.classList.contains('seg')) nx = nx.nextElementSibling;
+    if (nx && nx.querySelector('.ly').getBoundingClientRect().top > r.getBoundingClientRect().top + 4) sg.classList.add('stretched');
   });
 }
 window.addEventListener('resize', markStretched);
@@ -832,7 +836,10 @@ function alignEchoes() {
     }
     if (!last) return;
     const r = document.createRange(); r.setStart(last[0], last[1]); r.setEnd(last[0], last[1] + last[2]);
-    e.style.setProperty('--echo-x', Math.max(0, r.getBoundingClientRect().left - line.getBoundingClientRect().left) + 'px');
+    /* never so far right that the echo has to wrap: on a phone it moves left just enough to fit on one line */
+    const er = document.createRange(); er.selectNodeContents(e);
+    const room = line.getBoundingClientRect().width - er.getBoundingClientRect().width - 4;
+    e.style.setProperty('--echo-x', Math.max(0, Math.min(room, r.getBoundingClientRect().left - line.getBoundingClientRect().left)) + 'px');
   });
 }
 window.addEventListener('resize', alignEchoes);
@@ -967,7 +974,7 @@ document.getElementById('capo').oninput = e => { state.capo = Math.max(1, Math.m
 document.getElementById('numbers').onchange = e => { state.numbers = e.target.checked; renderAll(); };
 document.getElementById('tones').onchange = e => { state.tones = e.target.checked; renderParts(); };
 
-/* ---------- Click track (4/4, accent on 1) ---------- */
+/* ---------- Click track (accent on 1; the bar length comes from the score, else 4/4) ---------- */
 let ac = null, clickTimer = null, nextTime = 0, beat = 0;
 function tick(time, accent) {
   const o = ac.createOscillator(), g = ac.createGain();
@@ -980,7 +987,7 @@ function tick(time, accent) {
 function schedule() {
   const bpm = Math.max(40, Math.min(200, +document.getElementById('bpm').value || 92));
   while (nextTime < ac.currentTime + .12) {
-    tick(nextTime, beat % 4 === 0);
+    tick(nextTime, beat % (SONG.beatsPerBar || window.SCORE?.beatsPerBar || 4) === 0);
     nextTime += 60 / bpm; beat++;
   }
 }
@@ -1533,10 +1540,17 @@ function renderStaff(pass = 0) {
   const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
   const parts = MULTI() ? VOICE_ORDER().map(vc) : both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
   const KS = vexKeySig(keyName(SONG_KEY));
+  /* a key change in the score (SC.keys: [bar, fifths]) changes the key signature from that bar on */
+  const ksAt = bar => {
+    if (!SC.keys) return KS;
+    let f = SC.keys[0][1]; SC.keys.forEach(([b, x]) => { if (b <= bar) f = x; });
+    return vexKeySig(keyName(SONG_KEY + 7 * (f - SC.keys[0][1])));
+  };
   const bars = scopeBars(), headW = 100;
 
   /* 1. Build every bar's notes first, so we know how much room each bar really needs */
-  const built = bars.map(b => {
+  const built = bars.map((b, bi) => {
+    const ks = ksAt(b.bar), prevKs = bi ? ksAt(bars[bi - 1].bar) : ks;
     const voices = parts.map(([v, clef, annot]) => {
       const tuplet = [];
       const r = b.sec.rest?.[v], silent = r && b.bar >= r[0] && b.bar <= r[1];
@@ -1555,8 +1569,8 @@ function renderStaff(pass = 0) {
         if (it.t) tuplet.push(n);
         n._it = it; return n;
       });
-      const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
-      VF.Accidental.applyAccidentals([voice], KS);
+      const voice = new VF.Voice({ num_beats: SC.beatsPerBar, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+      VF.Accidental.applyAccidentals([voice], ks);
       /* beams settle the stem directions, so make them now: the vertical layout below depends on them */
       const beams = VF.Beam.generateBeams(notes.filter(n => !n.isRest()), { groups: [new VF.Fraction(1, 4)] });
       /* how far this bar reaches above and below the staff, in staff lines (stems, ledger notes, ties, triplet brackets) */
@@ -1579,7 +1593,7 @@ function renderStaff(pass = 0) {
     const fmt = new VF.Formatter();
     voices.forEach(o => fmt.joinVoices([o.voice]));
     const need = fmt.preCalculateMinTotalWidth(voices.map(o => o.voice));
-    return { b, voices, fmt, need: Math.max(60, need + 22) + (STAFF.extra[bars.indexOf(b)] || 0) };
+    return { b, voices, fmt, ks, prevKs, need: Math.max(60, need + 22) + (ks !== prevKs ? 50 : 0) + (STAFF.extra[bars.indexOf(b)] || 0) };
   });
 
   /* 2. Pack bars into lines and share out the spare width */
@@ -1629,7 +1643,8 @@ function renderStaff(pass = 0) {
     const { b, voices, fmt, line, col, x, w } = bt, L = sys[line], y0 = L.top;
     const staves = voices.map((o, pi) => {
       const st = new VF.Stave(x, L.staveY[pi], w);
-      if (col === 0) { st.addClef(o.clef, 'default', o.annot).addKeySignature(KS); if (i === 0) st.addTimeSignature('4/4'); }
+      if (col === 0) { st.addClef(o.clef, 'default', o.annot).addKeySignature(bt.ks, bt.ks !== bt.prevKs ? bt.prevKs : undefined); if (i === 0) st.addTimeSignature(SC.beatsPerBar + '/4'); }
+      else if (bt.ks !== bt.prevKs) st.addKeySignature(bt.ks, bt.prevKs);   // the key changes in this bar
       st.setContext(ctx).draw(); o.st = st; return st;
     });
     const startX = Math.max(...staves.map(st => st.getNoteStartX()));

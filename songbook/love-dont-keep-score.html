@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Love Don't Keep Score | Secret Songbook</title>
-<meta name="description" content="Love Don't Keep Score by Secret Chord Collective: words and chords to play and sing along.">
+<meta name="description" content="Love Don't Keep Score by Secret Chord Collective: words, chords, and your part to learn and sing along.">
 <meta property="og:title" content="Love Don't Keep Score | Secret Songbook">
-<meta property="og:description" content="Words and chords to play and sing along.">
+<meta property="og:description" content="Words, chords, and your part to learn and sing along.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Staatliches&display=swap" rel="stylesheet">
@@ -429,6 +429,7 @@
       <p class="rec-dl" id="recDl" hidden><a id="recDlLink" href="#" download><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Download the recording (mp3)</a></p>
       <dl class="facts">
         <div><dt>Key</dt><dd id="factKey">Gm</dd></div>
+        <div><dt>Tempo</dt><dd>130 bpm, in 3/4</dd></div>
         <div class="setting-now" id="settingNow" hidden></div>
       </dl>
       <p class="print-form" id="printForm"></p>
@@ -578,6 +579,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.3/build/cjs/vexflow-bravura.js"></script>
+<script src="love-dont-keep-score-score.js"></script>
 <script>
 /* ---------- The song ----------
    Chords go in square brackets right before the syllable they land on.
@@ -591,45 +593,54 @@
 const SONG = {
   slug: 'love-dont-keep-score', credit: '',
   key: 'G', minor: true,
-  /* No score yet: add a MuseScore file and the practice section, ranges and first notes appear. */
-  backing: [],
+  /* The lines singers learn here, by score part. Singers pick theirs when there's more than one. */
+  backing: [{ voice: 'alto', range: 'alto' }, { voice: 'tenor', range: 'tenor or baritone' }],
+  /* The recording, in assets/. kind: 'sketch' = a rough recording, not the finished song.
+     marks = the second each section starts in the mp3, by section id (v1, v2, solo, br, v3, out) plus end. */
   recording: { src: 'assets/love-dont-keep-score.mp3', kind: 'sketch', marks: null },
   parts: {
-    A: { cls: 'pa',  about: 'The verses. Verse 1 ends on "’til I\'m bored"; verse 2 turns to G for the bridge.' },
-    B: { cls: 'pb1', about: 'The bridge.' },
-    C: { cls: 'pb2', about: 'The tag, four times.' }
+    A: { cls: 'pa',  about: 'The verses, in G minor: Gm7 and F6, then Cm, Gm, B♭, F/A and E♭maj7 to close.' },
+    B: { cls: 'pb1', about: 'The solo and the bridge, in C. The solo is Dm7 and G7, played twice in the band (once here).' },
+    C: { cls: 'pb2', about: 'The tag: Nathan sings "don’t keep score," and the tenor, then the alto, answer "love don’t keep score."' }
   },
+  /* Chords sit where the score links them. The song is in 3/4.
+     parts: for each backing line, which words are theirs ({braces} = Nathan alone) and what they echo. */
   sections: [
     { id: 'v1', part: 'A', caption: 'verse 1', lines: [
-      "[Gm7]Stare at the stars, [F6]stare at the ceiling",
-      "[Gm7]Thought for thought, [F6]unbuild the building",
-      "[Cm]Place it [Gm]in a box now, [Bb]and set [F/A]it [Eb]beside the door",
-      "’til I'm [Gm7]bored [F6]  "
+      {"c": "[Gm7]stare at the stars [F6]stare at the ceiling___[Gm7]___ [F6]", "parts": {"alto": {"c": "{[Gm7]stare at the stars} [F6]stare at the ceiling___[Gm7]___ [F6]"}, "tenor": {"c": "{[Gm7]stare at the stars [F6]stare at the ceiling___[Gm7]___} [F6]"}}},
+      {"c": "[Gm7]thought for thought [F6]unbuild the building___[Gm7]___ [F6]", "parts": {"alto": {"c": "{[Gm7]thought for thought} [F6]unbuild the building___[Gm7]___ [F6]"}, "tenor": {"c": "{[Gm7]thought for thought [F6]unbuild the building___[Gm7]___} [F6]"}}},
+      {"c": "[Cm]  []place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___", "parts": {"alto": {"c": "[Cm]  []{place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___}"}, "tenor": {"c": "[Cm]  []{place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___}"}}},
+      {"c": "’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(’til I’m bored)"}, "tenor": {"c": "{’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(’til I’m bored)"}}}
     ]},
     { id: 'v2', part: 'A', caption: 'verse 2', lines: [
-      "[Gm7]Dot for dot, fill up [F6]the paper",
-      "[Gm7]Learn to name the [F6]colors of nature",
-      "[Cm]Draw blood, draw [Gm]connections, ’til the [Bb]painting [F/A]becomes the [Eb]world [G] "
+      {"c": "[Gm7]  []dot for dot [F6]fill up the paper___[Gm7]___ [F6]", "parts": {"alto": {"c": "[Gm7]  []{dot for dot} [F6]fill up the paper___[Gm7]___ [F6]"}, "tenor": {"c": "[Gm7]  []{dot for dot [F6]fill up the paper___[Gm7]___} [F6]"}}},
+      {"c": "[Gm7]  []learn to name the [F6]colors of nature___[Gm7]___ [F6]", "parts": {"alto": {"c": "[Gm7]  []{learn to name the} [F6]colors of nature___[Gm7]___ [F6]"}, "tenor": {"c": "[Gm7]  []{learn to name the [F6]colors of nature___[Gm7]___} [F6]"}}},
+      {"c": "draw [Cm]blood and draw [Gm]connections", "parts": {"alto": {"c": "draw [Cm]blood {and draw} [Gm]connections"}, "tenor": {"c": "draw [Cm]blood {and draw [Gm]connections}"}}},
+      {"c": "’til the [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___", "parts": {"alto": {"c": "{’til the} [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___"}, "tenor": {"c": "{’til the} [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___"}}}
+    ]},
+    { id: 'solo', part: 'B', caption: 'solo', lines: [
+      {"c": "[Dm7]  [G7]  ", "parts": {"alto": {"c": "[Dm7]  [G7]  "}, "tenor": {"c": "[Dm7]  [G7]  "}}}
     ]},
     { id: 'br', part: 'B', caption: 'bridge', lines: [
-      "[Dm7]  [G7]  Brushing back and forth",
-      "[Dm7]  [G7]  Flowing strokes of love",
-      "[Dm7]Ride the [G7]tide on beyond the [C/F]boundaries of images, wordless beyond",
-      "A [G6sus4]drizzle of dancing, [F]twisting, sparkling swirls",
-      "[Am7]  erasing [F]the lines of my self and world",
-      "[Gsus2]faces remembered and [F]honored and buried",
-      "[Am7]Awoken, and spat on, [F]renounced and remarried"
+      {"c": "[Dm7]  [][G7]brushing back and forth", "parts": {"alto": {"c": "[Dm7]  []{[G7]brushing back and forth}"}, "tenor": {"c": "[Dm7]  []{[G7]brushing back and forth}"}}},
+      {"c": "[Dm7]  [][G7]flowing strokes of love", "parts": {"alto": {"c": "[Dm7]  [][G7]flowing strokes of love"}, "tenor": {"c": "[Dm7]  []{[G7]flowing strokes of love}"}}},
+      {"c": "[Dm7]  [][G7]ride the [Dm7]tide", "parts": {"alto": {"c": "[Dm7]  [][G7]ride the [Dm7]tide"}, "tenor": {"c": "[Dm7]  [][G7]ride the [Dm7]tide"}}},
+      {"c": "[C/F]on beyond the bound[C/E]’ries of images", "parts": {"alto": {"c": "[C/F]on beyond the bound[C/E]’ries of images"}, "tenor": {"c": "[C/F]on beyond {the bound[C/E]’ries of images}"}}},
+      {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]", "parts": {"alto": {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]"}, "tenor": {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]"}}},
+      {"c": "[G7sus4]dancing twisting [F]sparkling swirl", "parts": {"alto": {"c": "[G7sus4]dancing twisting [F]sparkling swirl"}, "tenor": {"c": "{[G7sus4]dancing twisting [F]sparkling swirl}"}}},
+      {"c": "e[G7sus4]rasing the lines of my [F]self and the world", "parts": {"alto": {"c": "{e[G7sus4]rasing the} lines of {my} [F]self and {the} world"}, "tenor": {"c": "e[G7sus4]rasing the lines of my [F]self and the world"}}},
+      {"c": "[Gsus2]a true name remembered and [F]honored and buried", "parts": {"alto": {"c": "[Gsus2]a true name remembered and [F]honored and buried"}, "tenor": {"c": "[Gsus2]a true name remembered and [F]honored and buried"}}},
+      {"c": "a[Am7]woken and spat on re[F]nounced and remarried", "parts": {"alto": {"c": "a[Am7]woken and spat on re[F]nounced and remarried"}, "tenor": {"c": "a[Am7]woken and spat on re[F]nounced and remarried"}}}
     ]},
     { id: 'v3', part: 'A', caption: 'verse 3', lines: [
-      "[Gm7]I'll look at [F6]illusion until I look through it",
-      "[Gm7]Drop [F6]defenses, dare to intuit",
-      "[Cm]Evoke, evolve, [Gm]reveal a love [Bb]that's too grand [F/A]and too [Eb]real to ignore"
+      {"c": "I’ll [Gm7]look at illusion un[F6]til I look through it___[Gm7]___ [F6]", "parts": {"alto": {"c": "{I’ll [Gm7]look at illusion un[F6]til I look through it___[Gm7]___} [F6]"}, "tenor": {"c": "I’ll {[Gm7]look at illusion un[F6]til I look through it___[Gm7]___} [F6]"}}},
+      {"c": "[Gm7]drop defenses [F6]dare to intuit___[Gm7]___", "parts": {"alto": {"c": "{[Gm7]drop defenses} [F6]dare to intuit___[Gm7]___"}, "tenor": {"c": "{[Gm7]drop defenses [F6]dare to intuit___[Gm7]___}"}}},
+      {"c": "e[Cm]voke evolve re[Gm]veal a love", "parts": {"alto": {"c": "{e[Cm]voke evolve re[Gm]veal a love}"}, "tenor": {"c": "{e[Cm]voke evolve re[Gm]veal a love}"}}},
+      {"c": "that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore", "parts": {"alto": {"c": "{that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore}"}, "tenor": {"c": "{that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore}"}}}
     ]},
-    { id: 'out', part: 'C', caption: 'outro', lines: [
-      "Don't keep [Gm7]score [F6]  [Gm7]  [F6]  ",
-      "Love don't keep [Gm7]score [F6]  [Gm7]  [F6]  ",
-      "Don't keep [Gm7]score [F6]  [Gm7]  [F6]  ",
-      "Love don't keep [Gm7]score [F6]  [Gm7]  [F6]  "
+    { id: 'out', part: 'C', caption: 'tag', lines: [
+      {"c": "don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}, "tenor": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}}},
+      {"c": "don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}, "tenor": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}}}
     ]}
   ]
 };
@@ -775,13 +786,17 @@ function echoHTML(text, m) {
 }
 const echoWords = e => e.replace(/\[[^\]]*\]/g, '');
 /* Singing view: the alto's echo starts right under the last word of Nathan's line before it ("sky") */
-/* A word split by a wide chord (a-bandoned under "Cm"): show the hyphen, the way chord charts do. Only when it's actually pulled apart. */
+/* A word split by a wide chord (a-bandoned under "Cm"), or split across two lines on a narrow screen: show the hyphen,
+   the way chord charts do. Only when it's actually pulled apart. */
 function markStretched() {
   document.querySelectorAll('#song .seg.midword').forEach(sg => {
     sg.classList.remove('stretched');
     if (!document.body.classList.contains('chords-on')) return;
     const ly = sg.querySelector('.ly'), r = document.createRange(); r.selectNodeContents(ly);
     if (sg.getBoundingClientRect().width - r.getBoundingClientRect().width > 6) sg.classList.add('stretched');
+    /* ...or when the rest of the word wraps onto the next line (re- / nounced on a phone) */
+    let nx = sg.nextElementSibling; while (nx && !nx.classList.contains('seg')) nx = nx.nextElementSibling;
+    if (nx && nx.querySelector('.ly').getBoundingClientRect().top > r.getBoundingClientRect().top + 4) sg.classList.add('stretched');
   });
 }
 window.addEventListener('resize', markStretched);
@@ -797,7 +812,10 @@ function alignEchoes() {
     }
     if (!last) return;
     const r = document.createRange(); r.setStart(last[0], last[1]); r.setEnd(last[0], last[1] + last[2]);
-    e.style.setProperty('--echo-x', Math.max(0, r.getBoundingClientRect().left - line.getBoundingClientRect().left) + 'px');
+    /* never so far right that the echo has to wrap: on a phone it moves left just enough to fit on one line */
+    const er = document.createRange(); er.selectNodeContents(e);
+    const room = line.getBoundingClientRect().width - er.getBoundingClientRect().width - 4;
+    e.style.setProperty('--echo-x', Math.max(0, Math.min(room, r.getBoundingClientRect().left - line.getBoundingClientRect().left)) + 'px');
   });
 }
 window.addEventListener('resize', alignEchoes);
@@ -932,7 +950,7 @@ document.getElementById('capo').oninput = e => { state.capo = Math.max(1, Math.m
 document.getElementById('numbers').onchange = e => { state.numbers = e.target.checked; renderAll(); };
 document.getElementById('tones').onchange = e => { state.tones = e.target.checked; renderParts(); };
 
-/* ---------- Click track (4/4, accent on 1) ---------- */
+/* ---------- Click track (accent on 1; the bar length comes from the score, else 4/4) ---------- */
 let ac = null, clickTimer = null, nextTime = 0, beat = 0;
 function tick(time, accent) {
   const o = ac.createOscillator(), g = ac.createGain();
@@ -945,7 +963,7 @@ function tick(time, accent) {
 function schedule() {
   const bpm = Math.max(40, Math.min(200, +document.getElementById('bpm').value || 92));
   while (nextTime < ac.currentTime + .12) {
-    tick(nextTime, beat % 4 === 0);
+    tick(nextTime, beat % (SONG.beatsPerBar || window.SCORE?.beatsPerBar || 4) === 0);
     nextTime += 60 / bpm; beat++;
   }
 }
@@ -1498,10 +1516,17 @@ function renderStaff(pass = 0) {
   const vc = v => [v, SC.voices[v].clef || (v === 'alto' ? 'treble' : 'bass'), SC.voices[v].annot];
   const parts = MULTI() ? VOICE_ORDER().map(vc) : both ? [vc(state.part), vc('baritone')] : [vc(state.part)];
   const KS = vexKeySig(keyName(SONG_KEY));
+  /* a key change in the score (SC.keys: [bar, fifths]) changes the key signature from that bar on */
+  const ksAt = bar => {
+    if (!SC.keys) return KS;
+    let f = SC.keys[0][1]; SC.keys.forEach(([b, x]) => { if (b <= bar) f = x; });
+    return vexKeySig(keyName(SONG_KEY + 7 * (f - SC.keys[0][1])));
+  };
   const bars = scopeBars(), headW = 100;
 
   /* 1. Build every bar's notes first, so we know how much room each bar really needs */
-  const built = bars.map(b => {
+  const built = bars.map((b, bi) => {
+    const ks = ksAt(b.bar), prevKs = bi ? ksAt(bars[bi - 1].bar) : ks;
     const voices = parts.map(([v, clef, annot]) => {
       const tuplet = [];
       const r = b.sec.rest?.[v], silent = r && b.bar >= r[0] && b.bar <= r[1];
@@ -1520,8 +1545,8 @@ function renderStaff(pass = 0) {
         if (it.t) tuplet.push(n);
         n._it = it; return n;
       });
-      const voice = new VF.Voice({ num_beats: 4, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
-      VF.Accidental.applyAccidentals([voice], KS);
+      const voice = new VF.Voice({ num_beats: SC.beatsPerBar, beat_value: 4 }).setMode(VF.Voice.Mode.SOFT).addTickables(notes);
+      VF.Accidental.applyAccidentals([voice], ks);
       /* beams settle the stem directions, so make them now: the vertical layout below depends on them */
       const beams = VF.Beam.generateBeams(notes.filter(n => !n.isRest()), { groups: [new VF.Fraction(1, 4)] });
       /* how far this bar reaches above and below the staff, in staff lines (stems, ledger notes, ties, triplet brackets) */
@@ -1544,7 +1569,7 @@ function renderStaff(pass = 0) {
     const fmt = new VF.Formatter();
     voices.forEach(o => fmt.joinVoices([o.voice]));
     const need = fmt.preCalculateMinTotalWidth(voices.map(o => o.voice));
-    return { b, voices, fmt, need: Math.max(60, need + 22) + (STAFF.extra[bars.indexOf(b)] || 0) };
+    return { b, voices, fmt, ks, prevKs, need: Math.max(60, need + 22) + (ks !== prevKs ? 50 : 0) + (STAFF.extra[bars.indexOf(b)] || 0) };
   });
 
   /* 2. Pack bars into lines and share out the spare width */
@@ -1594,7 +1619,8 @@ function renderStaff(pass = 0) {
     const { b, voices, fmt, line, col, x, w } = bt, L = sys[line], y0 = L.top;
     const staves = voices.map((o, pi) => {
       const st = new VF.Stave(x, L.staveY[pi], w);
-      if (col === 0) { st.addClef(o.clef, 'default', o.annot).addKeySignature(KS); if (i === 0) st.addTimeSignature('4/4'); }
+      if (col === 0) { st.addClef(o.clef, 'default', o.annot).addKeySignature(bt.ks, bt.ks !== bt.prevKs ? bt.prevKs : undefined); if (i === 0) st.addTimeSignature(SC.beatsPerBar + '/4'); }
+      else if (bt.ks !== bt.prevKs) st.addKeySignature(bt.ks, bt.prevKs);   // the key changes in this bar
       st.setContext(ctx).draw(); o.st = st; return st;
     });
     const startX = Math.max(...staves.map(st => st.getNoteStartX()));
