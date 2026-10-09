@@ -7,17 +7,23 @@
 <meta name="description" content="The Secret Songbook by Secret Chord Collective: words, chords, and your part to learn for every song.">
 <meta property="og:title" content="Secret Songbook">
 <meta property="og:description" content="Words, chords, and your part to learn for every song.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Staatliches&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/fonts.css">
+<!-- Add to home screen: the logo, named "Songbook"; the pages keep working offline (sw.js) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Songbook">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#d9c29a">
 <style>
   :root {
     --kraft: #d9c29a;
     --kraft-light: #e7d6b3;
     --ink: #1c1915;
     --ink-soft: #4a4238;
-    --rust: #c0633d;
-    --rust-ink: #97401f;
+    --rust: #c86c46;
+    --rust-ink: #80361a;
     --mustard: #d4a33b;
     --slate: #454b52;
   }
@@ -33,12 +39,16 @@
   h1 { margin: 0; flex: 1 1 420px; min-width: 0; font-size: clamp(56px, 9vw, 104px); line-height: .9; letter-spacing: .01em; }
   h2 { margin: 0 0 20px; font-size: 32px; letter-spacing: .04em; }
 
-  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 16px; padding-bottom: 48px; margin: 0; list-style: none; padding-left: 0; }
-  .steps li { background: var(--kraft-light); border-radius: 10px; padding: 24px; display: flex; flex-direction: column; gap: 8px; }
-  .steps .num { font-size: 40px; line-height: 1; color: var(--rust-ink); }
-  .steps h3 { margin: 0; font-size: 20px; }
-  .steps p { margin: 0; font-size: 17px; line-height: 1.5; color: var(--ink-soft); }
 
+  .install { padding-bottom: 32px; }
+  .install-btn { display: flex; align-items: center; gap: 14px; width: 100%; max-width: 30rem; min-height: 64px; padding: 10px 18px 10px 12px;
+    border: 2px solid var(--ink); border-radius: 12px; background: var(--kraft-light); color: var(--ink); text-align: left; cursor: pointer;
+    font: 700 18px/1.3 'Atkinson Hyperlegible', sans-serif; }
+  .install-btn img { border-radius: 50%; flex: none; }
+  .install-btn small { display: block; font-weight: 400; font-size: 15px; color: var(--ink-soft); }
+  .install-btn:hover, .install-btn:focus-visible { background: var(--kraft); }
+  .install-how { max-width: 30rem; margin: 10px 0 0; font-size: 17px; line-height: 1.5; }
+  .install-how svg { vertical-align: -3px; }
   .songs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 500px), 1fr)); gap: 20px; padding-bottom: 64px; }
   .song { background: var(--kraft-light); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 18px; }
   .song-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 16px; }
@@ -46,12 +56,13 @@
   .song-top p { margin: 0; font-size: 17px; color: var(--ink-soft); }
   .song-top b { color: var(--ink); }
 
-  .strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px; margin: 0; padding: 0; list-style: none; }
+  .strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
   .strip li { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
   .seg { display: flex; align-items: center; justify-content: center; height: 34px; border-radius: 4px; font-family: 'Staatliches', sans-serif; font-size: 16px; letter-spacing: .04em; color: var(--ink); }
   .pa { background: var(--mustard); }
   .pb1 { background: var(--rust); }
   .pb2 { background: var(--rust-ink); color: var(--kraft-light); }
+  .pc { background: var(--slate); color: var(--kraft-light); }
   .cap { font-size: 12px; line-height: 1.2; color: var(--ink-soft); text-align: center; }
 
   .song dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 16px; font-size: 17px; line-height: 1.45; }
@@ -86,31 +97,46 @@
   <h1 class="display">Secret Songbook</h1>
 </header>
 
-<section class="wrap" aria-labelledby="how">
-  <h2 id="how" class="display">How it works</h2>
-  <ol class="steps">
-    <li>
-      <span class="num display">1</span>
-      <h3>Pick a song.</h3>
-      <p>Each page has the words, the chords, and a strip that shows how the song is built.</p>
-    </li>
-    <li>
-      <span class="num display">2</span>
-      <h3>Say if you're singing or playing.</h3>
-      <p>The page remembers your choice, your instrument, your capo, and your part for each song.</p>
-    </li>
-    <li>
-      <span class="num display">3</span>
-      <h3>Learn it, then sing along.</h3>
-      <p>Singers practice their line against Nathan's. Players get chord cards, sheets in their own key, and a chart to print.</p>
-    </li>
-  </ol>
+<!-- Shown only where it helps: Android/Chrome (one tap installs) and iPhone/iPad Safari (tap shows the two steps) -->
+<section class="wrap install" id="install" hidden aria-label="Add to home screen">
+  <button class="install-btn" id="installBtn" type="button">
+    <img src="assets/icons/icon-192.png" alt="" width="40" height="40">
+    <span>Add the Songbook to your home screen<small>It opens like an app and works without signal.</small></span>
+  </button>
+  <p class="install-how" id="installHow" hidden>On iPhone or iPad: tap the Share button
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M6 11v9h12v-9"/></svg>
+    then <b>Add to Home Screen</b>.</p>
 </section>
 
 <main class="wrap" aria-labelledby="songs-h">
   <h2 id="songs-h" class="display">The songs</h2>
   <div class="songs">
     <!-- Songs in alphabetical order. To add one, copy an <article> and keep the order. -->
+
+    <article class="song">
+      <div class="song-top">
+        <h3 class="display">Alive Again</h3>
+        <p><b>B♭ major</b> · 100 bpm, in 3/4</p>
+      </div>
+      <ol class="strip" aria-label="Song structure">
+        <li><span class="seg pa">A</span><span class="cap">verse 1</span></li>
+        <li><span class="seg pb1">B</span><span class="cap">chorus</span></li>
+        <li><span class="seg pb2">C</span><span class="cap">refrain</span></li>
+        <li><span class="seg pa">A</span><span class="cap">verse 2</span></li>
+        <li><span class="seg pb1">B</span><span class="cap">chorus</span></li>
+        <li><span class="seg pb2">C</span><span class="cap">refrain</span></li>
+        <li><span class="seg pc">D</span><span class="cap">bridge</span></li>
+        <li><span class="seg pb2">C</span><span class="cap">refrain</span></li>
+      </ol>
+      <dl>
+        <dt>Singers</dt><dd>One backing part, alto.</dd>
+        <dt>Players</dt><dd>In 3/4. In the verses and chorus the band plays the tune with the voice.</dd>
+      </dl>
+      <div class="song-foot">
+        <span class="status">Recording coming soon</span>
+        <a class="open" href="alive-again.html" aria-label="Open Alive Again">Open song <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </article>
 
     <article class="song">
       <div class="song-top">
@@ -213,5 +239,27 @@
   </div>
 </footer>
 
+<script>
+/* "Add to home screen": one tap on Android/Chrome; on iPhone Safari there's no button for it, so show the two steps.
+   Hidden when the Songbook is already open from the home screen, and in browsers that can't do either. */
+(() => {
+  const box = document.getElementById('install'), btn = document.getElementById('installBtn'), how = document.getElementById('installHow');
+  const installed = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if (installed) { try { navigator.storage?.persist?.(); } catch (e) {} return; }   // ask the phone to keep the offline copy
+  const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  let prompt = null;
+  addEventListener('beforeinstallprompt', e => { e.preventDefault(); prompt = e; box.hidden = false; });
+  addEventListener('appinstalled', () => { box.hidden = true; });
+  if (ios) box.hidden = false;
+  btn.onclick = async () => {
+    if (prompt) { prompt.prompt(); const r = await prompt.userChoice; if (r.outcome === 'accepted') box.hidden = true; prompt = null; }
+    else { how.hidden = !how.hidden; btn.setAttribute('aria-expanded', !how.hidden); }
+  };
+})();
+</script>
+<script>
+/* Offline: the first visit saves the whole songbook on the phone (pages, scores, recordings), so it opens without signal */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
 </body>
 </html>

@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Love Don't Keep Score | Secret Songbook</title>
-<meta name="description" content="Love Don't Keep Score by Secret Chord Collective: words, chords, and your part to learn and sing along.">
-<meta property="og:title" content="Love Don't Keep Score | Secret Songbook">
+<title>Alive Again | Secret Songbook</title>
+<meta name="description" content="Alive Again by Secret Chord Collective: words, chords, and your part to learn and sing along.">
+<meta property="og:title" content="Alive Again | Secret Songbook">
 <meta property="og:description" content="Words, chords, and your part to learn and sing along.">
 <link rel="stylesheet" href="assets/fonts.css">
 <!-- Add to home screen: the logo, named "Songbook"; the pages keep working offline (sw.js) -->
@@ -439,7 +439,7 @@
     <a href="songbook.html"><img src="assets/scc-logo.jpg" alt="Secret Chord Collective logo, back to the Secret Songbook"></a>
     <div>
       <p class="collective"><a href="songbook.html">Secret Songbook</a></p>
-      <h1>Love Don't Keep Score</h1>
+      <h1>Alive Again</h1>
       <div class="listen" id="listen">
         <button class="pp" id="recBtn" aria-label="Play" aria-pressed="false"><span class="pp-icon" aria-hidden="true"></span></button>
         <input type="range" id="recSeek" min="0" max="1000" value="0" aria-label="Position in the song">
@@ -451,7 +451,7 @@
       <p class="rec-dl" id="recDl" hidden><a id="recDlLink" href="#" download><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="M7 10l5 5 5-5"/><path d="M5 20h14"/></svg>Download the recording (mp3)</a></p>
       <dl class="facts">
         <div><dt>Key</dt><dd id="factKey">Gm</dd></div>
-        <div><dt>Tempo</dt><dd>130 bpm, in 3/4</dd></div>
+        <div><dt>Tempo</dt><dd>100 bpm, in 3/4</dd></div>
         <div class="setting-now" id="settingNow" hidden></div>
       </dl>
       <p class="print-form" id="printForm"></p>
@@ -603,7 +603,7 @@
 </div>
 
 <script src="assets/vexflow-bravura.js"></script>
-<script src="love-dont-keep-score-score.js"></script>
+<script src="alive-again-score.js"></script>
 <script>
 /* ---------- The song ----------
    Chords go in square brackets right before the syllable they land on.
@@ -615,56 +615,72 @@
    that voice for those score bars in that section only (the score repeats A1's bars for the last A2).
    A chord with no words after it is held or played in the gap.  */
 const SONG = {
-  slug: 'love-dont-keep-score', credit: '',
-  key: 'G', minor: true,
-  /* The lines singers learn here, by score part. Singers pick theirs when there's more than one. */
-  backing: [{ voice: 'alto', range: 'alto' }, { voice: 'tenor', range: 'tenor or baritone' }],
-  /* The recording, in assets/. kind: 'sketch' = a rough recording, not the finished song.
-     marks = the second each section starts in the mp3, by section id (v1, v2, solo, br, v3, out) plus end. */
-  recording: { src: 'assets/love-dont-keep-score.mp3', kind: 'sketch', marks: null },
+  slug: 'alive-again', credit: '',
+  key: 'B♭', minor: false,
+  /* The line singers learn here, by score part. */
+  backing: [{ voice: 'alto', range: 'alto' }],
+  /* The recording, in assets/ (named after the slug). kind: 'demo' or 'sketch' for one that isn't the finished song.
+     marks = the second each section starts in the mp3, by section id (v1, ch1, r1, v2, ch2, r2, br, out) plus end. */
+  recording: { src: 'assets/alive-again.mp3', marks: null },
   parts: {
-    A: { cls: 'pa',  about: 'The verses, in G minor: Gm7 and F6, then Cm, Gm, B♭, F/A and E♭maj7 to close.' },
-    B: { cls: 'pb1', about: 'The solo and the bridge, in C. The solo is Dm7 and G7, played twice in the band (once here).' },
-    C: { cls: 'pb2', about: 'The tag: Nathan sings "don’t keep score," and the tenor, then the alto, answer "love don’t keep score."' }
+    A: { cls: 'pa',  about: 'The verses. The band plays the tune along with the voice, so the page shows its notes instead of chords.' },
+    B: { cls: 'pb1', about: 'The chorus. The "been waitin’" lines follow the voice too, landing on B♭, B♭/F and F, then G, B♭ and F.' },
+    C: { cls: 'pb2', about: 'The refrain: B♭ and E♭, back and forth.' },
+    D: { cls: 'pc',  about: 'The bridge: B♭, B♭/F and E♭, then E♭9, E♭6 and E♭ under "way beyond the lines" and "be with us tonight."' }
   },
-  /* Chords sit where the score links them. The song is in 3/4.
+  /* Chords sit where the score links them. The song is in 3/4. Where the score says "instruments follow vocals (ifv)",
+     the line shows the sung notes ([~G]) until the next chord.
      parts: for each backing line, which words are theirs ({braces} = Nathan alone) and what they echo. */
   sections: [
     { id: 'v1', part: 'A', caption: 'verse 1', lines: [
-      {"c": "[Gm7]stare at the stars [F6]stare at the ceiling___[Gm7]___ [F6]", "parts": {"alto": {"c": "{[Gm7]stare at the stars} [F6]stare at the ceiling___[Gm7]___ [F6]"}, "tenor": {"c": "{[Gm7]stare at the stars [F6]stare at the ceiling___[Gm7]___} [F6]"}}},
-      {"c": "[Gm7]thought for thought [F6]unbuild the building___[Gm7]___ [F6]", "parts": {"alto": {"c": "{[Gm7]thought for thought} [F6]unbuild the building___[Gm7]___ [F6]"}, "tenor": {"c": "{[Gm7]thought for thought [F6]unbuild the building___[Gm7]___} [F6]"}}},
-      {"c": "[Cm]  []place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___", "parts": {"alto": {"c": "[Cm]  []{place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___}"}, "tenor": {"c": "[Cm]  []{place it in a [Gm]box now and [Bb]set it be[F/A]side the door___[Ebmaj7]___}"}}},
-      {"c": "’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(’til I’m bored)"}, "tenor": {"c": "{’til I’m [Gm7]bored___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(’til I’m bored)"}}}
+      {"c": "[~G]sha[~Bb]dow [~C]of [~C]coal", "parts": {"alto": {"c": "{[~G]sha[~Bb]dow [~C]of [~C]coal}"}}},
+      {"c": "[~C]marked [~C]at [~D]the [~G]mouth", "parts": {"alto": {"c": "{[~C]marked [~C]at [~D]the [~G]mouth}"}}},
+      {"c": "[~G]dark [~Bb]in [~C]the [~C]hole", "parts": {"alto": {"c": "{[~G]dark [~Bb]in [~C]the [~C]hole}"}}},
+      {"c": "[~C]ne[~Bb]ver [~C]made [~D]it [~G]out", "parts": {"alto": {"c": "{[~C]ne[~Bb]ver [~C]made [~D]it [~G]out}"}}}
+    ]},
+    { id: 'ch1', part: 'B', caption: 'chorus', lines: [
+      {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]a [Bb]sign", "parts": {"alto": {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]a [Bb]sign"}}},
+      {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~D]the [Bb/F]sun___[F]___", "parts": {"alto": {"c": "{[~G]been} [~G]wai[~F]tin’ [~D]on [~D]the [Bb/F]sun___[F]___"}}},
+      {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]my [Bb]kind", "parts": {"alto": {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]my [Bb]kind"}}},
+      {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]some[G]one", "parts": {"alto": {"c": "[~G]been [~G]wai[~F]tin’ [~D]on [~C]some[G]one"}}},
+      {"c": "[Bb]to spell it [F]out", "parts": {"alto": {"c": "{[Bb]to} spell it [F]out"}}}
+    ]},
+    { id: 'r1', part: 'C', caption: 'refrain', lines: [
+      {"c": "put me [Bb]right again___[Eb]___ [Bb]", "parts": {"alto": {"c": "{put me [Bb]right again___[Eb]___} [Bb]"}}},
+      {"c": "[Eb]  []I will [Bb]rise again___[Eb]___ [Bb]   [Eb]", "parts": {"alto": {"c": "[Eb]  []{I will [Bb]rise again___[Eb]___} [Bb]   [Eb]"}}}
     ]},
     { id: 'v2', part: 'A', caption: 'verse 2', lines: [
-      {"c": "[Gm7]  []dot for dot [F6]fill up the paper___[Gm7]___ [F6]", "parts": {"alto": {"c": "[Gm7]  []{dot for dot} [F6]fill up the paper___[Gm7]___ [F6]"}, "tenor": {"c": "[Gm7]  []{dot for dot [F6]fill up the paper___[Gm7]___} [F6]"}}},
-      {"c": "[Gm7]  []learn to name the [F6]colors of nature___[Gm7]___ [F6]", "parts": {"alto": {"c": "[Gm7]  []{learn to name the} [F6]colors of nature___[Gm7]___ [F6]"}, "tenor": {"c": "[Gm7]  []{learn to name the [F6]colors of nature___[Gm7]___} [F6]"}}},
-      {"c": "draw [Cm]blood and draw [Gm]connections", "parts": {"alto": {"c": "draw [Cm]blood {and draw} [Gm]connections"}, "tenor": {"c": "draw [Cm]blood {and draw [Gm]connections}"}}},
-      {"c": "’til the [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___", "parts": {"alto": {"c": "{’til the} [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___"}, "tenor": {"c": "{’til the} [Bb]painting be[F/A]comes the world___[Ebmaj7]___[G7]___"}}}
+      {"c": "[~G]trapped [~Bb]in [~C]a [~C]home", "parts": {"alto": {"c": "[~G]trapped [~Bb]in [~C]a [~C]home"}}},
+      {"c": "[~C]bro[~C]ken [~D]and [~G]old", "parts": {"alto": {"c": "[~C]bro[~C]ken [~D]and [~G]old"}}},
+      {"c": "[~G]dia[~Bb]mond [~C]of [~C]mind", "parts": {"alto": {"c": "[~G]dia[~Bb]mond [~C]of [~C]mind"}}},
+      {"c": "[~C]jo[~Bb]in[~C]ted [~D]with [~G]gold", "parts": {"alto": {"c": "[~C]jo[~Bb]in[~C]ted [~D]with [~G]gold"}}}
     ]},
-    { id: 'solo', part: 'B', caption: 'solo', lines: [
-      {"c": "[Dm7]  [G7]  ", "parts": {"alto": {"c": "[Dm7]  [G7]  "}, "tenor": {"c": "[Dm7]  [G7]  "}}}
+    { id: 'ch2', part: 'B', caption: 'chorus', lines: [
+      {"c": "[~G]been [~G]wak[~F]in’ [~D]up [~C]on [Bb]time", "parts": {"alto": {"c": "[~G]been [~G]wak[~F]in’ [~D]up [~C]on [Bb]time"}}},
+      {"c": "[~G]been [~G]sit[~F]tin’ [~D]on [~D]the [Bb/F]floor___[F]___", "parts": {"alto": {"c": "[~G]been [~G]sit[~F]tin’ [~D]on [~D]the [Bb/F]floor___[F]___"}}},
+      {"c": "[~G]I’m [~G]tak[~F]in’ [~D]my [~C]sweet [Bb]time", "parts": {"alto": {"c": "[~G]I’m [~G]tak[~F]in’ [~D]my [~C]sweet [Bb]time"}}},
+      {"c": "[~G]I’m [~G]grow[~F]in’ [~D]up [~C]and [G]old", "parts": {"alto": {"c": "[~G]I’m [~G]grow[~F]in’ [~D]up [~C]and [G]old"}}},
+      {"c": "[Bb]ready, set, [F]go!", "parts": {"alto": {"c": "{[Bb]ready, set, [F]go!}"}}}
     ]},
-    { id: 'br', part: 'B', caption: 'bridge', lines: [
-      {"c": "[Dm7]  [][G7]brushing back and forth", "parts": {"alto": {"c": "[Dm7]  []{[G7]brushing back and forth}"}, "tenor": {"c": "[Dm7]  []{[G7]brushing back and forth}"}}},
-      {"c": "[Dm7]  [][G7]flowing strokes of love", "parts": {"alto": {"c": "[Dm7]  [][G7]flowing strokes of love"}, "tenor": {"c": "[Dm7]  []{[G7]flowing strokes of love}"}}},
-      {"c": "[Dm7]  [][G7]ride the [Dm7]tide", "parts": {"alto": {"c": "[Dm7]  [][G7]ride the [Dm7]tide"}, "tenor": {"c": "[Dm7]  [][G7]ride the [Dm7]tide"}}},
-      {"c": "[C/F]on beyond the bound[C/E]’ries of images", "parts": {"alto": {"c": "[C/F]on beyond the bound[C/E]’ries of images"}, "tenor": {"c": "[C/F]on beyond {the bound[C/E]’ries of images}"}}},
-      {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]", "parts": {"alto": {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]"}, "tenor": {"c": "[Fmaj7]wordless beyond [Fmaj7/E]   [Fmaj7/A]"}}},
-      {"c": "[G7sus4]dancing twisting [F]sparkling swirl", "parts": {"alto": {"c": "[G7sus4]dancing twisting [F]sparkling swirl"}, "tenor": {"c": "{[G7sus4]dancing twisting [F]sparkling swirl}"}}},
-      {"c": "e[G7sus4]rasing the lines of my [F]self and the world", "parts": {"alto": {"c": "{e[G7sus4]rasing the} lines of {my} [F]self and {the} world"}, "tenor": {"c": "e[G7sus4]rasing the lines of my [F]self and the world"}}},
-      {"c": "[Gsus2]a true name remembered and [F]honored and buried", "parts": {"alto": {"c": "[Gsus2]a true name remembered and [F]honored and buried"}, "tenor": {"c": "[Gsus2]a true name remembered and [F]honored and buried"}}},
-      {"c": "a[Am7]woken and spat on re[F]nounced and remarried", "parts": {"alto": {"c": "a[Am7]woken and spat on re[F]nounced and remarried"}, "tenor": {"c": "a[Am7]woken and spat on re[F]nounced and remarried"}}}
+    { id: 'r2', part: 'C', caption: 'refrain', lines: [
+      {"c": "I will [Bb]rise again___[Eb]___ [Bb]", "parts": {"alto": {"c": "I will [Bb]rise again___[Eb]___ [Bb]"}}},
+      {"c": "[Eb]  []I’m a[Bb]live again___[Eb]___ [Bb]", "parts": {"alto": {"c": "[Eb]  []I’m a[Bb]live again___[Eb]___ [Bb]"}}},
+      {"c": "[Eb]  []on [Bb]fire within___[Eb]___ [Bb]   [Eb]", "parts": {"alto": {"c": "[Eb]  []on [Bb]fire within___[Eb]___ [Bb]   [Eb]"}}}
     ]},
-    { id: 'v3', part: 'A', caption: 'verse 3', lines: [
-      {"c": "I’ll [Gm7]look at illusion un[F6]til I look through it___[Gm7]___ [F6]", "parts": {"alto": {"c": "{I’ll [Gm7]look at illusion un[F6]til I look through it___[Gm7]___} [F6]"}, "tenor": {"c": "I’ll {[Gm7]look at illusion un[F6]til I look through it___[Gm7]___} [F6]"}}},
-      {"c": "[Gm7]drop defenses [F6]dare to intuit___[Gm7]___", "parts": {"alto": {"c": "{[Gm7]drop defenses} [F6]dare to intuit___[Gm7]___"}, "tenor": {"c": "{[Gm7]drop defenses [F6]dare to intuit___[Gm7]___}"}}},
-      {"c": "e[Cm]voke evolve re[Gm]veal a love", "parts": {"alto": {"c": "{e[Cm]voke evolve re[Gm]veal a love}"}, "tenor": {"c": "{e[Cm]voke evolve re[Gm]veal a love}"}}},
-      {"c": "that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore", "parts": {"alto": {"c": "{that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore}"}, "tenor": {"c": "{that’s too [Bb]grand and too [F/A]real to ig[Ebmaj7]nore}"}}}
+    { id: 'br', part: 'D', caption: 'bridge', lines: [
+      {"c": "[Bb]  []the way you look before [Bb/F]you [Bb]cry", "parts": {"alto": {"c": "[Bb]  []the way you look before [Bb/F]you [Bb]cry"}}},
+      {"c": "keeps a dark dream alive___[Eb]___", "parts": {"alto": {"c": "{keeps a dark dream alive___[Eb]___}"}}},
+      {"c": "[Bb]the birds receive a se[Bb/F]cret [Bb]sign", "parts": {"alto": {"c": "[Bb]the birds receive a se[Bb/F]cret [Bb]sign"}}},
+      {"c": "and take to morning [Bb/F]flight___[F]___", "parts": {"alto": {"c": "{and take to morning} [Bb/F]flight___[F]___"}}},
+      {"c": "[Eb9]way be[Eb6]yond the [Eb]lines", "parts": {"alto": {"c": "[Eb9]way be[Eb6]yond the [Eb]lines"}}},
+      {"c": "it’s al[Bb/F]right___[F]___", "parts": {"alto": {"c": "{it’s} al[Bb/F]right___[F]___"}}},
+      {"c": "[Eb9]be with [Eb6]us to[Eb]night", "parts": {"alto": {"c": "[Eb9]be with [Eb6]us to[Eb]night"}}},
+      {"c": "[D]blood that [F]rushes [Bb]up my skin___[Eb]___ [Bb]", "parts": {"alto": {"c": "[D]blood that [F]rushes [Bb]up {my skin___[Eb]___} [Bb]"}}}
     ]},
-    { id: 'out', part: 'C', caption: 'tag', lines: [
-      {"c": "don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}, "tenor": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}}},
-      {"c": "don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___ [Gm7]   [F6]", "parts": {"alto": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}, "tenor": {"c": "{don’t keep___[Gm7]___ score___[F6]___[Gm7]___[F6]___} [Gm7]   [F6]", "echo": "(love don’t keep score)"}}}
+    { id: 'out', part: 'C', caption: 'refrain', lines: [
+      {"c": "[Eb]  []I’m a[Bb]live again___[Eb]___ [Bb]", "parts": {"alto": {"c": "[Eb]  []{I’m a[Bb]live again___[Eb]___} [Bb]"}}},
+      {"c": "[Eb]  []on [Bb]fire within___[Eb]___ [Bb]", "parts": {"alto": {"c": "[Eb]  []{on [Bb]fire within___[Eb]___} [Bb]"}}},
+      {"c": "[Eb]  []the [Bb]whisp’rin’ [Eb]wind", "parts": {"alto": {"c": "[Eb]  []{the [Bb]whisp’rin’ [Eb]wind}"}}}
     ]}
   ]
 };

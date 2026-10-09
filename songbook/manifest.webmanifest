@@ -1,0 +1,15 @@
+{
+  "name": "Secret Songbook",
+  "short_name": "Songbook",
+  "description": "Secret Chord Collective songs: words, chords, and your part to learn.",
+  "start_url": "songbook.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#d9c29a",
+  "theme_color": "#d9c29a",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

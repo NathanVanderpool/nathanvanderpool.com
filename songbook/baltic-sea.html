@@ -7,17 +7,23 @@
 <meta name="description" content="Baltic Sea by Secret Chord Collective: words and your part to learn and sing along.">
 <meta property="og:title" content="Baltic Sea | Secret Songbook">
 <meta property="og:description" content="Words and your part to learn and sing along.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Staatliches&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/fonts.css">
+<!-- Add to home screen: the logo, named "Songbook"; the pages keep working offline (sw.js) -->
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-title" content="Songbook">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#d9c29a">
 <style>
   :root {
     --kraft: #d9c29a;
     --kraft-light: #e7d6b3;
     --ink: #1c1915;
     --ink-soft: #4a4238;
-    --rust: #c0633d;
-    --rust-ink: #97401f;
+    --rust: #c86c46;
+    --rust-ink: #80361a;
     --mustard: #d4a33b;
     --slate: #454b52;
     --display: "Staatliches", "Arial Narrow", Impact, sans-serif;
@@ -161,6 +167,8 @@
   body.view-staff .staff-box { display: block; }
   .staff-tools { display: none; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .5rem; margin: 0 0 .5rem; }
   body.view-staff .staff-tools { display: flex; }
+  .speed { display: inline-flex; align-items: center; gap: .35rem; font-size: .95rem; color: var(--ink-soft); margin-left: auto; }
+  .speed select { font: inherit; color: var(--ink); background: var(--kraft-light); border: 2px solid var(--ink); border-radius: 6px; min-height: 44px; padding: 0 .4rem; }
   .show-row { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
   .show-row .pick .tick { display: inline-block; width: 1.1em; }
   .staff-tools .zoom { display: inline-flex; align-items: center; gap: .3rem; }
@@ -282,6 +290,7 @@
   .pa  { background: var(--mustard); color: var(--ink); }
   .pb1 { background: var(--rust); color: var(--ink); }
   .pb2 { background: var(--rust-ink); color: var(--kraft-light) !important; }
+  .pc  { background: var(--slate); color: var(--kraft-light) !important; }   /* a fourth part, like a bridge */
 
   /* Headings */
   main > h2, .parts > h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; margin: 2rem 0 .25rem; letter-spacing: .02em; }
@@ -488,21 +497,6 @@
       </span>
       <button class="plain" id="keyReset">Original key</button>
     </div>
-    <div data-for="play" class="row">
-      <label class="label" for="readAs">Read as</label>
-      <select id="readAs">
-        <option value="concert">Concert pitch</option>
-        <option value="bb">B♭ instrument</option>
-        <option value="eb">E♭ instrument</option>
-        <option value="f">French horn</option>
-        <option value="capo">Capo shapes (guitar, uke)</option>
-      </select>
-      <span id="capoWrap" hidden>
-        <label for="capo">Capo fret</label>
-        <input type="number" id="capo" min="1" max="9" value="3">
-      </span>
-      <span class="hint" id="readHint"></span>
-    </div>
     <div class="row">
       <span class="label">Show</span>
       <label class="check"><input type="checkbox" id="showLyrics" checked> Words</label>
@@ -511,7 +505,6 @@
     <div data-for="play" class="row">
       <span class="label">Chords as</span>
       <label class="check"><input type="checkbox" id="numbers"> Numbers instead of chord names</label>
-      <label class="check"><input type="checkbox" id="tones"> Chord tones</label>
     </div>
     <div class="row">
       <span class="label">Click</span>
@@ -577,6 +570,12 @@
         <div class="ctl-row">
           <button class="play" id="playBtn">Play</button>
           <button class="pick small" id="firstNoteBtn">Your next note</button>
+          <label class="speed"><span class="speed-lead">Speed</span>
+            <select id="speedPick" aria-label="Practice speed">
+              <option value="1">100%</option><option value="0.9">90%</option><option value="0.8">80%</option>
+              <option value="0.7">70%</option><option value="0.6">60%</option>
+            </select>
+          </label>
         </div>
         <div class="ctl-row steps" role="group" aria-label="What you hear" id="balanceRow">
           <button class="pick small" data-bal="bg" aria-pressed="true"><b>1</b> Just your line</button>
@@ -602,7 +601,7 @@
   <footer>The Secret Songbook is made by Secret Chord Collective.</footer>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.3/build/cjs/vexflow-bravura.js"></script>
+<script src="assets/vexflow-bravura.js"></script>
 <script src="baltic-sea-score.js"></script>
 <script>
 /* ---------- The song ----------
@@ -705,7 +704,7 @@ function parseChord(sym) {
 }
 
 const SONG_KEY = parsePitch(SONG.key).pc;
-const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, hidden: {}, zoom: null, part: (SONG.backing[0] || {}).voice || 'alto' };
+const state = { lyrics: true, chords: true, sheets: false, shift: 0, readAs: 'concert', capo: 3, numbers: false, tones: false, role: 'play', inst: null, fade: 0, view: 'roll', staves: 'alto', bal: 'bg', muted: {}, hidden: {}, zoom: null, speed: 1, part: (SONG.backing[0] || {}).voice || 'alto' };
 
 function instOffset() { return state.readAs === 'capo' ? -state.capo : OFFSET[state.readAs]; }
 const move = () => state.shift + instOffset();
@@ -926,11 +925,6 @@ function renderKey() {
   badge.textContent = setting ? setting[0].toUpperCase() + setting.slice(1) : '';
   badge.hidden = !setting;
   document.getElementById('sheetBadge').textContent = state.readAs === 'capo' ? `Capo ${state.capo}` : state.readAs !== 'concert' ? written : '';
-  const hint = document.getElementById('readHint');
-  if (state.readAs === 'concert') hint.textContent = '';
-  else if (state.readAs === 'capo') hint.textContent = `Play ${written} shapes with a capo on fret ${state.capo}.`;
-  else hint.textContent = `Your part reads in ${written}.`;
-  document.getElementById('capoWrap').hidden = state.readAs !== 'capo';
 }
 
 function renderWhoSings() {
@@ -972,10 +966,7 @@ document.querySelectorAll('.toggle').forEach(btn => btn.addEventListener('click'
 document.getElementById('keyUp').onclick = () => { state.shift = state.shift >= 6 ? -5 : state.shift + 1; renderAll(); };
 document.getElementById('keyDown').onclick = () => { state.shift = state.shift <= -5 ? 6 : state.shift - 1; renderAll(); };
 document.getElementById('keyReset').onclick = () => { state.shift = 0; renderAll(); };
-document.getElementById('readAs').onchange = e => { state.readAs = e.target.value; remember(); renderAll(); };
-document.getElementById('capo').oninput = e => { state.capo = Math.max(1, Math.min(9, +e.target.value || 1)); remember(); renderAll(); };
 document.getElementById('numbers').onchange = e => { state.numbers = e.target.checked; renderAll(); };
-document.getElementById('tones').onchange = e => { state.tones = e.target.checked; renderParts(); };
 
 /* ---------- Click track (accent on 1; the bar length comes from the score, else 4/4) ---------- */
 let ac = null, clickTimer = null, nextTime = 0, beat = 0;
@@ -994,6 +985,8 @@ function schedule() {
     nextTime += 60 / bpm; beat++;
   }
 }
+/* the click starts at the song's own tempo (it used to start at 92 on every song) */
+if (window.SCORE?.bpm) document.getElementById('bpm').value = window.SCORE.bpm;
 document.getElementById('clickBtn').onclick = e => {
   if (clickTimer) {
     clearInterval(clickTimer); clickTimer = null;
@@ -1043,11 +1036,10 @@ function renderRange() {
   const box = document.getElementById('rangeBox'); if (!box || !SC) return;
   document.querySelector('.lg-you').textContent = `Your line (${SC.voices[state.part].name.toLowerCase()})`;
   document.querySelector('.lg-nathan').textContent = `Nathan (${SC.voices.baritone.name.toLowerCase()})`;
-  const hear = m => `<button class="hear" data-hear="${m}">${midiName(m)}</button>`;
+  const hear = m => midiName(m);
   const parts = SONG.backing.map(x => { const r = rangeOf(x.voice); return `${/^[aeiou]/i.test(x.range) ? 'an' : 'a'} ${x.range} range of ${hear(r.lo)} to ${hear(r.hi)}`; });
   const list = parts.length > 1 ? parts.slice(0, -1).join(', ') + ' and ' + parts[parts.length - 1] : parts[0];
   box.innerHTML = `This song requires ${list}.`;
-  box.querySelectorAll('[data-hear]').forEach(b => b.onclick = () => hearNote(+b.dataset.hear));
 }
 
 let TL = { events: [], secs: [], total: 0, alone: [], inst: [] };
@@ -1201,7 +1193,7 @@ function startPlayer(from = P.pos) {
   if (!SC) return;
   REC.pause();
   const c = audio();
-  P.spb = 60 / SC.bpm;
+  P.spb = 60 / (SC.bpm * state.speed);   // the Speed setting slows the practice tones (they're made here, so pitch stays put)
   P.out = c.createGain(); P.out.connect(c.destination);
   const start = c.currentTime + .1;
   if (from > 0) {
@@ -1364,7 +1356,6 @@ function renderCapo() {
 document.getElementById('capoPick').onchange = e => {
   const n = +e.target.value;
   state.readAs = n ? 'capo' : 'concert'; if (n) state.capo = n;
-  document.getElementById('readAs').value = state.readAs; document.getElementById('capo').value = state.capo;
   remember(); renderAll();
 };
 /* print: lay the riff out at page width, whatever screen it was opened on */
@@ -1578,7 +1569,7 @@ function renderStaff(pass = 0) {
           duration: it.d + (it.r ? 'r' : ''), dots: it.o || 0, align_center: !!it.m, auto_stem: true });
         for (let d = 0; d < (it.o || 0); d++) VF.Dot.buildAndAttach([n], { all: true });
         if (v === 'baritone') n.setStyle({ fillStyle: '#6b7178', strokeStyle: '#6b7178' });
-        else if (MULTI() && v === state.part) n.setStyle({ fillStyle: '#97401f', strokeStyle: '#97401f' });   // your line, in your color
+        else if (MULTI() && v === state.part) n.setStyle({ fillStyle: '#80361a', strokeStyle: '#80361a' });   // your line, in your color
         if (it.l) {   /* an invisible copy of the syllable makes the spacing leave room for the words */
           const an = new VF.Annotation(it.l + ' ').setFont('Arial', LF + LS * 2);
           an.setStyle({ fillStyle: 'rgba(0,0,0,0)', strokeStyle: 'rgba(0,0,0,0)' });
@@ -1608,6 +1599,7 @@ function renderStaff(pass = 0) {
       const words = notes.some(n => n._it?.l);
       return { v, clef, annot, voice, notes, tuplet, beams, top, bot, words };
     });
+    if (b.count > 1) voices.forEach(o => { o.top = Math.max(o.top, 8.5); });   // room for the bar count over a multi-bar rest
     const fmt = new VF.Formatter();
     voices.forEach(o => fmt.joinVoices([o.voice]));
     const need = fmt.preCalculateMinTotalWidth(voices.map(o => o.voice));
@@ -1861,6 +1853,10 @@ document.querySelectorAll('[data-fade]').forEach(b => b.onclick = () => {
   renderSong();
 });
 document.getElementById('playBtn').onclick = () => P.on ? stopPlayer() : startPlayer();
+document.getElementById('speedPick').onchange = e => {
+  state.speed = +e.target.value; remember();
+  if (P.on) { stopPlayer(); startPlayer(Math.max(0, P.pos)); }   // keep going from the same spot at the new speed
+};
 window.addEventListener('resize', () => { drawRoll(); renderStaff(); renderRiff(); });
 
 /* Drag the moving lines left and right to go back or forward. Playing pauses while you drag and picks up where you let go. */
@@ -1929,13 +1925,13 @@ function setInst(inst, save = true) {
   state.inst = inst;
   document.querySelectorAll('[data-inst]').forEach(b => b.setAttribute('aria-pressed', b.dataset.inst === inst));
   const readAs = { bb: 'bb', eb: 'eb', f: 'f' }[inst] || 'concert';
-  state.readAs = readAs; document.getElementById('readAs').value = readAs;
-  state.tones = inst === 'keys'; document.getElementById('tones').checked = state.tones;
+  state.readAs = readAs;
+  state.tones = inst === 'keys';   // keyboard players see the notes of each chord on the chord cards
   document.getElementById('roleNote').textContent = inst ? INST_NOTES[inst] : NOTES[state.role];
   if (save) { remember(); renderAll(); }
 }
 function remember() {
-  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part, zoom: state.zoom, hidden: state.hidden })); } catch (e) {}
+  try { localStorage.setItem('ss-' + SONG.slug, JSON.stringify({ role: state.role, inst: state.inst, readAs: state.readAs, capo: state.capo, part: state.part, zoom: state.zoom, hidden: state.hidden, speed: state.speed })); } catch (e) {}
 }
 document.querySelectorAll('[data-role]').forEach(b => b.onclick = () => setRole(b.dataset.role));
 document.querySelectorAll('[data-inst]').forEach(b => b.onclick = () => setInst(state.inst === b.dataset.inst ? null : b.dataset.inst));
@@ -1946,14 +1942,18 @@ if (saved?.role === 'both') saved.role = 'play';   // older visits
 if (saved?.part && SONG.backing.some(b => b.voice === saved.part)) state.part = saved.part;
 if (typeof saved?.zoom === 'number') state.zoom = saved.zoom;
 if (saved?.hidden && typeof saved.hidden === 'object') state.hidden = saved.hidden;
+if ([1, .9, .8, .7, .6].includes(saved?.speed)) { state.speed = saved.speed; document.getElementById('speedPick').value = String(saved.speed); }
 setRole(saved?.role || 'play', false, !!saved);
 if (saved) document.getElementById('startHint').hidden = true;
 if (saved?.inst && saved.role === 'play') setInst(saved.inst, false);
 if (saved?.role === 'play' && saved.readAs === 'capo' && (saved.inst === 'guitar' || saved.inst === 'uke')) {
   state.readAs = 'capo'; state.capo = saved.capo || 3;
-  document.getElementById('readAs').value = 'capo'; document.getElementById('capo').value = state.capo;
 }
 renderAll();
+</script>
+<script>
+/* Offline: the first visit saves the whole songbook on the phone (pages, scores, recordings), so it opens without signal */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
 </body>
 </html>
